@@ -15,6 +15,10 @@ def Parse(file_obj):
     "Finale": Finale,
     "GuitarPro": Guitarpro,
     # OMRs
+    "Audiveris": Audiveris,
+    "PhotoScore": Photoscore,
+    "ScoreMaker": Scoremaker,
+    "SmartScore": Smartscore,
   }
 
   try:
