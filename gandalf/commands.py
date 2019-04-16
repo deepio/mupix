@@ -21,3 +21,8 @@ def compare_all():
   """
   """
   print("Mass Compare files!")
+
+@cli.command("diff", short_help="Show the parsed musicxml tree of a single file")
+def diff():
+  """
+  """
