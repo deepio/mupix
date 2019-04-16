@@ -1,9 +1,13 @@
 from collections import defaultdict
 from os import system
 
-class ParsedXML:
+class Parser:
   def __init__(self, file_object):
     self.output = defaultdict()
+    self.file_object = file_object
+
+  def parse(self):
+    return "Parsing..."
 
 def main():
   system("clear")
