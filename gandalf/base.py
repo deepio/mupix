@@ -3,10 +3,11 @@ from io import StringIO, BytesIO
 import json
 from os import system
 
-import attr
+# import attr
 from lxml import etree
 
 from .extra import boundary_search
+
 
 class ValidateXML:
   def __init__(self, schema_filepath, testxml_filepath):
@@ -23,8 +24,9 @@ class ValidateXML:
     self.xml_schema = etree.XMLSchema(self.xmlschema_doc)
 
   def isvalid(self):
-    status = self.xml_schema.validate( etree.parse(self.test) )
+    status = self.xml_schema.validate(etree.parse(self.test))
     return self.output(status, self.schema_filepath, self.testxml_filepath)
+
 
 class MusicXML_Parser:
   def __init__(self, file_obj):
@@ -115,6 +117,9 @@ class MusicXML_Parser:
     articulation = "".join(boundary_search("<articulations", "</articulations>", note_obj))
     return [art for art in boundary_search("<", " />", articulation)]
 
+  def get_note_object(self, ):
+    pass
+
   def parse(self):
     output = defaultdict()
     parts_obj = self.get_parts()
@@ -126,11 +131,12 @@ class MusicXML_Parser:
         output[f"part_{part_number}.measure_{measure_number}.key_signature_mode"] = self.get_key_modes(measure_data)
         for note_number, note_data in enumerate(boundary_search("<note", "</note", measure_data)):
           output[f"part_{part_number}.measure_{measure_number}.note_{note_number}.step"] = self.get_step(note_data)
-          output[f"part_{part_number}.measure_{measure_number}.note_{note_number}.accidental"] = self.get_accidental(note_data)
-          output[f"part_{part_number}.measure_{measure_number}.note_{note_number}.duration"] = self.get_duration(note_data)
-          output[f"part_{part_number}.measure_{measure_number}.note_{note_number}.stem_direction"] = self.get_stem_direction(note_data)
-          output[f"part_{part_number}.measure_{measure_number}.note_{note_number}.articulation"] = self.get_articulations(note_data)
+          output[f"part_{part_number}.measure_{measure_number}.note_{note_number}.accidental"] = self.get_accidental(note_data)         # noqa E501
+          output[f"part_{part_number}.measure_{measure_number}.note_{note_number}.duration"] = self.get_duration(note_data)             # noqa E501
+          output[f"part_{part_number}.measure_{measure_number}.note_{note_number}.stem_direction"] = self.get_stem_direction(note_data) # noqa E501
+          output[f"part_{part_number}.measure_{measure_number}.note_{note_number}.articulation"] = self.get_articulations(note_data)    # noqa E501
     return output
+
 
 def main():
   system("clear")
@@ -146,4 +152,6 @@ def main():
   # Validation Check
   print(ValidateXML(schema, test_file).isvalid())
 
-if __name__ == "__main__": main()
+
+if __name__ == "__main__":
+  main()

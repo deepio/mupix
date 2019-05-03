@@ -1,7 +1,7 @@
-import json
 import os
 
 from gandalf.base import MusicXML_Parser
+
 
 class Finale(MusicXML_Parser):
   """
@@ -9,6 +9,7 @@ class Finale(MusicXML_Parser):
   """
   def __init__(self, file_obj):
     super().__init__(file_obj)
+
 
 def main():
   os.system("clear")
@@ -19,4 +20,6 @@ def main():
     data = f.read()
   print(Finale(data))
 
-if __name__ == "__main__": main()
+
+if __name__ == "__main__":
+  main()

@@ -8,6 +8,7 @@ from gandalf.omr.scoremaker import Scoremaker
 from gandalf.omr.smartscore import Smartscore
 from gandalf.extra import boundary_search
 
+
 def Parse(file_obj):
   handlers = {
     # Engravers
@@ -26,11 +27,10 @@ def Parse(file_obj):
       if software in "".join(boundary_search("<software>", "</software>", file_obj)):
         return handlers.get(software)(file_obj)
   except Exception as err:
-    raise FileIncompatible(f"""Either a parser was not created for that musicXML output, or you did not provide a valid musicXML file.\nTraceback:\n{err}""")
+    raise FileIncompatible(f"""Either a parser was not created for that musicXML output, or you did not provide a valid musicXML file.\nTraceback:\n{err}""") # noqa E501
+
 
 if __name__ == "__main__":
   with open("../tests/xml/test.xml") as f:
     data = f.read()
-  print(
-    Parse(data)
-  )
+  print(Parse(data))

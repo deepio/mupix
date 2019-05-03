@@ -1,0 +1,15 @@
+<note>
+  <chord/>
+  <pitch>
+    <step>E</step>
+    <octave>5</octave>
+  </pitch>
+  <duration>80</duration>
+  <instrument id="P1-S0V0"/>
+  <voice>1</voice>
+  <type>quarter</type>
+  <stem>down</stem>
+</note>
+<backup>
+  <duration>80</duration>
+</backup>

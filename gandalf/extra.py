@@ -1,5 +1,6 @@
 import re
 
+
 def boundary_search(begin, end, string):
   """
   Boundary Search
@@ -7,7 +8,7 @@ def boundary_search(begin, end, string):
   This is the regex formula for finding everything between two specific strings.
   e.g. :
         this character =>[ (all of the stuff here, including newlines) ] <= this character
-        (?<=\[)(.*?)(?=\])
+        (?<=[)(.*?)(?=])
 
   Args:
     begin (string): The character that signals the begins what you want to search for.
@@ -19,5 +20,5 @@ def boundary_search(begin, end, string):
   Returns:
     output (list): A list of all instances of what was searched for.
   """
-  pattern = f"(?<=\{begin})(.*?)(?=\{end})"
+  pattern = f"(?<={begin})(.*?)(?={end})"
   return re.findall(pattern, string, re.DOTALL)

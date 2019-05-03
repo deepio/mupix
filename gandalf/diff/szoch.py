@@ -59,7 +59,7 @@ def diff(ground_truth, omr_output):
   Returns:
     szwoch (attrs): Returns a mutable named tuple that includes a count of each element.
   """
-  output = SzochResults([1,1,1])
+  output = SzochResults([1, 1, 1])
 
   measure_offset = 0
   note_offset = 0
@@ -85,12 +85,12 @@ def diff(ground_truth, omr_output):
           if ground_truth[next_note_path] == omr_output[key]:
             output.correct_step += 1
           else:
-            temp_note_path = note_and_measure_offset(key, measure_offset, note_offset+1)
+            temp_note_path = note_and_measure_offset(key, measure_offset, note_offset + 1)
             if ground_truth[temp_note_path] == omr_output[key] and temp_note_path not in moved_paths:
               output.correct_step += 1
               moved_paths.append(track_moved_notes(temp_note_path))
               note_offset += 1
-              next_note_path = note_and_measure_offset(path, measure_offset, note_offset+1)
+              next_note_path = note_and_measure_offset(key, measure_offset, note_offset + 1)
             output.wrong_step += 1
         except KeyError:
           output.wrong_step += 1
@@ -103,12 +103,12 @@ def diff(ground_truth, omr_output):
           if ground_truth[next_note_path] == omr_output[key]:
             output.correct_accidental += 1
           else:
-            temp_note_path = note_and_measure_offset(key, measure_offset, note_offset+1)
+            temp_note_path = note_and_measure_offset(key, measure_offset, note_offset + 1)
             if ground_truth[temp_note_path] == omr_output[key] and temp_note_path not in moved_paths:
               moved_paths.append(track_moved_notes(temp_note_path))
               output.correct_accidental += 1
               note_offset += 1
-              next_note_path = note_and_measure_offset(key, measure_offset, note_offset+1)
+              next_note_path = note_and_measure_offset(key, measure_offset, note_offset + 1)
             output.wrong_accidental += 1
         except KeyError:
           output.wrong_accidental += 1
@@ -121,12 +121,12 @@ def diff(ground_truth, omr_output):
           if ground_truth[next_note_path] == omr_output[key]:
             output.correct_duration += 1
           else:
-            temp_note_path = note_and_measure_offset(key, measure_offset, note_offset+1)
+            temp_note_path = note_and_measure_offset(key, measure_offset, note_offset + 1)
             if ground_truth[temp_note_path] == omr_output[key] and temp_note_path not in moved_paths:
               moved_paths.append(track_moved_notes(temp_note_path))
               output.correct_duration += 1
               note_offset += 1
-              next_note_path = note_and_measure_offset(key, measure_offset, note_offset+1)
+              next_note_path = note_and_measure_offset(key, measure_offset, note_offset + 1)
             output.wrong_duration += 1
         except KeyError:
           output.wrong_duration += 1
@@ -137,18 +137,18 @@ def diff(ground_truth, omr_output):
           symbol_classes.append("stem_direction")
         try:
           if ground_truth[next_note_path] == omr_output[key]:
-            output.correct_stem_dir +=1
+            output.correct_stem_dir += 1
           else:
-            temp_note_path = note_and_measure_offset(key, measure_offset, note_offset+1)
+            temp_note_path = note_and_measure_offset(key, measure_offset, note_offset + 1)
             if ground_truth[temp_note_path] == omr_output[key] and temp_note_path not in moved_paths:
               moved_paths.append(track_moved_notes(temp_note_path))
               output.correct_stem_dir += 1
               note_offset += 1
-              next_note_path = note_and_measure_offset(key, measure_offset, note_offset+1)
-            output.wrong_stem_dir +=1
+              next_note_path = note_and_measure_offset(key, measure_offset, note_offset + 1)
+            output.wrong_stem_dir += 1
         except KeyError:
-          output.wrong_stem_dir +=1
-        output.expected_stem_dir +=1
+          output.wrong_stem_dir += 1
+        output.expected_stem_dir += 1
 
     elif isinstance(value, list):
       if path_list[-1] == "clef":

@@ -1,5 +1,6 @@
 import click
 
+
 @click.group()
 def cli():
   """
@@ -9,6 +10,7 @@ def cli():
   what they are aswell.
   """
 
+
 @cli.command("compare", short_help="Compare two MusicXML files.")
 def compare():
   """
@@ -16,11 +18,13 @@ def compare():
   """
   print("Compare only two files")
 
+
 @cli.command("compare-all", short_help="Mass compare all the files.")
 def compare_all():
   """
   """
   print("Mass Compare files!")
+
 
 @cli.command("diff", short_help="Show the parsed musicxml tree of a single file")
 def diff():
