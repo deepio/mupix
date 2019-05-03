@@ -50,3 +50,36 @@ def handle_backups(file_path):
   return "".join(data)
 
 
+def note_and_measure_offset(path: str, measure_offset: int, note_offset: int):
+  """
+  Note and Measure Offset Alignment
+
+  Takes the current key, and returns the same key with a note/measure offset combination, this is required
+  for looking at measures and notes ahead of the note currently in scope.
+
+  Args:
+    path (string): The dictionary key that describes what is at the current element in the list
+
+    measure_offset (int): How many measures to look ahead, could also work for previous measures
+                          but this is not tested.
+
+    note_offset (int): How many notes to look ahead, could also work for previous notes but this
+                          is not tested.
+
+  Returns:
+    (string): Describing the new altered path.
+  """
+  path_list = path.split(".")
+  try:
+    current_measure = int(path_list[1].split("_")[-1])
+    path = path.replace(f"measure_{current_measure}", f"measure_{current_measure + measure_offset}")
+
+    if "note" in path_list[2]:
+      current_note = int(path_list[2].split("_")[-1])
+      path = path.replace(f"note_{current_note}", f"note_{current_note + note_offset}")
+
+  except IndexError:
+    pass
+  return path
+
+
