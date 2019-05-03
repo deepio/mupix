@@ -93,3 +93,31 @@ def track_moved_measures(path: str) -> str:
   return f"{path_list[0]}.{path_list[1]}"
 
 
+if __name__ == "__main__":
+  import os
+  os.system("clear")
+
+  # Test usage
+  string1 = "\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f" # noqa E501
+  string2 = """<note>
+  <chord/>
+  <pitch>
+    <step>E</step>
+    <octave>5</octave>
+  </pitch>
+  <duration>80</duration>
+  <instrument id="P1-S0V0"/>
+  <voice>1</voice>
+  <type>quarter</type>
+  <stem>down</stem>
+<backup>
+  <vertical-alignment>80</vertical-alignment>
+</backup>
+</note>
+"""
+
+  assert boundary_search("\u001a", "\u001e", string1)             == ['\x1b\x1c\x1d'] # noqa E221
+  assert handle_backups("../tests/xml/backup-test.xml")           == string2 # noqa E221
+  assert note_and_measure_offset("inst_1.measure_1.note_1", 1, 1) == "inst_1.measure_2.note_2" # noqa E221
+  assert track_moved_notes("a.bb.c.eee")                          == "a.bb.c" # noqa E221
+  assert track_moved_measures("a.bb.c.eee")                       == "a.bb" # noqa E221
