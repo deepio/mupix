@@ -83,3 +83,13 @@ def note_and_measure_offset(path: str, measure_offset: int, note_offset: int):
   return path
 
 
+def track_moved_notes(path: str) -> str:
+  path_list = path.split(".")
+  return f"{path_list[0]}.{path_list[1]}.{path_list[2]}"
+
+
+def track_moved_measures(path: str) -> str:
+  path_list = path.split(".")
+  return f"{path_list[0]}.{path_list[1]}"
+
+
