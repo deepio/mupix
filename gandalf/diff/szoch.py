@@ -1,5 +1,9 @@
 import attr
 
+from gandalf.extra import note_and_measure_offset
+from gandalf.extra import track_moved_notes
+
+
 @attr.s
 class SzochResults:
   All_Symbols = attr.ib(init=False, default=0, type=int,)
@@ -40,6 +44,41 @@ class SzochResults:
   correct_key_signature = attr.ib(init=False, default=0, type=int,)
   wrong_key_signature = attr.ib(init=False, default=0, type=int,)
   expected_key_signature = attr.ib(init=False, default=0, type=int,)
+
+
+def compare_list_items(ground_truth_list: list, omr_data_list: list) -> tuple:
+  """
+  Count and compare two list for items.
+    - All items from the ground truths that are in the omr data list.
+    - All extra items that are in the omr data, but not in the ground truth.
+
+  Args:
+    ground_truth_list (list): List of values from the ground truth MusicXML dict
+                              taken at a specific key in the dictionary.
+
+    omr_data_list (list): List of values from the omr data MusicXML dict taken
+                          at a specific key in the dictionary.
+
+  Returns (tuple): correct, wrong, expected
+  """
+  correct, wrong, expected = (0, 0, 0)
+
+  if isinstance(ground_truth_list, list) and isinstance(omr_data_list, list):
+    if ground_truth_list == [] and omr_data_list == []:
+      return 0, 0, 0
+
+    for item in ground_truth_list:
+      if item in omr_data_list:
+        correct += 1
+        expected += 1
+        omr_data_list.remove(item)
+      else:
+        wrong += 1
+        expected += 1
+
+    return correct, wrong, expected
+  else:
+    raise Exception(f"Something went wrong\nGroundTruth type: {type(ground_truth_list)}\nOMRData type: {type(omr_data_list)}") # noqa E501
 
 
 def diff(ground_truth, omr_output):
