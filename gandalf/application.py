@@ -27,7 +27,8 @@ def Parse(file_obj):
       if software in "".join(boundary_search("<software>", "</software>", file_obj)):
         return handlers.get(software)(file_obj)
   except Exception as err:
-    raise FileIncompatible(f"""Either a parser was not created for that musicXML output, or you did not provide a valid musicXML file.\nTraceback:\n{err}""") # noqa E501
+    raise FileIncompatible("Either a parser was not created for that musicXML output" +
+                            f", or you did not provide a valid musicXML file.\nTraceback:\n{err}") # noqa E127
 
 
 if __name__ == "__main__":
