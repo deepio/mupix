@@ -1,3 +1,5 @@
+import hashlib
+
 from gandalf.extra import boundary_search
 from gandalf.extra import handle_backups
 from gandalf.extra import note_and_measure_offset
@@ -11,23 +13,28 @@ def test_boundary_search():
 
 
 def test_handle_backups():
-  string = """<note>
-  <chord/>
-  <pitch>
-    <step>E</step>
-    <octave>5</octave>
-  </pitch>
-  <duration>80</duration>
-  <instrument id="P1-S0V0"/>
-  <voice>1</voice>
-  <type>quarter</type>
-  <stem>down</stem>
-<backup>
-  <vertical-alignment>80</vertical-alignment>
-</backup>
-</note>
-"""
-  assert handle_backups("tests/xml/backup-test.xml")           == string # noqa E221
+  #   string = """<note>
+  #   <chord/>
+  #   <pitch>
+  #     <step>E</step>
+  #     <octave>5</octave>
+  #   </pitch>
+  #   <duration>80</duration>
+  #   <instrument id="P1-S0V0"/>
+  #   <voice>1</voice>
+  #   <type>quarter</type>
+  #   <stem>down</stem>
+  # <backup>
+  #   <vertical-alignment>80</vertical-alignment>
+  # </backup>
+  # </note>
+  # """
+  #   assert handle_backups("tests/xml/backup-test.xml")           == string # noqa E221
+  m = hashlib.sha512()
+  m.update(bytes(handle_backups("tests/xml/backup-test.xml"), "utf-8"))
+  correct_hash = b"\xfa\xe9\xb0\xd8\x7f\x8c7G\xf4\x02\xb0\xee\x81*I,\xb8\xe6\x7f\xa1Q\x81\x9eG\xa8\xc8\x12]\x17\xcf"
+  correct_hash += b"\xdey\x91\xad\xc3t\xa6P\xad\x8cN\x195\xa2]\x1c\\\xa61\xa5L&\xb5E\xc5)\x8e\xea(5\xe3I\xcf\xef"
+  assert m.digest() == correct_hash
 
 
 def test_note_and_measure_offset():
