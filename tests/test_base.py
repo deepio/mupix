@@ -1,13 +1,15 @@
 import hashlib
 import json
+import os
 
 import pytest
 
 from gandalf.base import ValidateXML
 from gandalf.base import MusicXML_Parser
 
-test_file = "tests/xml/test.xml"
-schema = "tests/xml/musicxml.xsd"
+ROOT_DIR = "/".join(os.path.abspath(__file__).split("/")[0:-1])
+test_file = ROOT_DIR + "/xml/test.xml"
+schema = ROOT_DIR + "/xml/musicxml.xsd"
 
 
 @pytest.mark.slow
