@@ -21,4 +21,5 @@ def main():
   print(Sibelius(data))
 
 
-if __name__ == "__main__": main()
+if __name__ == "__main__":
+  main()
