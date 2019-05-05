@@ -1,5 +1,8 @@
 import click
 
+from gandalf.application import Parse
+from gandalf.extra import handle_backups
+
 
 @click.group()
 def cli():
@@ -26,7 +29,9 @@ def compare_all():
   print("Mass Compare files!")
 
 
-@cli.command("diff", short_help="Show the parsed musicxml tree of a single file")
-def diff():
+@cli.command("read", short_help="Show the parsed musicxml tree of a single file")
+@click.argument("filename")
+def read(filename):
   """
   """
+  print(Parse(handle_backups(filename)))
