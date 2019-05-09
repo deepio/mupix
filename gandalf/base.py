@@ -3,10 +3,27 @@ from io import StringIO, BytesIO
 import json
 from os import system
 
-# import attr
+import attr
 from lxml import etree
 
-from .extra import boundary_search
+from gandalf.extra import boundary_search
+
+
+@attr.s
+class MusicalEvent:
+  duration = attr.ib(type=int)
+  voice = attr.ib(type=int)
+
+
+@attr.s
+class NoteObject(MusicalEvent):
+  pitch = attr.ib(type=str)
+  octave = attr.ib(type=int)
+
+
+@attr.s
+class RestObject(MusicalEvent):
+  pass 
 
 
 class ValidateXML:
