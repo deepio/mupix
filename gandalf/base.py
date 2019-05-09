@@ -146,12 +146,17 @@ class MusicXML_Parser:
         output[f"part_{part_number}.measure_{measure_number}.time_signature"] = self.get_times(measure_data)
         output[f"part_{part_number}.measure_{measure_number}.key_signature_fifth"] = self.get_key_fifths(measure_data)
         output[f"part_{part_number}.measure_{measure_number}.key_signature_mode"] = self.get_key_modes(measure_data)
-        for note_number, note_data in enumerate(boundary_search("<note", "</note", measure_data)):
-          output[f"part_{part_number}.measure_{measure_number}.note_{note_number}.step"] = self.get_step(note_data)
-          output[f"part_{part_number}.measure_{measure_number}.note_{note_number}.accidental"] = self.get_accidental(note_data)         # noqa E501
-          output[f"part_{part_number}.measure_{measure_number}.note_{note_number}.duration"] = self.get_duration(note_data)             # noqa E501
-          output[f"part_{part_number}.measure_{measure_number}.note_{note_number}.stem_direction"] = self.get_stem_direction(note_data) # noqa E501
-          output[f"part_{part_number}.measure_{measure_number}.note_{note_number}.articulation"] = self.get_articulations(note_data)    # noqa E501
+        note_number = 0
+        for note_data in boundary_search("<note", "</note", measure_data):
+          if "vertical-alignment" not in note_data:
+            note_number += 1
+          output[f"part_{part_number}.measure_{measure_number}.note_{note_number}.step.{self.get_step(note_data)}"] = {
+            "accidental": self.get_accidental(note_data),
+            "duration": self.get_duration(note_data),
+            "stem_direction": self.get_stem_direction(note_data),
+            "articulation": self.get_articulations(note_data)
+          }
+
     return output
 
 
