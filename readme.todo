@@ -1,0 +1,42 @@
+Gandalf Parser:
+  Testing Framework:
+    ☐ Create basic testing of parsing through CLI
+    ☐ Create basic testing of diffing through CLI
+  Basic Diffing Class:
+    ☐ Compare strings to strings
+    ☐ Compare lists to lists
+Pivot to testing framework:
+  Create test sheets for:
+    ☐ flipped pages
+    ☐ number of voices
+    ☐ number of instruments
+    ☐ number of measures
+    ☐ number of clefs
+    ☐ number of notes?
+    ☐ number of dynamics
+    ☐ type of dynamics
+    ☐ type of note durations
+    ☐ stem direction
+    ☐ articulations
+    ☐ part continuation with multiple
+    ☐ instrument names
+    ☐ tempo markings
+    ☐ measure numbers
+    ☐ measure markings (repeat bars)
+  Create test Cases for:
+    ☐ flipped pages
+    ☐ number of voices
+    ☐ number of instruments
+    ☐ number of measures
+    ☐ number of clefs
+    ☐ number of notes?
+    ☐ number of dynamics
+    ☐ type of dynamics
+    ☐ type of note durations
+    ☐ stem direction
+    ☐ articulations
+    ☐ part continuation with multiple
+    ☐ instrument names
+    ☐ tempo markings
+    ☐ measure numbers
+    ☐ measure markings (repeat bars)
