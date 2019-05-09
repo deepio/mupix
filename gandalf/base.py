@@ -12,6 +12,7 @@ from gandalf.extra import boundary_search
 @attr.s
 class MusicalEvent:
   duration = attr.ib(type=int)
+  tuplet = attr.ib(type=int)
   voice = attr.ib(type=int)
 
 
@@ -19,11 +20,71 @@ class MusicalEvent:
 class NoteObject(MusicalEvent):
   pitch = attr.ib(type=str)
   octave = attr.ib(type=int)
+  accidental = attr.ib(type=str, validator=attr.validators.in_(["natural", "#", "b", ""]))
 
 
 @attr.s
 class RestObject(MusicalEvent):
-  pass 
+  voice = attr.ib(type=list)
+
+
+@attr.s
+class MusicalMarker:
+  part = attr.ib(type=int)
+  measure = attr.ib(type=int)
+  beat = attr.ib(type=int)
+
+
+@attr.s
+class ClefObject(MusicalMarker):
+  # percussion clef not implemented.
+  name = attr.ib(type=str, default="G-clef", validator=attr.validators.in_(["G-clef", "C-clef", "F-clef"]))
+  step = attr.ib(type=str, default="g", validator=attr.validators.in_(["a", "b", "c", "d", "e", "f", "g"]))
+  octave = attr.ib(type=int, default=4, validator=attr.validators.in_([3, 4]))
+
+
+@attr.s
+class TimeSignatureObject(MusicalMarker):
+  numerator = attr.ib(type=int, default=4, validator=attr.validators.in_([x for x in range(1, 30, 1)]))
+  denominator = attr.ib(type=int, default=4, validator=attr.validators.in_([1, 2, 4, 8, 16]))
+
+
+@attr.s
+class TempoObject(MusicalMarker):
+  metronome_mark = attr.ib(init=False, type=int)
+  metronome_step = attr.ib(init=False, type=int, validator=attr.validators.in_([1, 2, 4, 8, 16]))
+
+
+@attr.s
+class PageMarkers:
+  marker_type = attr.ib(type=str)
+  content = attr.ib(type=str)
+
+
+@attr.s
+class MeasureNumber(PageMarkers):
+  measure_number = attr.ib(type=int)
+
+
+def MusicXMLValidator(schema_filepath, musicxml_filepath):
+  """
+  Return if the provided musicxml file is valid against the current musicxml schema.
+
+  Args:
+    schema_filepath (string): a filepath to the musicxml schema.
+
+    musicxml_filepath (string): a filepath to the musicxml file to be validated.
+
+  Returns:
+    bool
+  """
+  with open(schema_filepath, "r") as schema:
+      schema = StringIO(schema.read())
+  with open(musicxml_filepath, "rb") as xml_file:
+    test = BytesIO(xml_file.read())
+
+  xml_schema = etree.XMLSchema(etree.parse(schema_filepath))
+  return xml_schema.validate(etree.parse(test))
 
 
 class ValidateXML:
@@ -55,6 +116,9 @@ class MusicXML_Parser:
   def __str__(self):
     self.output = self.parse()
     return json.dumps(self.output, default=lambda o: o.__dict__, sort_keys=True, indent=2)
+
+  def __getitem__(self, item):
+    return self.output[item]
 
   def get_vendor(self,):
     return boundary_search("<software>", "</software>", self.file_obj)[0]
@@ -138,41 +202,117 @@ class MusicXML_Parser:
     pass
 
   def parse(self):
-    output = defaultdict()
+    output = {}
     parts_obj = self.get_parts()
     for part_number, (instrument, part_data) in enumerate(parts_obj.items()):
       for measure_number, measure_data in enumerate(boundary_search("<measure", "</measure", part_data)):
-        output[f"part_{part_number}.measure_{measure_number}.clef"] = self.get_clefs(measure_data)
-        output[f"part_{part_number}.measure_{measure_number}.time_signature"] = self.get_times(measure_data)
-        output[f"part_{part_number}.measure_{measure_number}.key_signature_fifth"] = self.get_key_fifths(measure_data)
-        output[f"part_{part_number}.measure_{measure_number}.key_signature_mode"] = self.get_key_modes(measure_data)
+        if self.get_clefs(measure_data) != []:
+          output[f"part_{part_number}.measure_{measure_number}.clef"] = self.get_clefs(measure_data)
+        if self.get_times(measure_data) != []:
+          output[f"part_{part_number}.measure_{measure_number}.time_signature"] = self.get_times(measure_data)
+        if self.get_key_fifths(measure_data) != []:
+          output[f"part_{part_number}.measure_{measure_number}.key_signature_fifth"] = self.get_key_fifths(measure_data)
+        if self.get_key_modes(measure_data) != []:
+          output[f"part_{part_number}.measure_{measure_number}.key_signature_mode"] = self.get_key_modes(measure_data)
         note_number = 0
         for note_data in boundary_search("<note", "</note", measure_data):
           if "vertical-alignment" not in note_data:
             note_number += 1
-          output[f"part_{part_number}.measure_{measure_number}.note_{note_number}.step.{self.get_step(note_data)}"] = {
-            "accidental": self.get_accidental(note_data),
-            "duration": self.get_duration(note_data),
-            "stem_direction": self.get_stem_direction(note_data),
-            "articulation": self.get_articulations(note_data)
-          }
+
+          output[f"part_{part_number}.measure_{measure_number}.note_{note_number}.step.{self.get_step(note_data)}"] = {}
+          if self.get_duration(note_data):
+            output[f"part_{part_number}.measure_{measure_number}.note_{note_number}.step.{self.get_step(note_data)}"]["duration"] = self.get_duration(note_data) # noqa E501
+          if self.get_accidental(note_data):
+            output[f"part_{part_number}.measure_{measure_number}.note_{note_number}.step.{self.get_step(note_data)}"]["accidental"] = self.get_accidental(note_data) # noqa E501
+          if self.get_stem_direction(note_data):
+            output[f"part_{part_number}.measure_{measure_number}.note_{note_number}.step.{self.get_step(note_data)}"]["stem_direction"] = self.get_stem_direction(note_data) # noqa E501
+          if self.get_articulations(note_data) != []:
+            output[f"part_{part_number}.measure_{measure_number}.note_{note_number}.step.{self.get_step(note_data)}"]["articulation"] = self.get_articulations(note_data) # noqa E501
 
     return output
+
+
+def compare_list_items(true_data: list, test_data: list) -> tuple:
+  """
+  Count and compare two list for items.
+    - All items from the ground truths that are in the omr data list.
+    - All extra items that are in the omr data, but not in the ground truth.
+
+  Args:
+    true_data (list): List of values from the ground truth MusicXML dict
+                      taken at a specific key in the dictionary.
+
+    test_data (list): List of values from the omr data MusicXML dict taken
+                      at a specific key in the dictionary.
+
+  Returns (tuple): correct, wrong, expected
+  """
+  correct, wrong, expected = (0, 0, 0)
+
+  if isinstance(true_data, list) and isinstance(test_data, list):
+    if true_data == [] and test_data == []:
+      return 0, 0, 0
+
+    for item in true_data:
+      if item in test_data:
+        correct += 1
+        expected += 1
+        test_data.remove(item)
+      else:
+        wrong += 1
+        expected += 1
+
+    return correct, wrong, expected
+  else:
+    raise Exception(f"Something went wrong\nGroundTruth type: {type(true_data)}\nOMRData type: {type(test_data)}")
+
+
+class BasicDiff:
+  def __init__(self, ground_truth, omr_data):
+    import os
+    os.system("clear")
+    print("Welcome to the mega parser :)")
+
+    with open(ground_truth,) as f:
+      self.true_data = MusicXML_Parser(f.read()).parse()
+    with open(omr_data,) as f:
+      self.test_data = MusicXML_Parser(f.read()).parse()
+
+    for key, value in self.true_data.items():
+      if isinstance(value, list):
+        pass
+      elif isinstance(value, dict):
+        print("ok:(", end="")
+      else:
+        raise Exception(f"Something went very wrong, check the value: {value} and key: {key}")
+
+  def __str__(self):
+    hmm = 0
+    for key, value in self.true_data.items():
+      if self.true_data[key] == self.test_data[key]:
+        hmm += 1
+    return "\n" + str(hmm)
+
+
 
 
 def main():
   system("clear")
 
   test_file = "../tests/xml/test.xml"
-  schema = "../tests/xml/musicxml.xsd"
+  schema = "../tests/xml/musicxml.xsd" # noqa F841
 
+  # Examine Parsing
   # Check if parsing works
-  with open(test_file) as f:
-    data = f.read()
-  print(MusicXML_Parser(data))
+  # with open(test_file) as f:
+  #   data = f.read()
+  # print(MusicXML_Parser(data))
 
   # Validation Check
-  print(ValidateXML(schema, test_file).isvalid())
+  # print(ValidateXML(schema, test_file).isvalid())
+
+  # Diff Check
+  print(BasicDiff(test_file, test_file))
 
 
 if __name__ == "__main__":

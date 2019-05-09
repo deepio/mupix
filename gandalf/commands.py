@@ -1,6 +1,7 @@
 import click
 
 from gandalf.application import Parse
+from gandalf.base import BasicDiff
 from gandalf.extra import handle_backups
 
 
@@ -15,11 +16,13 @@ def cli():
 
 
 @cli.command("compare", short_help="Compare two MusicXML files.")
-def compare():
+@click.argument("correct_data")
+@click.argument("test_data")
+def compare(correct_data, test_data):
   """
    Compare two MusicXML files. -c <ground truth file> <file to parse through>
   """
-  print("Compare only two files")
+  print(BasicDiff(correct_data, test_data))
 
 
 @cli.command("compare-all", short_help="Mass compare all the files.")
@@ -35,3 +38,8 @@ def read(filename):
   """
   """
   print(Parse(handle_backups(filename)))
+
+
+if __name__ == "__main__":
+  test_file = "../tests/xml/test.xml"
+  print(BasicDiff(test_file, test_file))

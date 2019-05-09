@@ -1,10 +1,8 @@
 Gandalf Parser:
-  Testing Framework:
-    ☐ Create basic testing of parsing through CLI
-    ☐ Create basic testing of diffing through CLI
-  Basic Diffing Class:
-    ☐ Compare strings to strings
+  ☐ Testing Framework:
+  ☐ Basic Diffing Class:
     ☐ Compare lists to lists
+    ☐ Compare dicts to dicts
 Pivot to testing framework:
   Create test sheets for:
     ☐ flipped pages
@@ -23,6 +21,7 @@ Pivot to testing framework:
     ☐ tempo markings
     ☐ measure numbers
     ☐ measure markings (repeat bars)
+    ☐ part following
   Create test Cases for:
     ☐ flipped pages
     ☐ number of voices
@@ -40,3 +39,22 @@ Pivot to testing framework:
     ☐ tempo markings
     ☐ measure numbers
     ☐ measure markings (repeat bars)
+Archive:
+  ✔ Create basic testing of parsing through CLI @started(19-05-09 15:50) @done(19-05-09 15:50) @lasted(23s) @project(Gandalf Parser)
+  ✔ Create basic testing of diffing through CLI @started(19-05-09 15:50) @done(19-05-09 16:23) @lasted(33m14s) @project(Gandalf Parser)
+  ✘ Compare strings to strings @cancelled(19-05-09 16:33) @project(Gandalf Parser)
+  ✔ Validator Class: @started(19-05-09 12:17) @done(19-05-09 12:19) @lasted(2m4s) @project(Gandalf Parser)
+    ✘ Rework with attrs instead @started(19-05-09 12:07) @cancelled(19-05-09 12:16) @wasted(9m13s) @project(Gandalf Parser.Validator Class) @project(Gandalf Parser)
+    ✔ Rework as a function instead @done(19-05-09 12:16) @project(Gandalf Parser.Validator Class) @project(Gandalf Parser)
+  ✔ Classify Page Markers @done(19-05-09 12:06) @project(Gandalf Parser.Basic Diffing Class)
+    ✘ Title @cancelled(19-05-09 12:04) @project(Gandalf Parser.Basic Diffing Class)
+    ✘ Subtitle @cancelled(19-05-09 12:04) @project(Gandalf Parser.Basic Diffing Class)
+    ✔ Page Marker base class @done(19-05-09 12:04) @project(Gandalf Parser.Basic Diffing Class)
+    ✔ Measure Numbers? @done(19-05-09 12:05) @project(Gandalf Parser.Basic Diffing Class)
+  ✔ Classify musical-events @done(19-05-09 09:51) @project(Gandalf Parser.Basic Diffing Class)
+    ✔ Musical events class @done(19-05-09 09:51) @project(Gandalf Parser.Basic Diffing Class)
+    ✔ Note class @done(19-05-09 09:51) @project(Gandalf Parser.Basic Diffing Class)
+    ✔ Rest class @done(19-05-09 09:51) @project(Gandalf Parser.Basic Diffing Class)
+  ✔ Classify Music Markers @started(19-05-09 10:00) @done(19-05-09 10:19) @lasted(19m26s) @project(Gandalf Parser.Basic Diffing Class)
+    ✔ Clef class @started(19-05-09 10:16) @done(19-05-09 10:16) @lasted(36s) @project(Gandalf Parser.Basic Diffing Class)
+    ✔ Time Signature class @done(19-05-09 10:17) @project(Gandalf Parser.Basic Diffing Class)
