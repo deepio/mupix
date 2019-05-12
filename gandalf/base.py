@@ -294,8 +294,6 @@ class BasicDiff:
     return "\n" + str(hmm)
 
 
-
-
 def main():
   system("clear")
 
