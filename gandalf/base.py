@@ -248,16 +248,17 @@ def compare_list_items(true_data: list, test_data: list) -> tuple:
   Returns (tuple): correct, wrong, expected
   """
   correct, wrong, expected = (0, 0, 0)
+  test_data_copy = test_data.copy()
 
-  if isinstance(true_data, list) and isinstance(test_data, list):
-    if true_data == [] and test_data == []:
+  if isinstance(true_data, list) and isinstance(test_data_copy, list):
+    if true_data == [] and test_data_copy == []:
       return 0, 0, 0
 
     for item in true_data:
-      if item in test_data:
+      if item in test_data_copy:
         correct += 1
         expected += 1
-        test_data.remove(item)
+        test_data_copy.remove(item)
       else:
         wrong += 1
         expected += 1
@@ -276,9 +277,14 @@ class BasicDiff:
     with open(omr_data,) as f:
       self.test_data = MusicXML_Parser(f.read()).parse()
 
+    self.c, self.w, self.e = 0, 0, 0
+
     for key, value in self.true_data.items():
       if isinstance(value, list):
-        pass
+        temp = compare_list_items(self.true_data[key], self.test_data[key])
+        self.c += temp[0]
+        self.w += temp[1]
+        self.e += temp[2]
       elif isinstance(value, dict):
         print("ok:(", end="")
       else:
