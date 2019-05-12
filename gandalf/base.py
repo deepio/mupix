@@ -1,7 +1,7 @@
 from collections import defaultdict, namedtuple
 from io import StringIO, BytesIO
 import json
-from os import system
+import os
 
 import attr
 from lxml import etree
@@ -269,8 +269,6 @@ def compare_list_items(true_data: list, test_data: list) -> tuple:
 
 class BasicDiff:
   def __init__(self, ground_truth, omr_data):
-    import os
-    os.system("clear")
     print("Welcome to the mega parser :)")
 
     with open(ground_truth,) as f:
@@ -295,7 +293,7 @@ class BasicDiff:
 
 
 def main():
-  system("clear")
+  os.system("clear")
 
   test_file = "../tests/xml/test.xml"
   schema = "../tests/xml/musicxml.xsd" # noqa F841
