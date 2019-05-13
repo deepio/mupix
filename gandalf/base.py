@@ -7,6 +7,7 @@ import attr
 from lxml import etree
 
 from gandalf.extra import boundary_search
+from gandalf.extra import __return_root_path
 
 
 @attr.s
@@ -301,8 +302,9 @@ class BasicDiff:
 def main():
   os.system("clear")
 
-  test_file = "../tests/xml/test.xml"
-  schema = "../tests/xml/musicxml.xsd" # noqa F841
+  ROOT_DIR = __return_root_path() + "/tests/xml"
+  test_file = ROOT_DIR + "/test.xml"
+  schema = ROOT_DIR + "/musicxml.xsd" # noqa F841
 
   # Examine Parsing
   # Check if parsing works
