@@ -123,23 +123,42 @@ def handle_lists(self, dictionary_term, key):
         self.output.__setattr__(pattern, temp.get(pattern) + len(self.true_data[self.next_measure_path]))
 
 
+def handle_dicts(self, key):
 
-  if isinstance(ground_truth_list, list) and isinstance(omr_data_list, list):
-    if ground_truth_list == [] and omr_data_list == []:
-      return 0, 0, 0
+  temp = attr.asdict(self.output)
 
-    for item in ground_truth_list:
-      if item in omr_data_list:
-        correct += 1
-        expected += 1
-        omr_data_list.remove(item)
+  try:
+    # Compare .step.rest vs .step.rest
+    if self.test_data[key]:
+      self.output.correct_step += 1
+    else:
+      self.output.wrong_step += 1
+    self.output.expected_step += 1
+
+    # Individual keys and values inside the step.Note dictionary
+    for k, v in self.true_data[self.next_measure_path].items():
+      if k not in self.symbol_classes:
+        self.symbol_classes.append(k)
+
+      # Count each item inside the note dictionary
+      for pattern in temp:
+        if k in pattern and "expected" in pattern:
+          self.output.__setattr__(pattern, temp.get(pattern) + 1)
+
+      # Evaluate correct/wrong
+      if self.true_data[self.next_measure_path][k] == self.test_data[self.next_measure_path][k]:
+        for pattern in temp:
+          if k in pattern and "correct" in pattern:
+            self.output.__setattr__(pattern, temp.get(pattern) + 1)
       else:
-        wrong += 1
-        expected += 1
+        for pattern in temp:
+          if k in pattern and "wrong" in pattern:
+            self.output.__setattr__(pattern, temp.get(pattern) + 1)
 
-    return correct, wrong, expected
-  else:
-    raise Exception(f"Something went wrong\nGroundTruth type: {type(ground_truth_list)}\nOMRData type: {type(omr_data_list)}") # noqa E501
+  except KeyError:
+    for pattern in temp:
+      if k in pattern and "wrong" in pattern:
+        self.output.__setattr__(pattern, temp.get(pattern) + 1)
 
 
 def diff(ground_truth, omr_output):
