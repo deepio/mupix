@@ -2,7 +2,6 @@ import click
 
 from gandalf.application import Parse
 from gandalf.base import BasicDiff
-from gandalf.extra import handle_backups
 
 
 @click.group()
@@ -37,7 +36,7 @@ def compare_all():
 def read(filename):
   """
   """
-  print(Parse(handle_backups(filename)))
+  print(Parse(filename))
 
 
 if __name__ == "__main__":
