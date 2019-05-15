@@ -1,5 +1,6 @@
 import attr
 
+from gandalf.extra import compare_list_items
 from gandalf.extra import note_and_measure_offset
 from gandalf.extra import track_moved_notes
 # from gandalf.extra import track_moved_measures
@@ -47,7 +48,43 @@ class SzochResults:
   expected_key_signature = attr.ib(init=False, default=0, type=int,)
 
 
-def compare_list_items(ground_truth_list: list, omr_data_list: list) -> tuple:
+def handle_str(self, item, key, true_data, test_data):
+  if item not in self.symbol_classes:
+    self.symbol_classes.append(item)
+  try:
+    temp = attr.asdict(self.output)
+    if true_data[self.next_note_path] == test_data[key]:
+      # output.correct_X += 1
+      for pattern in temp:
+        if item in pattern and "correct" in temp:
+          self.output.__setattr__(pattern, temp.get(pattern) + 1)
+    else:
+      temp_note_path = note_and_measure_offset(key, self.measure_offset, self.note_offset + 1)
+      if true_data[temp_note_path] == test_data[key] and temp_note_path not in self.moved_paths:
+        # output.correct_X += 1
+        # temp = attr.asdict(self.output)
+        for pattern in temp:
+          if item in pattern and "correct" in temp:
+            self.output.__setattr__(pattern, temp.get(pattern) + 1)
+        self.moved_paths.append(track_moved_notes(temp_note_path))
+        self.note_offset += 1
+        self.next_note_path = note_and_measure_offset(key, self.measure_offset, self.note_offset + 1)
+      # output.wrong_X += 1
+      # temp = attr.asdict(self.output)
+      for pattern in temp:
+        if item in pattern and "wrong" in temp:
+          self.output.__setattr__(pattern, temp.get(pattern) + 1)
+  except KeyError:
+    # output.wrong_X += 1
+    for pattern in temp:
+      if (item in pattern and "wrong" in temp):
+        self.output.__setattr__(pattern, temp.get(pattern) + 1)
+  # output.expected_X += 1
+  for pattern in temp:
+      if (item in pattern and "expected" in temp):
+        self.output.__setattr__(pattern, temp.get(pattern) + 1)
+
+
   """
   Count and compare two list for items.
     - All items from the ground truths that are in the omr data list.
