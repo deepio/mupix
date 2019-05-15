@@ -217,3 +217,13 @@ class SzochDiff(BasicDiff):
   def __str__(self):
     import json
     return json.dumps(attr.asdict(self.output), indent=2)
+
+
+if __name__ == "__main__":
+  import os
+  from gandalf.extra import __return_root_path
+  os.system("clear")
+  ROOT_DIR = __return_root_path() + "/tests/xml"
+  test_file = ROOT_DIR + "/test.xml"
+
+  print(SzochDiff(test_file, test_file))
