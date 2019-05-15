@@ -151,6 +151,9 @@ class MusicXML_Parser:
     self.output = self.parse()
     return json.dumps(self.output, default=lambda o: o.__dict__, sort_keys=True, indent=2)
 
+  def __repr__(self):
+    return dict(self.prase())
+
   def __getitem__(self, item):
     return self.output[item]
 
