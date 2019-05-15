@@ -85,21 +85,44 @@ def handle_str(self, item, key, true_data, test_data):
         self.output.__setattr__(pattern, temp.get(pattern) + 1)
 
 
+def handle_lists(self, dictionary_term, key):
   """
-  Count and compare two list for items.
-    - All items from the ground truths that are in the omr data list.
-    - All extra items that are in the omr data, but not in the ground truth.
+  This function will compare two lists and count the number of correct, expected, or wrong data.
+  If a correct relation was not found between test_data and true_data, the next measure or note
+  (depending on the type of list item) will be checked. If the following measure or note has
+  correct data for the specific entry, then correct and wrong receive +1, while expected receives +2.
 
   Args:
-    ground_truth_list (list): List of values from the ground truth MusicXML dict
-                              taken at a specific key in the dictionary.
+    self (self object): Receive all items particular to a specific class.
 
-    omr_data_list (list): List of values from the omr data MusicXML dict taken
-                          at a specific key in the dictionary.
+    dictionary_term (string): One of the dictionary keys, like "clef" or "time_signature".
 
-  Returns (tuple): correct, wrong, expected
+    key (string): Full path in parsed musicXML dictionary for the current item to be evaluated.
+
+  Returns:
+    (None)
   """
-  correct, wrong, expected = (0, 0, 0)
+  if dictionary_term not in self.symbol_classes:
+    self.symbol_classes.append(dictionary_term)
+
+  temp = attr.asdict(self.output)
+  try:
+    c, w, e = compare_list_items(self.true_data[self.next_measure_path], self.test_data[key])
+    for pattern in temp:
+      if dictionary_term in pattern and "correct" in pattern:
+        self.output.__setattr__(pattern, temp.get(pattern) + c)
+      elif dictionary_term in pattern and "wrong" in pattern:
+        self.output.__setattr__(pattern, temp.get(pattern) + w)
+      elif dictionary_term in pattern and "expected" in pattern:
+        self.output.__setattr__(pattern, temp.get(pattern) + e)
+  except KeyError:
+    for pattern in temp:
+      if dictionary_term in pattern and "wrong" in pattern:
+        self.output.__setattr__(pattern, temp.get(pattern) + len(self.true_data[self.next_measure_path]))
+      elif dictionary_term in pattern and "expected" in pattern:
+        self.output.__setattr__(pattern, temp.get(pattern) + len(self.true_data[self.next_measure_path]))
+
+
 
   if isinstance(ground_truth_list, list) and isinstance(omr_data_list, list):
     if ground_truth_list == [] and omr_data_list == []:
