@@ -7,6 +7,8 @@ import attr
 from lxml import etree
 
 from gandalf.extra import boundary_search
+from gandalf.extra import compare_list_items
+from gandalf.extra import compare_dict_items
 from gandalf.extra import __return_root_path
 
 
@@ -105,6 +107,37 @@ class ValidateXML:
   def isvalid(self):
     status = self.xml_schema.validate(etree.parse(self.test))
     return self.output(status, self.schema_filepath, self.testxml_filepath)
+
+
+class BasicDiff:
+  def __init__(self, ground_truth, omr_data):
+    print("Welcome to the mega parser :)")
+
+    with open(ground_truth,) as f:
+      self.true_data = MusicXML_Parser(f.read()).parse()
+    with open(omr_data,) as f:
+      self.test_data = MusicXML_Parser(f.read()).parse()
+    self.c, self.w, self.e = 0, 0, 0
+    self.compare()
+
+  def compare(self):
+    for key, value in self.true_data.items():
+      if isinstance(value, list):
+        temp = compare_list_items(self.true_data[key], self.test_data[key])
+        self.c += temp[0]
+        self.w += temp[1]
+        self.e += temp[2]
+      elif isinstance(value, dict):
+        temp = compare_dict_items(self.true_data[key], self.test_data[key])
+        self.c += temp[0]
+        self.w += temp[1]
+        self.e += temp[2]
+      else:
+        raise Exception(f"Something went very wrong, check the value: {value} and key: {key}")
+
+  def __str__(self):
+    message = f"Correct: {self.c}\nWrong: {self.w}\nTotal: {self.e}"
+    return message
 
 
 class MusicXML_Parser:
@@ -231,40 +264,6 @@ class MusicXML_Parser:
             output[f"part_{part_number}.measure_{measure_number}.note_{note_number}.step.{self.get_step(note_data)}"]["articulation"] = self.get_articulations(note_data) # noqa E501
 
     return output
-
-
-class BasicDiff:
-  def __init__(self, ground_truth, omr_data):
-    print("Welcome to the mega parser :)")
-
-    with open(ground_truth,) as f:
-      self.true_data = MusicXML_Parser(f.read()).parse()
-    with open(omr_data,) as f:
-      self.test_data = MusicXML_Parser(f.read()).parse()
-    self.c, self.w, self.e = 0, 0, 0
-    self.compare()
-
-  def compare(self):
-    for key, value in self.true_data.items():
-      if isinstance(value, list):
-        temp = compare_list_items(self.true_data[key], self.test_data[key])
-        self.c += temp[0]
-        self.w += temp[1]
-        self.e += temp[2]
-      elif isinstance(value, dict):
-        temp = compare_dict_items(self.true_data[key], self.test_data[key])
-        self.c += temp[0]
-        self.w += temp[1]
-        self.e += temp[2]
-      else:
-        raise Exception(f"Something went very wrong, check the value: {value} and key: {key}")
-
-  def __str__(self):
-    hmm = 0
-    for key, value in self.true_data.items():
-      if self.true_data[key] == self.test_data[key]:
-        hmm += 1
-    return "\n" + str(hmm)
 
 
 def main():
