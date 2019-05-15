@@ -166,10 +166,10 @@ class MusicXML_Parser:
       output[instrument] = boundary_search("<part id=\"", "</part>", self.file_obj)[measure_number]
     return output
 
-  def get_clefs(self, measure_obj,):
+  def get_clefs(self, measure_obj,) -> list:
     return boundary_search("<sign>", "</sign>", measure_obj)
 
-  def get_times(self, measure_obj):
+  def get_times(self, measure_obj) -> list:
     time = []
     numerator = boundary_search("<beats>", "</beats>", measure_obj)
     denominator = boundary_search("<beat-type>", "</beat-type>", measure_obj)
@@ -183,19 +183,19 @@ class MusicXML_Parser:
   def get_keys(self, measure_obj):
     return boundary_search("<key", "</key>", measure_obj)
 
-  def get_key_fifths(self, measure_obj):
+  def get_key_fifths(self, measure_obj) -> list:
     fifths = []
     for item in self.get_keys(measure_obj):
       fifths.append("".join(boundary_search("<fifths>", "</fifths>", item)))
     return fifths
 
-  def get_key_modes(self, measure_obj):
+  def get_key_modes(self, measure_obj) -> list:
     modes = []
     for item in self.get_keys(measure_obj):
       modes.append("".join(boundary_search("<mode>", "</mode>", item)))
     return modes
 
-  def get_step(self, note_obj):
+  def get_step(self, note_obj) -> str:
     note = "".join(boundary_search("<pitch>", "</pitch>", note_obj))
     step = "".join(boundary_search("<step>", "</step>", note))
     octave = "".join(boundary_search("<octave>", "</octave>", note))
@@ -204,7 +204,7 @@ class MusicXML_Parser:
       note = "rest"
     return note
 
-  def get_accidental(self, note_obj):
+  def get_accidental(self, note_obj) -> str:
     accidental = "".join(boundary_search("<alter>", "</alter>", note_obj))
     if accidental == "0":
       return "natural"
@@ -217,7 +217,7 @@ class MusicXML_Parser:
     else:
       return "unexpected"
 
-  def get_duration(self, note_obj):
+  def get_duration(self, note_obj) -> str:
     duration = "".join(boundary_search("<type>", "</type>", note_obj))
     tuplet = "".join(boundary_search("<actual-notes>", "</actual-notes>", note_obj))
     if tuplet == "":
@@ -225,10 +225,10 @@ class MusicXML_Parser:
     else:
       return f"{duration}-tuplet({tuplet})"
 
-  def get_stem_direction(self, note_obj):
+  def get_stem_direction(self, note_obj) -> str:
     return "".join(boundary_search("<stem>", "</stem>", note_obj))
 
-  def get_articulations(self, note_obj):
+  def get_articulations(self, note_obj) -> list:
     articulation = "".join(boundary_search("<articulations", "</articulations>", note_obj))
     return [art for art in boundary_search("<", " />", articulation)]
 
