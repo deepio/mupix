@@ -84,6 +84,42 @@ def note_and_measure_offset(path: str, measure_offset: int, note_offset: int):
   return path
 
 
+def compare_list_items(true_data: list, test_data: list) -> tuple:
+  """
+  Count and compare two list for items.
+    - All items from the ground truths that are in the omr data list.
+    - All extra items that are in the omr data, but not in the ground truth.
+
+  Args:
+    true_data (list): List of values from the ground truth MusicXML dict
+                      taken at a specific key in the dictionary.
+
+    test_data (list): List of values from the omr data MusicXML dict taken
+                      at a specific key in the dictionary.
+
+  Returns (tuple): correct, wrong, expected
+  """
+  correct, wrong, expected = (0, 0, 0)
+  test_data_copy = test_data.copy()
+
+  if isinstance(true_data, list) and isinstance(test_data_copy, list):
+    if true_data == [] and test_data_copy == []:
+      return 0, 0, 0
+
+    for item in true_data:
+      if item in test_data_copy:
+        correct += 1
+        expected += 1
+        test_data_copy.remove(item)
+      else:
+        wrong += 1
+        expected += 1
+
+    return correct, wrong, expected
+  else:
+    raise Exception(f"Something went wrong\nGroundTruth type: {type(true_data)}\nOMRData type: {type(test_data_copy)}")
+
+
 def track_moved_notes(path: str) -> str:
   path_list = path.split(".")
   return f"{path_list[0]}.{path_list[1]}.{path_list[2]}"
