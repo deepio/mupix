@@ -4,17 +4,15 @@ from gandalf.base import BasicDiff
 from gandalf.extra import compare_list_items
 from gandalf.extra import note_and_measure_offset
 from gandalf.extra import track_moved_notes
-# from gandalf.extra import track_moved_measures
 
 
 @attr.s
 class SzochResults:
-  All_Symbols = attr.ib(init=False, default=0, type=int,)
   Symbol_Classes = attr.ib(init=False, default=0, type=int,)
-  Weights = attr.ib(type=list,)
-
   Correctly_Identified = attr.ib(init=False, default=0, type=int,)
   Wrongly_Identified = attr.ib(init=False, default=0, type=int,)
+  All_Symbols = attr.ib(init=False, default=0, type=int,)
+  # Weights = attr.ib(type=list,)
 
   correct_step = attr.ib(init=False, default=0, type=int,)
   wrong_step = attr.ib(init=False, default=0, type=int,)
