@@ -1,45 +1,20 @@
 Gandalf Parser:
+  ☐ Multi-compare:
+    ☐ Flesh out conceptually what multi-compare should do
   ☐ Testing Framework:
-  ☐ Basic Diffing Class:
-    ☐ Compare lists to lists
-    ☐ Compare dicts to dicts
-Pivot to testing framework:
-  Create test sheets for:
-    ☐ flipped pages
-    ☐ number of voices
-    ☐ number of instruments
-    ☐ number of measures
-    ☐ number of clefs
-    ☐ number of notes?
-    ☐ number of dynamics
-    ☐ type of dynamics
-    ☐ type of note durations
-    ☐ stem direction
-    ☐ articulations
-    ☐ part continuation with multiple
-    ☐ instrument names
-    ☐ tempo markings
-    ☐ measure numbers
-    ☐ measure markings (repeat bars)
-    ☐ part following
-  Create test Cases for:
-    ☐ flipped pages
-    ☐ number of voices
-    ☐ number of instruments
-    ☐ number of measures
-    ☐ number of clefs
-    ☐ number of notes?
-    ☐ number of dynamics
-    ☐ type of dynamics
-    ☐ type of note durations
-    ☐ stem direction
-    ☐ articulations
-    ☐ part continuation with multiple
-    ☐ instrument names
-    ☐ tempo markings
-    ☐ measure numbers
-    ☐ measure markings (repeat bars)
+    ☐ Create Unittests and xml files for Sibelius
+    ☐ Create Unittests and xml files for PhotoScore
+    ☐ Create Unittests and xml files for SmartScore
+    ☐ Create Unittests and xml files for GuitarPro
+    ☐ Create Unittests and xml files for ScoreMaker
+    ☐ Create Unittests and xml files for Finale
+    ☐ Create Unittests for checking if Szoch's measure up works
+    ☐ Create Unittests for checking if Szoch's note up works
+
 Archive:
+  ✔ Basic Diffing Class: @done(19-05-15 14:01) @project(Gandalf Parser)
+    ✔ Compare lists to lists @done(19-05-15 13:58) @project(Gandalf Parser)
+    ✔ Compare dicts to dicts @done(19-05-15 13:58) @project(Gandalf Parser)
   ✔ Create basic testing of parsing through CLI @started(19-05-09 15:50) @done(19-05-09 15:50) @lasted(23s) @project(Gandalf Parser)
   ✔ Create basic testing of diffing through CLI @started(19-05-09 15:50) @done(19-05-09 16:23) @lasted(33m14s) @project(Gandalf Parser)
   ✘ Compare strings to strings @cancelled(19-05-09 16:33) @project(Gandalf Parser)
