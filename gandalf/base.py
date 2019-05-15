@@ -233,40 +233,6 @@ class MusicXML_Parser:
     return output
 
 
-def compare_dict_items(true_data: dict, test_data: dict) -> tuple:
-  """
-  Count and compare two dictionaries for item simularities.
-
-  Args:
-    true_data (dict): Key-Value pairs from the ground truth MusicXML dict
-                      taken at a specific key in the dictionary.
-
-    test_data (dict): Key-Value pairs from the ground truth MusicXML dict
-                      taken at a specific key in the dictionary.
-
-  Returns (array): correct, wrong, expected
-  """
-  correct, wrong, expected = 0, 0, 0
-
-  try:
-    for key, value in true_data.items():
-      expected += 1
-
-      if true_data[key] == test_data[key]:
-        correct += 1
-      else:
-        wrong += 1
-
-  except ValueError:
-    message  = f"Something wrong happend with: {true_data}, or {test_data}.\n"
-    message += f"\tCheck TrueData type: {type(true_data)}\n"
-    message += f"\tCheck TestData type: {type(test_data)}\n"
-    message += f"\tCheck Value Key: {key}"
-    raise(message)
-  else:
-    return [correct, wrong, expected]
-
-
 class BasicDiff:
   def __init__(self, ground_truth, omr_data):
     print("Welcome to the mega parser :)")
