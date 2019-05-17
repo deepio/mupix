@@ -103,3 +103,4 @@ venv.bak/
 # mypy
 .mypy_cache/
 pip-wheel-metadata/
+.DS_Store
