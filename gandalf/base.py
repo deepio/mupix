@@ -111,8 +111,6 @@ class ValidateXML:
 
 class BasicDiff:
   def __init__(self, ground_truth, omr_data):
-    print("Welcome to the mega parser :)")
-
     with open(ground_truth,) as f:
       self.true_data = MusicXML_Parser(f.read()).parse()
     with open(omr_data,) as f:
@@ -271,7 +269,7 @@ class MusicXML_Parser:
 
 def main():
   os.system("clear")
-
+  print("Welcome to the mega parser :)")
   ROOT_DIR = __return_root_path() + "/tests/xml"
   test_file = ROOT_DIR + "/test.xml"
   schema = ROOT_DIR + "/musicxml.xsd" # noqa F841
