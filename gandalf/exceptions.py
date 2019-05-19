@@ -4,3 +4,11 @@ class FileIncompatible(Exception):
   provide a valid musicXML file.
   """
   pass
+
+
+class CheckNextNoteException(Exception):
+  """
+  Exception raised when about to check the next note to see if one was
+  incorrectly inserted into the omr output.
+  """
+  pass
