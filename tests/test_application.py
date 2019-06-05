@@ -1,5 +1,6 @@
 import hashlib
 
+from gandalf.application import Compare
 from gandalf.application import parse_xml
 from gandalf.extra import __return_root_path
 
@@ -29,3 +30,10 @@ def test_parse_xml():
 
   assert m.digest() == correct_hash
 
+
+def test_Compare():
+  output = Compare(
+    ROOT_DIR + "/compare/ms_F_Lydian_quarter_true.xml",
+    ROOT_DIR + "/compare/ms_F_Lydian_quarter_test.xml",
+  )
+  assert output.total_right == 30 and output.total_wrong == 2

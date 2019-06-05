@@ -52,3 +52,57 @@ def parse_xml(filepath):
   return note_data, meter_data, key_data
 
 
+class Compare:
+  def __init__(self, true_data, test_data):
+    self.true_data = parse_xml(true_data)
+    self.test_data = parse_xml(test_data)
+    self.compare()
+    self.calculate_total()
+
+  def __str__(self):
+    return str(Result(self.total_right, self.total_wrong))
+
+  def __repr__(self):
+    return Result(self.total_right, self.total_wrong)
+
+  def compare(self):
+    self.pitch = Result()
+    self.octave = Result()
+    self.accidental = Result()
+    self.stem_direction = Result()
+    self.note_parameter_list = ["pitch", "octave", "accidental", "stem_direction"]
+
+    for self.key, self.value in self.true_data[0].items():
+      self.compare_dicts()
+
+  def compare_dicts(self):
+    true_object = self.value
+    test_object = self.test_data[0][self.key]
+
+    # Fancy way of doing the exact same comparison for all parameters. It just saves from doing the
+    # same things for every parameter in the list.
+    # Why? Its to avoid code duplication, but it has the expense of being a little to read at first sight.
+    #   if pitch,
+    #   elif pitch,
+
+    #   if octave,
+    #   elif octave,
+
+    #   if accidental,
+    #   elif accidental,
+
+    #   if stem_direction
+    #   elif stem_direction
+    for parameter in self.note_parameter_list:
+      if true_object.__getattribute__(parameter) == test_object.__getattribute__(parameter):
+        self.__setattr__(parameter, Result(self.__getattribute__(parameter).right + 1, self.__getattribute__(parameter).wrong))  # noqa
+      elif true_object.__getattribute__(parameter) != test_object.__getattribute__(parameter):
+        self.__setattr__(parameter, Result(self.__getattribute__(parameter).right, self.__getattribute__(parameter).wrong + 1))  # noqa
+
+  def calculate_total(self):
+    self.total_right, self.total_wrong = 0, 0
+
+    # Fancy way to cycle through parameters instead of explicitly going through each
+    for parameter in self.note_parameter_list:
+      self.total_right += self.__getattribute__(parameter).right
+      self.total_wrong += self.__getattribute__(parameter).wrong
