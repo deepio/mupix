@@ -31,3 +31,6 @@ class KeySignature:
 
 
 @attr.s
+class Result:
+  right = attr.ib(type=int, default=0)
+  wrong = attr.ib(type=int, default=0)
