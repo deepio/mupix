@@ -18,24 +18,6 @@ def test_validate_xml():
   assert ValidateXML(schema, test_file).isvalid()
 
 
-def test_musicxml_parser():
-  global test_file
-
-  with open(test_file) as f:
-    data = MusicXML_Parser(f.read())
-
-  def test_vendor(data):
-    """
-    Test if the software distributor is parsed correctly.
-    """
-    assert data.get_vendor() == "Sibelius 7.1.3"
-
-  def test_instruments(data):
-    """
-    Test if the part names are parsed correctly.
-    """
-    assert data.get_instruments() == ['P1-I1', 'P2-I1', 'P3-I1', 'P4-I1', 'P5-I1', 'P6-I1', 'P7-I1']
-
   def test_parts(data):
     """
     Test if the entire part data is parsed correctly.
@@ -46,10 +28,3 @@ def test_musicxml_parser():
     correct_hash += b"\x13\xa8\xe4\xb8\xc2(nP\xd0\xbcz@\xd9\xcd\xeb\xb4\x0f\xec?\xfb\xf9\xb9th32PX\xca\x02\x83"
     assert m.digest() == correct_hash
 
-  test_vendor(data)
-  test_instruments(data)
-  test_parts(data)
-
-
-if __name__ == "__main__":
-  test_musicxml_parser()
