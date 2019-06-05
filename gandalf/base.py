@@ -10,7 +10,10 @@ class MusicalEvent:
 class NoteObject(MusicalEvent):
   pitch = attr.ib(type=str)
   octave = attr.ib(type=int)
-  accidental = attr.ib(type=str, validator=attr.validators.in_(["natural", "#", "b", ""]))
+  accidental = attr.ib(
+    type=str,
+    validator=attr.validators.in_(["-", "--", "#", "##", ""])
+  )
 
 
 @attr.s
