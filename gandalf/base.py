@@ -14,6 +14,10 @@ class NoteObject(MusicalEvent):
     type=str,
     validator=attr.validators.in_(["-", "--", "#", "##", ""])
   )
+  stem_direction = attr.ib(
+    type=str,
+    validator=attr.validators.in_(["up", "down", "noStem"])
+  )
 
 
 @attr.s
