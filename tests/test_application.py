@@ -1,12 +1,16 @@
 import hashlib
 
+import pytest
+
 from gandalf.application import Compare
 from gandalf.application import parse_xml
+from gandalf.application import validate_xml
 from gandalf.extra import __return_root_path
 
 # Test Files path
 ROOT_DIR = __return_root_path() + "/tests/xml"
 schema = ROOT_DIR + "/musicxml.xsd"
+test_file = ROOT_DIR + "/compare/ms_F_Lydian_quarter_test.xml"
 
 
 def test_parse_xml():
@@ -29,6 +33,11 @@ def test_parse_xml():
   correct_hash += b"\xb8\x93\xb5\x14FH\x10\xb3\xe1"
 
   assert m.digest() == correct_hash
+
+
+@pytest.mark.slow
+def test_validate_xml():
+  assert validate_xml(test_file)
 
 
 def test_Compare():
