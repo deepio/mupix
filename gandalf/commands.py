@@ -1,6 +1,7 @@
 import click
 
 from gandalf.application import parse_xml
+from gandalf.application import validate_xml
 from gandalf.application import Compare
 
 
@@ -42,3 +43,10 @@ def read(file_path):
 
 if __name__ == "__main__":
   test_file = "../tests/xml/test.xml"
+@cli.command("validate", short_help="Check if MusicXML file is valid.")
+@click.argument("file_path", nargs=-1)
+def validate(file_path):
+  """
+  """
+  for f in file_path:
+    print(f"{f}: {validate_xml(f)}")
