@@ -1,3 +1,6 @@
+from io import StringIO, BytesIO
+
+from lxml import etree
 import music21
 
 from gandalf.base import TimeSignature
@@ -5,6 +8,7 @@ from gandalf.base import KeySignature
 from gandalf.base import NoteObject
 from gandalf.base import Result
 
+from gandalf.extra import __return_root_path
 from gandalf.extra import extract_accidental
 
 
@@ -50,6 +54,28 @@ def parse_xml(filepath):
           )
 
   return note_data, meter_data, key_data
+
+
+def validate_xml(musicxml_filepath):
+  """
+  Return if the provided musicxml file is valid against the current musicxml schema.
+
+  Args:
+    schema_filepath (string): a filepath to the musicxml schema.
+
+    musicxml_filepath (string): a filepath to the musicxml file to be validated.
+
+  Returns:
+    bool
+  """
+  schema_filepath = __return_root_path() + "/tests/xml/musicxml.xsd"
+  with open(schema_filepath, "r") as schema:
+    schema = StringIO(schema.read())
+  with open(musicxml_filepath, "rb") as xml_file:
+    test = BytesIO(xml_file.read())
+
+  xml_schema = etree.XMLSchema(etree.parse(schema_filepath))
+  return xml_schema.validate(etree.parse(test))
 
 
 class Compare:
