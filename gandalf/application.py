@@ -126,9 +126,10 @@ class Compare:
         self.__setattr__(parameter, Result(self.__getattribute__(parameter).right, self.__getattribute__(parameter).wrong + 1))  # noqa
 
   def calculate_total(self):
+    """
+    Fancy way to cycle through parameters instead of explicitly going through each
+    """
     self.total_right, self.total_wrong = 0, 0
-
-    # Fancy way to cycle through parameters instead of explicitly going through each
     for parameter in self.note_parameter_list:
       self.total_right += self.__getattribute__(parameter).right
       self.total_wrong += self.__getattribute__(parameter).wrong

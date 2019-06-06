@@ -17,4 +17,3 @@ def extract_accidental(note):
   else:
     accidental = ""
   return accidental
-

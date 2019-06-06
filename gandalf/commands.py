@@ -41,8 +41,6 @@ def read(file_path):
     print(f"{parse_xml(f)}\n")
 
 
-if __name__ == "__main__":
-  test_file = "../tests/xml/test.xml"
 @cli.command("validate", short_help="Check if MusicXML file is valid.")
 @click.argument("file_path", nargs=-1)
 def validate(file_path):
