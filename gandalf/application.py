@@ -32,14 +32,6 @@ def parse_xml(filepath):
   for part_index, part in enumerate(file_object.recurse().getElementsByClass("Part")):
     # And all measures in the part
     for measure_index, measure in enumerate(part.recurse().getElementsByClass("Measure")):
-
-      for meter_index, meter in enumerate(measure.recurse().getElementsByClass("TimeSignature")):
-        meter_data[f"{part_index}.{measure_index}.{meter_index}"] = TimeSignature(meter._getNumerator(), meter._getDenominator())  # noqa
-
-      for key_index, key in enumerate(measure.recurse().getElementsByClass("KeySignature")):
-        key = str(key.asKey()).split(" ")
-        key_data[f"{part_index}.{measure_index}.{key_index}"] = KeySignature(key[0], key[1])
-
       # Grab all Musical events
       for note_index, note in enumerate(measure.recurse().getElementsByClass(["Note", "Rest"])):
         if note.isRest:
@@ -55,6 +47,33 @@ def parse_xml(filepath):
             note.stemDirection,
             extract_beam(note),
           )
+
+      for meter_index, meter in enumerate(measure.recurse().getElementsByClass("TimeSignature")):
+        # IF: the list is empty, add the first element
+        if len(list(meter_data.items())) == 0:
+          meter_data[f"{part_index}.{measure_index}.{meter_index}"] = TimeSignature(meter._getNumerator(), meter._getDenominator())  # noqa
+        
+        # IF: the item is the same as the last item added, don't ad an additional item.
+        # ELSE: Item changed, add it to the list
+        if list(meter_data.items())[-1][1] == TimeSignature(meter._getNumerator(), meter._getDenominator()):
+          pass
+        else:
+          meter_data[f"{part_index}.{measure_index}.{meter_index}"] = TimeSignature(meter._getNumerator(), meter._getDenominator())  # noqa
+
+      for key_index, key in enumerate(measure.recurse().getElementsByClass("KeySignature")):
+        key = str(key.asKey()).split(" ")
+
+        # IF: the list is empty, add the first element
+        if len(list(key_data.items())) == 0:
+          key_data[f"{part_index}.{measure_index}.{key_index}"] = KeySignature(key[0], key[1])
+
+        # IF: the item is the same as the last item added, don't ad an additional item.
+        # ELSE: Item changed, add it to the list
+        if list(key_data.items())[-1][1] == KeySignature(key[0], key[1]):
+          pass
+        else:
+          key_data[f"{part_index}.{measure_index}.{key_index}"] = KeySignature(key[0], key[1])
+
 
   return note_data, meter_data, key_data
 
