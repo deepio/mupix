@@ -25,13 +25,6 @@ def compare(true_data, test_data):
   print(Compare(true_data, test_data))
 
 
-@cli.command("compare-all", short_help="Mass compare all the files.")
-def compare_all():
-  """
-  """
-  print("Mass Compare files!")
-
-
 @cli.command("read", short_help="Show the parsed musicxml tree of a single file")
 @click.argument("file_path", nargs=-1)
 def read(file_path):
