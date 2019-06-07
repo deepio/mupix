@@ -26,7 +26,7 @@ class NoteObject(MusicalEvent):
 
 @attr.s
 class RestObject(MusicalEvent):
-  voice = attr.ib(type=list)
+  pass
 
 
 @attr.s

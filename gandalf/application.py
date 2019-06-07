@@ -6,6 +6,7 @@ import music21
 from gandalf.base import TimeSignature
 from gandalf.base import KeySignature
 from gandalf.base import NoteObject
+from gandalf.base import RestObject
 from gandalf.base import Result
 
 from gandalf.extra import __return_root_path
@@ -42,7 +43,8 @@ def parse_xml(filepath):
       # Grab all Musical events
       for note_index, note in enumerate(measure.recurse().getElementsByClass(["Note", "Rest"])):
         if note.isRest:
-            pass
+          # note_data[f"{part_index}.{measure_index}.{note_index}"] = \
+          note_data[f"{part_index}.{measure_index}.{note_index}"] = RestObject(note.quarterLength)
         elif note.isNote:
           note_data[f"{part_index}.{measure_index}.{note_index}"] = \
           NoteObject(
