@@ -18,6 +18,10 @@ class NoteObject(MusicalEvent):
     type=str,
     validator=attr.validators.in_(["up", "down", "noStem"])
   )
+  beam = attr.ib(
+    type=str,
+    validator=attr.validators.in_(["nobeam", "start", "stop", "continue"])
+  )
 
 
 @attr.s

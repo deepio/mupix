@@ -17,3 +17,11 @@ def extract_accidental(note):
   else:
     accidental = ""
   return accidental
+
+
+def extract_beam(note):
+  try:
+    beam = note.beams.getTypes()[0]
+  except IndexError:
+    beam = "nobeam"
+  return beam

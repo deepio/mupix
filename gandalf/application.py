@@ -10,6 +10,7 @@ from gandalf.base import Result
 
 from gandalf.extra import __return_root_path
 from gandalf.extra import extract_accidental
+from gandalf.extra import extract_beam
 
 
 def parse_xml(filepath):
@@ -43,14 +44,14 @@ def parse_xml(filepath):
         if note.isRest:
             pass
         elif note.isNote:
-          note_data[
-            f"{part_index}.{measure_index}.{note_index}"
-          ] = NoteObject(
-            "eighth",
+          note_data[f"{part_index}.{measure_index}.{note_index}"] = \
+          NoteObject(
+            note.quarterLength,
             note.step,
             note.octave,
             extract_accidental(note),
             note.stemDirection,
+            extract_beam(note),
           )
 
   return note_data, meter_data, key_data
