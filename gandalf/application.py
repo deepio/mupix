@@ -35,7 +35,6 @@ def parse_xml(filepath):
       # Grab all Musical events
       for note_index, note in enumerate(measure.recurse().getElementsByClass(["Note", "Rest"])):
         if note.isRest:
-          # note_data[f"{part_index}.{measure_index}.{note_index}"] = \
           note_data[f"{part_index}.{measure_index}.{note_index}"] = RestObject(note.quarterLength)
         elif note.isNote:
           note_data[f"{part_index}.{measure_index}.{note_index}"] = \
@@ -52,7 +51,7 @@ def parse_xml(filepath):
         # IF: the list is empty, add the first element
         if len(list(meter_data.items())) == 0:
           meter_data[f"{part_index}.{measure_index}.{meter_index}"] = TimeSignature(meter._getNumerator(), meter._getDenominator())  # noqa
-        
+
         # IF: the item is the same as the last item added, don't ad an additional item.
         # ELSE: Item changed, add it to the list
         if list(meter_data.items())[-1][1] == TimeSignature(meter._getNumerator(), meter._getDenominator()):
@@ -73,7 +72,6 @@ def parse_xml(filepath):
           pass
         else:
           key_data[f"{part_index}.{measure_index}.{key_index}"] = KeySignature(key[0], key[1])
-
 
   return note_data, meter_data, key_data
 
