@@ -1,18 +1,18 @@
-Gandalf Parser:
 ☐ Create skip not test sheet and non-skip for comparison 
 ☐ Multi-compare:
   ☐ Flesh out conceptually what multi-compare should do
 ☐ Testing Framework:
+  ☐ Create Unittests for checking if Szoch's measure up works
+  ☐ Create Unittests for checking if Szoch's note up works
+☐ Workout note voices
+
+Archive:
   ✘ Create Unittests and xml files for Sibelius @cancelled(19-06-05 14:49)
   ✘ Create Unittests and xml files for PhotoScore @cancelled(19-06-05 14:49)
   ✘ Create Unittests and xml files for SmartScore @cancelled(19-06-05 14:49)
   ✘ Create Unittests and xml files for GuitarPro @cancelled(19-06-05 14:49)
   ✘ Create Unittests and xml files for ScoreMaker @cancelled(19-06-05 14:49)
   ✘ Create Unittests and xml files for Finale @cancelled(19-06-05 14:49)
-  ☐ Create Unittests for checking if Szoch's measure up works
-  ☐ Create Unittests for checking if Szoch's note up works
-
-Archive:
 ✔ Basic Diffing Class: @done(19-05-15 14:01) @project(Gandalf Parser)
   ✔ Compare lists to lists @done(19-05-15 13:58) @project(Gandalf Parser)
   ✔ Compare dicts to dicts @done(19-05-15 13:58) @project(Gandalf Parser)
