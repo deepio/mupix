@@ -18,9 +18,9 @@ def parse_xml(filepath):
   """
   Returning all the music21 elements we could be interested in.
   """
-  notes_and_rests = [item for item in music21.converter.parseFile(filepath).flat.notesAndRests]
-  time_signatures = [item for item in music21.converter.parseFile(filepath).flat.getTimeSignatures()]
-  key_signatures = [item for item in music21.converter.parseFile(filepath).flat.getClefs()]
+  notes_and_rests = [item for item in music21.converter.parseFile(filepath).recurse().notesAndRests]
+  time_signatures = [item for item in music21.converter.parseFile(filepath).recurse().getTimeSignatures()]
+  key_signatures = [item for item in music21.converter.parseFile(filepath).recurse().getClefs()]
   return notes_and_rests, time_signatures, key_signatures
 
 
