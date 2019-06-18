@@ -86,16 +86,15 @@ class TimeSignature(Marking):
 
 @attr.s
 class KeySignature(Marking):
-  # key = str(key.asKey()).split(" ")
   step = attr.ib(init=False)
   @step.default
   def _get_step(self):
-    return self.music21_object
+    return self.music21_object.asKey().name.split(" ")[0]
 
-  scale = attr.ib(init=False)
-  @scale.default
-  def _get_scale(self):
-    return self.music21_object
+  mode = attr.ib(init=False)
+  @mode.default
+  def _get_mode(self):
+    return self.music21_object.asKey().name.split(" ")[1]
 
 
 @attr.s

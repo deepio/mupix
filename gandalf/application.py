@@ -19,7 +19,8 @@ def parse_xml(filepath):
   notes = [NoteObject(item) for item in music21.converter.parseFile(filepath).recurse().notes]
   rests = [RestObject(item) for item in music21.converter.parseFile(filepath).recurse().notesAndRests if not item.isNote]
   time_signatures = [TimeSignature(item) for item in music21.converter.parseFile(filepath).recurse().getTimeSignatures()]
-  return notes, rests, time_signatures
+  key_signatures = [KeySignature(item) for item in music21.converter.parseFile(filepath).recurse().getElementsByClass("KeySignature")]
+  return notes, rests, time_signatures, key_signatures
 
 
 def validate_xml(musicxml_filepath):
