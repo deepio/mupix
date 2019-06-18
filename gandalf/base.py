@@ -5,6 +5,16 @@ import attr
 class Marking:
   music21_object = attr.ib()
 
+  measure = attr.ib(init=False)
+  @measure.default
+  def _get_measure(self):
+    return self.music21_object.measureNumber
+
+  onset = attr.ib(init=False,)
+  @onset.default
+  def _get_onset(self):
+    return self.music21_object.offset
+
 
 @attr.s
 class MusicalEvent(Marking):
@@ -20,11 +30,6 @@ class MusicalEvent(Marking):
       return 1
     else:
       return int(self.music21_object.activeSite.id)
-
-  onset = attr.ib(init=False,)
-  @onset.default
-  def _get_onset(self):
-    return self.music21_object.offset
 
   articulation = attr.ib(init=False)
   @articulation.default
