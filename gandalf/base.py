@@ -2,26 +2,68 @@ import attr
 
 
 @attr.s
-class MusicalEvent:
-  duration = attr.ib(type=int)
+class Marking:
+  music21_object = attr.ib()
+
+
+@attr.s
+class MusicalEvent(Marking):
+  duration = attr.ib(init=False, type=int)
+  @duration.default
+  def _get_duration(self):
+    return self.music21_object.quarterLength
+
+  voice = attr.ib(init=False, type=int)
+  @voice.default
+  def _get_voice(self):
+    if isinstance(self.music21_object.activeSite.id, int):
+      return 1
+    else:
+      return int(self.music21_object.activeSite.id)
+
+  onset = attr.ib(init=False,)
+  @onset.default
+  def _get_onset(self):
+    return self.music21_object.offset
+
+  articulation = attr.ib(init=False)
+  @articulation.default
+  def _get_articulation(self):
+    return self.music21_object.articulations
 
 
 @attr.s
 class NoteObject(MusicalEvent):
-  pitch = attr.ib(type=str)
-  octave = attr.ib(type=int)
-  accidental = attr.ib(
-    type=str,
-    validator=attr.validators.in_(["-", "--", "#", "##", ""])
-  )
-  stem_direction = attr.ib(
-    type=str,
-    validator=attr.validators.in_(["up", "down", "noStem"])
-  )
-  beam = attr.ib(
-    type=str,
-    validator=attr.validators.in_(["nobeam", "start", "stop", "continue"])
-  )
+  pitch = attr.ib(init=False)
+  @pitch.default
+  def _get_pitch(self):
+    return self.music21_object.step
+
+  octave = attr.ib(init=False)
+  @octave.default
+  def _get_octave(self):
+    return self.music21_object.octave
+
+  accidental = attr.ib(init=False, type=str)
+  @accidental.default
+  def _get_accidental(self):
+    note = self.music21_object
+    if len(note.name) > 1:
+      return note.name[1:]
+    else:
+      return ""
+
+  stem_direction = attr.ib(init=False)
+  @stem_direction.default
+  def _get_stem_direction(self):
+    return self.music21_object.stemDirection
+
+  beam = attr.ib(init=False)
+  @beam.default
+  def _get_beam(self):
+    note = self.music21_object
+    note.beams.getTypes()
+    return [item for item in note.beams.getTypes()]
 
 
 @attr.s
@@ -30,15 +72,30 @@ class RestObject(MusicalEvent):
 
 
 @attr.s
-class TimeSignature:
-  numerator = attr.ib(type=int)
-  denominator = attr.ib(type=int)
+class TimeSignature(Marking):
+  numerator = attr.ib(init=False)
+  @numerator.default
+  def _get_numerator(self):
+    return self.music21_object._getNumerator()
+
+  denominator = attr.ib(init=False)
+  @denominator.default
+  def _get_denominator(self):
+    return self.music21_object._getDenominator()
 
 
 @attr.s
-class KeySignature:
-  step = attr.ib(type=str)
-  scale = attr.ib(type=str)
+class KeySignature(Marking):
+  # key = str(key.asKey()).split(" ")
+  step = attr.ib(init=False)
+  @step.default
+  def _get_step(self):
+    return self.music21_object
+
+  scale = attr.ib(init=False)
+  @scale.default
+  def _get_scale(self):
+    return self.music21_object
 
 
 @attr.s
