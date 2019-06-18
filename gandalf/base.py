@@ -4,6 +4,7 @@ import attr
 @attr.s
 class Marking:
   music21_object = attr.ib()
+  part = attr.ib(type=int)
 
   measure = attr.ib(init=False)
   @measure.default
