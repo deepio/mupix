@@ -16,64 +16,12 @@ from gandalf.extra import extract_beam
 
 def parse_xml(filepath):
   """
-  Output dictionary key's are structured in the following way.
-    part_number.measure_number.musical_event_number
-
-  The reason we enumerate this way is because we want the notes in a measure to be
-  incremental to the measure, not based on the beat. If we base it off the beat, our
-  comparison will break.
+  Returning all the music21 elements we could be interested in.
   """
-  note_data = {}
-  meter_data = {}
-  key_data = {}
-  file_object = music21.converter.parseFile(filepath)
-
-  # For all parts in the score
-  for part_index, part in enumerate(file_object.recurse().getElementsByClass("Part")):
-    # And all measures in the part
-    for measure_index, measure in enumerate(part.recurse().getElementsByClass("Measure")):
-      # Grab all Musical events
-      for note_index, note in enumerate(measure.recurse().getElementsByClass(["Note", "Rest"])):
-        if note.isRest:
-          note_data[f"{part_index}.{measure_index}.{note_index}"] = RestObject(note.quarterLength)
-        elif note.isNote:
-          note_data[f"{part_index}.{measure_index}.{note_index}"] = \
-          NoteObject(
-            note.quarterLength,
-            note.step,
-            note.octave,
-            extract_accidental(note),
-            note.stemDirection,
-            extract_beam(note),
-          )
-
-      for meter_index, meter in enumerate(measure.recurse().getElementsByClass("TimeSignature")):
-        # IF: the list is empty, add the first element
-        if len(list(meter_data.items())) == 0:
-          meter_data[f"{part_index}.{measure_index}.{meter_index}"] = TimeSignature(meter._getNumerator(), meter._getDenominator())  # noqa
-
-        # IF: the item is the same as the last item added, don't ad an additional item.
-        # ELSE: Item changed, add it to the list
-        if list(meter_data.items())[-1][1] == TimeSignature(meter._getNumerator(), meter._getDenominator()):
-          pass
-        else:
-          meter_data[f"{part_index}.{measure_index}.{meter_index}"] = TimeSignature(meter._getNumerator(), meter._getDenominator())  # noqa
-
-      for key_index, key in enumerate(measure.recurse().getElementsByClass("KeySignature")):
-        key = str(key.asKey()).split(" ")
-
-        # IF: the list is empty, add the first element
-        if len(list(key_data.items())) == 0:
-          key_data[f"{part_index}.{measure_index}.{key_index}"] = KeySignature(key[0], key[1])
-
-        # IF: the item is the same as the last item added, don't ad an additional item.
-        # ELSE: Item changed, add it to the list
-        if list(key_data.items())[-1][1] == KeySignature(key[0], key[1]):
-          pass
-        else:
-          key_data[f"{part_index}.{measure_index}.{key_index}"] = KeySignature(key[0], key[1])
-
-  return note_data, meter_data, key_data
+  notes_and_rests = [item for item in music21.converter.parseFile(filepath).flat.notesAndRests]
+  time_signatures = [item for item in music21.converter.parseFile(filepath).flat.getTimeSignatures()]
+  key_signatures = [item for item in music21.converter.parseFile(filepath).flat.getClefs()]
+  return notes_and_rests, time_signatures, key_signatures
 
 
 def validate_xml(musicxml_filepath):
@@ -116,40 +64,3 @@ class Compare:
     self.octave = Result()
     self.accidental = Result()
     self.stem_direction = Result()
-    self.note_parameter_list = ["pitch", "octave", "accidental", "stem_direction"]
-
-    for self.key, self.value in self.true_data[0].items():
-      self.compare_dicts()
-
-  def compare_dicts(self):
-    true_object = self.value
-    test_object = self.test_data[0][self.key]
-
-    # Fancy way of doing the exact same comparison for all parameters. It just saves from doing the
-    # same things for every parameter in the list.
-    # Why? Its to avoid code duplication, but it has the expense of being a little to read at first sight.
-    #   if pitch,
-    #   elif pitch,
-
-    #   if octave,
-    #   elif octave,
-
-    #   if accidental,
-    #   elif accidental,
-
-    #   if stem_direction
-    #   elif stem_direction
-    for parameter in self.note_parameter_list:
-      if true_object.__getattribute__(parameter) == test_object.__getattribute__(parameter):
-        self.__setattr__(parameter, Result(self.__getattribute__(parameter).right + 1, self.__getattribute__(parameter).wrong))  # noqa
-      elif true_object.__getattribute__(parameter) != test_object.__getattribute__(parameter):
-        self.__setattr__(parameter, Result(self.__getattribute__(parameter).right, self.__getattribute__(parameter).wrong + 1))  # noqa
-
-  def calculate_total(self):
-    """
-    Fancy way to cycle through parameters instead of explicitly going through each
-    """
-    self.total_right, self.total_wrong = 0, 0
-    for parameter in self.note_parameter_list:
-      self.total_right += self.__getattribute__(parameter).right
-      self.total_wrong += self.__getattribute__(parameter).wrong
