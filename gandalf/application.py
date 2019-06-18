@@ -10,8 +10,6 @@ from gandalf.base import RestObject
 from gandalf.base import Result
 
 from gandalf.extra import __return_root_path
-from gandalf.extra import extract_accidental
-from gandalf.extra import extract_beam
 
 
 def parse_xml(filepath):
