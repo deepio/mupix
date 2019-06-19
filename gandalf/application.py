@@ -3,10 +3,10 @@ from io import StringIO, BytesIO
 from lxml import etree
 import music21
 
-from gandalf.base import TimeSignature
-from gandalf.base import KeySignature
 from gandalf.base import NoteObject
 from gandalf.base import RestObject
+from gandalf.base import TimeSignature
+from gandalf.base import KeySignature
 from gandalf.base import Result
 
 from gandalf.extra import __return_root_path
