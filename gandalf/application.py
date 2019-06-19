@@ -1,52 +1,67 @@
-from gandalf.exceptions import FileIncompatible
-from gandalf.engraver.sibelius import Sibelius
-from gandalf.engraver.finale import Finale
-from gandalf.engraver.guitarpro import Guitarpro
-from gandalf.omr.audiveris import Audiveris
-from gandalf.omr.photoscore import Photoscore
-from gandalf.omr.scoremaker import Scoremaker
-from gandalf.omr.smartscore import Smartscore
-from gandalf.extra import boundary_search
-from gandalf.extra import handle_backups
+from io import StringIO, BytesIO
+
+from lxml import etree
+import music21
+
+from gandalf.base import TimeSignature
+from gandalf.base import KeySignature
+from gandalf.base import NoteObject
+from gandalf.base import RestObject
+from gandalf.base import Result
+
+from gandalf.extra import __return_root_path
 
 
-def Parse(file_obj):
+def parse_xml(filepath):
   """
-  The Parse function will select the appropriate parser for the given musicxml file.
+  Returning all the music21 elements we could be interested in.
+  """
+  notes, rests, time_signatures, key_signatures = [], [], [], []
+  for parts_index, (_unused, parts) in enumerate(music21.converter.parseFile(filepath).recurse().getElementsByClass("Part")):
+    notes += [NoteObject(item, parts_index) for item in parts.notes]
+    rests += [RestObject(item, parts_index) for item in parts.notesAndRests if not item.isNote]
+    time_signatures += [TimeSignature(item, parts_index) for item in parts.getTimeSignatures()]
+    key_signatures += [KeySignature(item, parts_index) for item in parts.getElementsByClass("KeySignature")]
+  return notes, rests, time_signatures, key_signatures
+
+
+def validate_xml(musicxml_filepath):
+  """
+  Return if the provided musicxml file is valid against the current musicxml schema.
 
   Args:
-    file_obj (string): A Filepath to the musicxml file to parse.
+    schema_filepath (string): a filepath to the musicxml schema.
+
+    musicxml_filepath (string): a filepath to the musicxml file to be validated.
 
   Returns:
-    (dict) of all the elements within.
+    bool
   """
+  schema_filepath = __return_root_path() + "/tests/xml/musicxml.xsd"
+  with open(schema_filepath, "r") as schema:
+    schema = StringIO(schema.read())
+  with open(musicxml_filepath, "rb") as xml_file:
+    test = BytesIO(xml_file.read())
 
-  # Rewrite musicxml files to have backup tags inside the note objects, the way it should be.
-  # This function returns the file as a corrected string.
-  file_obj = handle_backups(file_obj)
-
-  handlers = {
-    # Engravers
-    "Sibelius": Sibelius,
-    "Finale": Finale,
-    "GuitarPro": Guitarpro,
-    # OMRs
-    "Audiveris": Audiveris,
-    "PhotoScore": Photoscore,
-    "ScoreMaker": Scoremaker,
-    "SmartScore": Smartscore,
-  }
-
-  try:
-    for software in handlers:
-      if software in "".join(boundary_search("<software>", "</software>", file_obj)):
-        return handlers.get(software)(file_obj)
-  except Exception as err:
-    raise FileIncompatible("Either a parser was not created for that musicXML output" +
-                            ", you found a significant bug, or you did not provide a" +
-                            f"valid musicXML file.\nTraceback:\n{err}") # noqa E127
+  xml_schema = etree.XMLSchema(etree.parse(schema_filepath))
+  return xml_schema.validate(etree.parse(test))
 
 
-if __name__ == "__main__":
-  data = "../tests/xml/test.xml"
-  print(Parse(data))
+class Compare:
+  def __init__(self, true_data, test_data):
+    self.true_data = parse_xml(true_data)
+    self.test_data = parse_xml(test_data)
+    self.compare()
+    self.calculate_total()
+
+  def __str__(self):
+    return str(Result(self.total_right, self.total_wrong))
+
+  def __repr__(self):
+    return Result(self.total_right, self.total_wrong)
+
+  def compare(self):
+    self.pitch = Result()
+    self.octave = Result()
+    self.accidental = Result()
+    self.stem_direction = Result()
