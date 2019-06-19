@@ -104,6 +104,24 @@ class KeySignature(Marking):
 
 
 @attr.s
+class Clef(Marking):
+  name = attr.ib(init=False)
+  @name.default
+  def _get_name(self):
+    return self.music21_object.sign
+
+  line = attr.ib(init=False)
+  @line.default
+  def _get_line(self):
+    return self.music21_object.line
+
+  octave = attr.ib(init=False)
+  @octave.default
+  def _get_octave(self):
+    return self.music21_object.octaveChange
+
+
+@attr.s
 class Result:
   right = attr.ib(type=int, default=0)
   wrong = attr.ib(type=int, default=0)
