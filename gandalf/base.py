@@ -74,7 +74,9 @@ class NoteObject(MusicalEvent):
   def _get_beam(self):
     note = self._music21_object
     note.beams.getTypes()
-    return [item for item in note.beams.getTypes()]
+    # The number of "partial" elements that can appear in the beams is related to the note duration.
+    # We do not want the errors be disproportionate if the duration is wrong too.
+    return set([item for item in note.beams.getTypes()])
 
 
 @attr.s
