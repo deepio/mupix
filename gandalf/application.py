@@ -18,7 +18,7 @@ def parse_xml(filepath):
   Returning all the music21 elements we could be interested in.
   """
   notes, rests, time_signatures, key_signatures, clefs = [], [], [], [], []
-  for parts_index, parts in enumerate(music21.converter.parseFile(filepath).recurse().getElementsByClass("Part")):
+  for parts_index, parts in enumerate(music21.converter.parseFile(filepath).recurse().getElementsByClass("Part"), 1):
     notes += [NoteObject(item, parts_index) for item in parts.recurse().notes]
     rests += [RestObject(item, parts_index) for item in parts.recurse().notesAndRests if not item.isNote]
     time_signatures += [TimeSignature(item, parts_index) for item in parts.recurse().getTimeSignatures()]
