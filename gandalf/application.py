@@ -19,12 +19,11 @@ def parse_xml(filepath):
   """
   notes, rests, time_signatures, key_signatures, clefs = [], [], [], [], []
   for parts_index, parts in enumerate(music21.converter.parseFile(filepath).recurse().getElementsByClass("Part"), 1):
-    notes += [NoteObject(item, parts_index) for item in parts.recurse().notes]
+    notes += [NoteObject(item, parts_index) for item in parts.recurse().notes if not item.isChord]
     rests += [RestObject(item, parts_index) for item in parts.recurse().notesAndRests if not item.isNote]
     time_signatures += [TimeSignature(item, parts_index) for item in parts.recurse().getTimeSignatures()]
     key_signatures += [KeySignature(item, parts_index) for item in parts.recurse().getElementsByClass("KeySignature")]
     clefs += [Clef(item, parts_index) for item in parts.recurse().getElementsByClass("Clef")]
-
   return notes, rests, time_signatures, key_signatures, clefs
 
 

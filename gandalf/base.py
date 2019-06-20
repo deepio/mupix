@@ -11,10 +11,10 @@ class Marking:
   def _get_measure(self):
     return self._music21_object.measureNumber
 
-  onset = attr.ib(init=False,)
+  onset = attr.ib(init=False, type=str)
   @onset.default
   def _get_onset(self):
-    return self._music21_object.offset
+    return str(self._music21_object.offset)
 
   def asdict(self):
     tmp = attr.asdict(self)
@@ -24,10 +24,10 @@ class Marking:
 
 @attr.s
 class MusicalEvent(Marking):
-  duration = attr.ib(init=False, type=int)
+  duration = attr.ib(init=False, type=str)
   @duration.default
   def _get_duration(self):
-    return self._music21_object.quarterLength
+    return str(self._music21_object.quarterLength)
 
   voice = attr.ib(init=False, type=int)
   @voice.default
