@@ -17,7 +17,7 @@ class Marking:
     return self._music21_object.offset
 
   def asdict(self):
-    tmp = self.__dict__
+    tmp = attr.asdict(self)
     del tmp["_music21_object"]
     return tmp
 

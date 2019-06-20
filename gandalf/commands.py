@@ -16,6 +16,7 @@ def output_filter(ctx, func, *args, **kwargs):
   if all(value == False for value in ctx.values()):  # noqa
     print(func(*args, **kwargs))
   else:
+    # Not Pretty Print with a combination
     if not ctx["p"]:
       if ctx["n"]:
         print(func(*args, **kwargs)[0])
@@ -28,25 +29,34 @@ def output_filter(ctx, func, *args, **kwargs):
       if ctx["c"]:
         print(func(*args, **kwargs)[4])
     else:
-      if ctx["n"]:
-        print(json.dumps([item.asdict() for item in func(*args, **kwargs)[0]], indent=2))
-      if ctx["r"]:
-        print(json.dumps([item.asdict() for item in func(*args, **kwargs)[1]], indent=2))
-      if ctx["t"]:
-        print(json.dumps([item.asdict() for item in func(*args, **kwargs)[2]], indent=2))
-      if ctx["k"]:
-        print(json.dumps([item.asdict() for item in func(*args, **kwargs)[3]], indent=2))
-      if ctx["c"]:
-        print(json.dumps([item.asdict() for item in func(*args, **kwargs)[4]], indent=2))
+      # Just Pretty Print
+      if all(value == False for value in list(ctx.values())[1:]):  # noqa
+        print("NOTES:" + json.dumps([item.asdict() for item in func(*args, **kwargs)[0]], indent=2))
+        print("RESTS:" + json.dumps([item.asdict() for item in func(*args, **kwargs)[1]], indent=2))
+        print("TIMES:" + json.dumps([item.asdict() for item in func(*args, **kwargs)[2]], indent=2))
+        print("KEYS :" + json.dumps([item.asdict() for item in func(*args, **kwargs)[3]], indent=2))
+        print("CLEFS:" + json.dumps([item.asdict() for item in func(*args, **kwargs)[4]], indent=2))
+      else:
+        # Pretty Print with a combination
+        if ctx["n"]:
+          print(json.dumps([item.asdict() for item in func(*args, **kwargs)[0]], indent=2))
+        if ctx["r"]:
+          print(json.dumps([item.asdict() for item in func(*args, **kwargs)[1]], indent=2))
+        if ctx["t"]:
+          print(json.dumps([item.asdict() for item in func(*args, **kwargs)[2]], indent=2))
+        if ctx["k"]:
+          print(json.dumps([item.asdict() for item in func(*args, **kwargs)[3]], indent=2))
+        if ctx["c"]:
+          print(json.dumps([item.asdict() for item in func(*args, **kwargs)[4]], indent=2))
 
 
 @click.group()
-@click.option("-p/--pretty-print", default=False)
-@click.option("-n/--notes", default=False)
-@click.option("-r/--rests", default=False)
-@click.option("-t/--time-signatures", default=False)
-@click.option("-k/--key-signatures", default=False)
-@click.option("-c/--clefs", default=False)
+@click.option("-p/--pretty-print", default=False, help="Print the output with and automatic indent.")
+@click.option("-n/--notes", default=False, help="Show note objects")
+@click.option("-r/--rests", default=False, help="Show rest objects")
+@click.option("-t/--time-signatures", default=False, help="Show the time signatures")
+@click.option("-k/--key-signatures", default=False, help="Show the key signatures")
+@click.option("-c/--clefs", default=False, help="Show the clefs")
 @click.pass_context
 def cli(ctx, p, n, r, t, k, c):
   """
