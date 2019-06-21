@@ -1,12 +1,15 @@
-☐ Create skip not test sheet and non-skip for comparison 
-☐ Multi-compare:
-  ☐ Flesh out conceptually what multi-compare should do
-☐ Testing Framework:
-  ☐ Create Unittests for checking if Szoch's measure up works
-  ☐ Create Unittests for checking if Szoch's note up works
-☐ Workout note voices
+☐ Write basic diff
+☐ Write skip-diff algorithm with Sylvain
+☐ Test music21 import filetype differences
+☐ Workout measures from time signatures in midi files
 
 Archive:
+  ✘ Multi-compare: @cancelled(19-06-20 20:50)
+  ✘ Flesh out conceptually what multi-compare should do @cancelled(19-06-20 20:50)
+  ✘ Testing Framework: @cancelled(19-06-20 20:49)
+  ✘ Create Unittests for checking if Szoch's measure up works @cancelled(19-06-20 20:49)
+  ✘ Create Unittests for checking if Szoch's note up works @cancelled(19-06-20 20:49)
+  ✔ Workout note voices @done(19-06-20 20:49)
   ✘ Create Unittests and xml files for Sibelius @cancelled(19-06-05 14:49)
   ✘ Create Unittests and xml files for PhotoScore @cancelled(19-06-05 14:49)
   ✘ Create Unittests and xml files for SmartScore @cancelled(19-06-05 14:49)
