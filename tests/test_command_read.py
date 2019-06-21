@@ -23,7 +23,7 @@ def test_basic_parse_xml():
 
   # You can get the new hash AFTER checking manually for errors by un-commenting this next line and running the test.
   # raise Exception(m.hexdigest())
-  correct_hash = "e78d49f9201e71969d6ab5f682e445779424544c783376d42dacb0e8695dc853fa6a91a18d6cd8b00abc2c080a893b5c8fec376001c759ffd198de67f19a1fe5"
+  correct_hash = "5bc9fc906c4c24448c56ce84bea30b0f2d942f5fe0d9cb097097f713ab4dadad89ff709762a9cd894f731ac83a30b2f9650b40e8e374f838286cb9275dc4c1ef"
   assert m.hexdigest() == correct_hash
 
 
@@ -64,22 +64,22 @@ def test_key_signature_parse_xml():
 
   assert key_signatures[0].part == 1
   assert key_signatures[0].measure == 1
-  assert key_signatures[0].onset == 0.0
+  assert key_signatures[0].onset == "0.0"
   assert key_signatures[0].step == "A"
 
   assert key_signatures[1].part == 1
   assert key_signatures[1].measure == 2
-  assert key_signatures[1].onset == 3.0
+  assert key_signatures[1].onset == "3.0"
   assert key_signatures[1].step == "B"
 
   assert key_signatures[2].part == 1
   assert key_signatures[2].measure == 3
-  assert key_signatures[2].onset == 1.0
+  assert key_signatures[2].onset == "1.0"
   assert key_signatures[2].step == "B-"
 
   assert key_signatures[3].part == 1
   assert key_signatures[3].measure == 4
-  assert key_signatures[3].onset == 0.0
+  assert key_signatures[3].onset == "0.0"
   assert key_signatures[3].step == "C"
 
 
@@ -98,27 +98,27 @@ def test_time_signature_parse_xml():
   time_signatures = parse_xml(ROOT_DIR + "/read/time_signature.xml")[2]
 
   assert time_signatures[0].measure == 1
-  assert time_signatures[0].onset == 0.0
+  assert time_signatures[0].onset == "0.0"
   assert time_signatures[0].numerator == 4
   assert time_signatures[0].denominator == 4
 
   assert time_signatures[1].measure == 2
-  assert time_signatures[1].onset == 4.0
+  assert time_signatures[1].onset == "4.0"
   assert time_signatures[1].numerator == 7
   assert time_signatures[1].denominator == 8
 
   assert time_signatures[2].measure == 3
-  assert time_signatures[2].onset == 7.5
+  assert time_signatures[2].onset == "7.5"
   assert time_signatures[2].numerator == 25
   assert time_signatures[2].denominator == 16
 
   assert time_signatures[3].measure == 4
-  assert time_signatures[3].onset == 13.75
+  assert time_signatures[3].onset == "13.75"
   assert time_signatures[3].numerator == 4
   assert time_signatures[3].denominator == 4
 
   assert time_signatures[4].measure == 5
-  assert time_signatures[4].onset == 17.75
+  assert time_signatures[4].onset == "17.75"
   assert time_signatures[4].numerator == 2
   assert time_signatures[4].denominator == 2
 
