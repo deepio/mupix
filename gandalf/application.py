@@ -71,15 +71,40 @@ class Compare(GandalfObject):
     self.test_data = ParseMusic21.from_filepath(test_filepath)
 
     # Notes
-    self.notes = Result()
-    self.notes_pitch = Result()
-    self.notes_duration = Result()
-    self.notes_octave = Result()
-    self.notes_accidental = Result()
-    self.notes_stemdirection = Result()
-    self.notes_beam = Result()
+    self.notes = []
+    self.notes_pitch = Result("notes_pitch")
+    self.notes_duration = Result("notes_duration")
+    self.notes_octave = Result("notes_octave")
+    self.notes_accidental = Result("notes_accidental")
+    self.notes_stemdirection = Result("notes_stemdirection")
+    self.notes_beam = Result("notes_beam")
+    self.notes_total = Result("notes_total")
 
-    self._compare()
+    # Rests
+    self.rests = []
+    self.rests_accidental = Result("rests_accidental")
+    self.rests_duration = Result("rests_duration")
+    self.rests_total = Result("rests_total")
+
+    # Time Signatures
+    self.timeSignatures = []
+    self.timeSignatures_numerator = Result("timeSignatures_numerator")
+    self.timeSignatures_denominator = Result("timeSignatures_denominator")
+    self.timeSignatures_total = Result("timeSignatures_total")
+
+    # Key Signatures
+    self.keySignatures = []
+    self.keySignatures_step = Result("keySignatures_step")
+    self.keySignatures_mode = Result("keySignatures_mode")
+    self.keySignatures_total = Result("keySignatures_total")
+
+    # Clefs
+    self.clefs = []
+    self.clefs_name = Result("clefs_name")
+    self.clefs_line = Result("clefs_line")
+    self.clefs_octave = Result("clefs_octave")
+    self.clefs_total = Result("clefs_total")
+
     self._total()
 
     print(

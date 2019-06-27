@@ -155,5 +155,9 @@ class ClefObject(Marking):
 
 @attr.s
 class Result:
-  right = attr.ib(type=int, default=0)
-  wrong = attr.ib(type=int, default=0)
+  name = attr.ib(type=str)
+  right = attr.ib(init=False, type=int, default=0)
+  wrong = attr.ib(init=False, type=int, default=0)
+
+  def asdict(self):
+    return attr.asdict(self)
