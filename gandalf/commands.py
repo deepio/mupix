@@ -1,6 +1,7 @@
 import click
 
 from gandalf.application import validate_xml
+from gandalf.application import Compare
 from gandalf.application import ParseMusic21
 from gandalf.extra import output_filter
 
@@ -24,12 +25,14 @@ def cli(ctx, p, n, r, t, k, c):
 
 @cli.command("compare", short_help="Compare two MusicXML files.")
 @click.argument("true_data")
-@click.argument("test_data")
-def compare(true_data, test_data):
+@click.argument("test_data", nargs=-1)
+@click.pass_context
+def compare(ctx, true_data, test_data):
   """
   Compares two MusicXML files. -c <ground truth file> <file to parse through>
   """
-  print(Compare(true_data, test_data))
+  for f in test_data:
+    return output_filter(ctx.parent.params, Compare, true_data, f)
 
 
 @cli.command("read", short_help="Show the parsed Symbolic file as a list of elements")
