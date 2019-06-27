@@ -61,7 +61,7 @@ class MusicalEvent(Marking):
   articulation = attr.ib(init=False, cmp=False)
   @articulation.default
   def _get_articulation(self):
-    return self._music21_object.articulations
+    return [item.name for item in self._music21_object.articulations]
 
 
 @attr.s
