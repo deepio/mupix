@@ -7,9 +7,9 @@ import music21
 from gandalf.base import GandalfObject
 from gandalf.base import NoteObject
 from gandalf.base import RestObject
-from gandalf.base import TimeSignature
-from gandalf.base import KeySignature
-from gandalf.base import Clef
+from gandalf.base import TimeSignatureObject
+from gandalf.base import KeySignatureObject
+from gandalf.base import ClefObject
 from gandalf.base import Result
 from gandalf.extra import __return_root_path
 
@@ -43,18 +43,18 @@ class ParseMusic21(GandalfObject):
   """
   @classmethod
   def from_filepath(cls, filepath):
-    notes, rests, time_signatures, key_signatures, clefs = [], [], [], [], []
+    notes, rests, timeSignatures, keySignatures, clefs = [], [], [], [], []
     for parts_index, parts in enumerate(music21.converter.parseFile(filepath).recurse().getElementsByClass("Part"), 1):  # noqa
       notes += [NoteObject(item, parts_index) for item in parts.recurse().notes if not item.isChord]
       rests += [RestObject(item, parts_index) for item in parts.recurse().notesAndRests if not item.isNote]
-      time_signatures += [TimeSignature(item, parts_index) for item in parts.recurse().getTimeSignatures()]
-      key_signatures += [KeySignature(item, parts_index) for item in parts.recurse().getElementsByClass("KeySignature")]  # noqa
-      clefs += [Clef(item, parts_index) for item in parts.recurse().getElementsByClass("Clef")]
+      timeSignatures += [TimeSignatureObject(item, parts_index) for item in parts.recurse().getTimeSignatures()]
+      keySignatures += [KeySignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("KeySignature")]  # noqa
+      clefs += [ClefObject(item, parts_index) for item in parts.recurse().getElementsByClass("Clef")]
     return cls(
       notes=notes,
       rests=rests,
-      time_signatures=time_signatures,
-      key_signatures=key_signatures,
+      timeSignatures=timeSignatures,
+      keySignatures=keySignatures,
       clefs=clefs
     )
 
