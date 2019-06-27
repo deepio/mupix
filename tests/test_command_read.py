@@ -1,6 +1,6 @@
 import hashlib
 
-from gandalf.application import parse_xml
+from gandalf.application import ParseMusic21
 from gandalf.extra import __return_root_path
 
 # Test Files path
@@ -15,7 +15,7 @@ def test_basic_parse_xml():
   b'KHsnMC4wLjAnOiBOb3RlT2JqZWN0KGR1cmF0aW9uPSdlaWdodGgnLCBwaXRjaD0nRicsIG9jdGF2ZT00LCBhY2NpZGVudGFsPScnLCBzdGVtX2RpcmVjdGlvbj0ndXAnKSwgJzAuMC4xJzogTm90ZU9iamVjdChkdXJhdGlvbj0nZWlnaHRoJywgcGl0Y2g9J0cnLCBvY3RhdmU9NCwgYWNjaWRlbnRhbD0nJywgc3RlbV9kaXJlY3Rpb249J3VwJyksICcwLjAuMic6IE5vdGVPYmplY3QoZHVyYXRpb249J2VpZ2h0aCcsIHBpdGNoPSdBJywgb2N0YXZlPTQsIGFjY2lkZW50YWw9JycsIHN0ZW1fZGlyZWN0aW9uPSd1cCcpLCAnMC4wLjMnOiBOb3RlT2JqZWN0KGR1cmF0aW9uPSdlaWdodGgnLCBwaXRjaD0nQicsIG9jdGF2ZT00LCBhY2NpZGVudGFsPScnLCBzdGVtX2RpcmVjdGlvbj0nZG93bicpLCAnMC4xLjAnOiBOb3RlT2JqZWN0KGR1cmF0aW9uPSdlaWdodGgnLCBwaXRjaD0nQycsIG9jdGF2ZT01LCBhY2NpZGVudGFsPScnLCBzdGVtX2RpcmVjdGlvbj0nZG93bicpLCAnMC4xLjEnOiBOb3RlT2JqZWN0KGR1cmF0aW9uPSdlaWdodGgnLCBwaXRjaD0nRCcsIG9jdGF2ZT01LCBhY2NpZGVudGFsPScnLCBzdGVtX2RpcmVjdGlvbj0nZG93bicpLCAnMC4xLjInOiBOb3RlT2JqZWN0KGR1cmF0aW9uPSdlaWdodGgnLCBwaXRjaD0nRScsIG9jdGF2ZT01LCBhY2NpZGVudGFsPScnLCBzdGVtX2RpcmVjdGlvbj0nZG93bicpLCAnMC4xLjMnOiBOb3RlT2JqZWN0KGR1cmF0aW9uPSdlaWdodGgnLCBwaXRjaD0nRicsIG9jdGF2ZT01LCBhY2NpZGVudGFsPScnLCBzdGVtX2RpcmVjdGlvbj0nZG93bicpfSwgeycwLjAuMCc6IFRpbWVTaWduYXR1cmUobnVtZXJhdG9yPTQsIGRlbm9taW5hdG9yPTQpfSwgeycwLjAuMCc6IEtleVNpZ25hdHVyZShzdGVwPSdDJywgc2NhbGU9J21ham9yJyl9KQ=='
   """
   m = hashlib.sha512()
-  output = parse_xml(ROOT_DIR + "/compare/ms_F_Lydian_quarter_true.xml")
+  output = ParseMusic21.from_filepath(ROOT_DIR + "/compare/ms_F_Lydian_quarter_true.xml")
   output = bytes(str(output), encoding="utf-8")
   m.update(output)
   # If you want to change the structure of how elements are stored, or add fields to the classes,
@@ -23,7 +23,8 @@ def test_basic_parse_xml():
 
   # You can get the new hash AFTER checking manually for errors by un-commenting this next line and running the test.
   # raise Exception(m.hexdigest())
-  correct_hash = "5bc9fc906c4c24448c56ce84bea30b0f2d942f5fe0d9cb097097f713ab4dadad89ff709762a9cd894f731ac83a30b2f9650b40e8e374f838286cb9275dc4c1ef"
+  # raise Exception(output)
+  correct_hash = "1dd7e4eba9a911e3499bbb856104f8855cf38f4fa8e7e27579ad69f003106aedcdbd523b8c56f3fcfe0985264869ef8d210d4bc54e4f4b5db6ab0c32826ffb5c" # noqa
   assert m.hexdigest() == correct_hash
 
 
@@ -60,7 +61,7 @@ def test_key_signature_parse_xml():
     "mode": "major"
   }
   """
-  key_signatures = parse_xml(ROOT_DIR + "/read/key_signature.xml")[3]
+  key_signatures = ParseMusic21.from_filepath(ROOT_DIR + "/read/key_signature.xml").ret()[3]
 
   assert key_signatures[0].part == 1
   assert key_signatures[0].measure == 1
@@ -86,7 +87,7 @@ def test_key_signature_parse_xml():
 def test_beam_parse_xml():
   """
   """
-  notes = parse_xml(ROOT_DIR + "/read/beam.xml")[0]
+  notes = ParseMusic21.from_filepath(ROOT_DIR + "/read/beam.xml").ret()[0]
   assert notes[0].beam == {'start'}
   assert notes[1].beam == {'continue', 'partial'}
   assert notes[2].beam == {'partial', 'stop'}
@@ -95,7 +96,7 @@ def test_beam_parse_xml():
 def test_time_signature_parse_xml():
   """
   """
-  time_signatures = parse_xml(ROOT_DIR + "/read/time_signature.xml")[2]
+  time_signatures = ParseMusic21.from_filepath(ROOT_DIR + "/read/time_signature.xml").ret()[2]
 
   assert time_signatures[0].measure == 1
   assert time_signatures[0].onset == "0.0"
@@ -126,7 +127,7 @@ def test_time_signature_parse_xml():
 def test_voice_parse_xml():
   """
   """
-  voices = parse_xml(ROOT_DIR + "/read/voice.xml")[0]
+  voices = ParseMusic21.from_filepath(ROOT_DIR + "/read/voice.xml").ret()[0]
 
   assert voices[0].voice == 1
   assert voices[1].voice == 2
