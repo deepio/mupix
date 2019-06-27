@@ -1,7 +1,7 @@
 # GANDALF
-The MusicXML evaluation tool nobody wants, but everybody needs. :laughing:
-- It may, somewhat, work on `python 3.7.3`, definitely maybe.
-  - Will not support `python 2.x`
+The Symbolic Music File Evaluation Tool.
+- Written with the newer format strings `python 3.6+`.
+- Will not support `python 2.x`.
 - Read the LICENSE.
 
 ### Installation
