@@ -105,6 +105,7 @@ class Compare(GandalfObject):
     self.clefs_octave = Result("clefs_octave")
     self.clefs_total = Result("clefs_total")
 
+    self._object_split()
     self._total()
 
   def _return_object_names(self):
@@ -133,34 +134,22 @@ class Compare(GandalfObject):
       else:
         self.__getattribute__(param).wrong += 1
 
-  def _object_split(self, func, true_objects, test_objects):
+  def _object_split(self):
     """
     Align Objects together
     """
-    for index, true_object in enumerate(true_objects):
-      for index2, test_object in enumerate(test_objects):
-        if true_object == test_object:
-          func(true_object, test_object)
-
-  def _compare_notes(self, true_data, test_data):
-    # TODO: Refactor _compare_notes and _compare together for all objects.
-    attributes = [item.split("_")[1] for item in self._param_finder("notes")]
-
-    for obj in self._object_finder():
-      for attribute in attributes:
-        if true_data.__getattribute__(attribute) == test_data.__getattribute__(attribute):
-          self.__getattribute__(f"{obj}_{attribute}").right += 1
-        else:
-          self.__getattribute__(f"{obj}_{attribute}").wrong += 1
-
-  def _compare(self):
-    # Compare NoteObjects
-    self._object_split(self._compare_notes, self.true_data.ret()[0], self.test_data.ret()[0])
+    for obj in self._return_object_names():
+      for true_object in self.true_data.__getattribute__(obj):
+        for test_object in self.test_data.__getattribute__(obj):
+          if true_object == test_object:
+            self._compare(true_object, test_object)
 
   def _total(self):
-    # 
-    for obj in self._object_finder():
-      # For each parameter
-      for parameter in self._param_finder(obj):
-        self.notes.right += self.__getattribute__(parameter).right
-        self.notes.wrong += self.__getattribute__(parameter).wrong
+    for obj in self._return_object_names():
+      for params in self._return_parameter_names(obj):
+        # Add the detailed results to the list of objects
+        self.__getattribute__(obj).append(self.__getattribute__(params))
+        self.__getattribute__(f"{obj}_total").right += self.__getattribute__(params).right
+        self.__getattribute__(f"{obj}_total").wrong += self.__getattribute__(params).wrong
+
+      self.__getattribute__(obj).append(self.__getattribute__(f"{obj}_total"))
