@@ -1,53 +1,7 @@
-import json
-
 import click
 
-from gandalf.application import parse_xml
 from gandalf.application import validate_xml
-# from gandalf.application import Compare
-
-
-def output_filter(ctx, func, *args, **kwargs):
-  """
-  This is a helper function to filter the output of all commands into notes, rests, etc.
-  """
-
-  # If no filtering options are defined, output all information
-  if all(value == False for value in ctx.values()):  # noqa
-    print(func(*args, **kwargs))
-  else:
-    # Not Pretty Print with a combination
-    if not ctx["p"]:
-      if ctx["n"]:
-        print(func(*args, **kwargs)[0])
-      if ctx["r"]:
-        print(func(*args, **kwargs)[1])
-      if ctx["t"]:
-        print(func(*args, **kwargs)[2])
-      if ctx["k"]:
-        print(func(*args, **kwargs)[3])
-      if ctx["c"]:
-        print(func(*args, **kwargs)[4])
-    else:
-      # Just Pretty Print
-      if all(value == False for value in list(ctx.values())[1:]):  # noqa
-        print("NOTES:" + json.dumps([item.asdict() for item in func(*args, **kwargs)[0]], indent=2))
-        print("RESTS:" + json.dumps([item.asdict() for item in func(*args, **kwargs)[1]], indent=2))
-        print("TIMES:" + json.dumps([item.asdict() for item in func(*args, **kwargs)[2]], indent=2))
-        print("KEYS :" + json.dumps([item.asdict() for item in func(*args, **kwargs)[3]], indent=2))
-        print("CLEFS:" + json.dumps([item.asdict() for item in func(*args, **kwargs)[4]], indent=2))
-      else:
-        # Pretty Print with a combination
-        if ctx["n"]:
-          print(json.dumps([item.asdict() for item in func(*args, **kwargs)[0]], indent=2))
-        if ctx["r"]:
-          print(json.dumps([item.asdict() for item in func(*args, **kwargs)[1]], indent=2))
-        if ctx["t"]:
-          print(json.dumps([item.asdict() for item in func(*args, **kwargs)[2]], indent=2))
-        if ctx["k"]:
-          print(json.dumps([item.asdict() for item in func(*args, **kwargs)[3]], indent=2))
-        if ctx["c"]:
-          print(json.dumps([item.asdict() for item in func(*args, **kwargs)[4]], indent=2))
+from gandalf.extra import output_filter
 
 
 @click.group()
