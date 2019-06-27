@@ -30,7 +30,7 @@ class Marking:
   measure = attr.ib(init=False)
   @measure.default
   def _get_measure(self):
-    return self._music21_object.measureNumber
+    return int(self._music21_object.measureNumber)
 
   onset = attr.ib(init=False, type=str)
   @onset.default
