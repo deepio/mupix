@@ -85,8 +85,8 @@ class NoteObject(MusicalEvent):
     else:
       return ""
 
-  stem_direction = attr.ib(init=False, cmp=False)
-  @stem_direction.default
+  stemdirection = attr.ib(init=False, cmp=False)
+  @stemdirection.default
   def _get_stem_direction(self):
     return self._music21_object.stemDirection
 
