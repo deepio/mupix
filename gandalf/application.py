@@ -107,26 +107,31 @@ class Compare(GandalfObject):
 
     self._total()
 
-    print(
-      "pitch", self.notes_pitch,
-      "duration", self.notes_duration,
-      "octave", self.notes_octave,
-      "accidental", self.notes_accidental,
-      "stem", self.notes_stemdirection,
-      "beam", self.notes_beam,
-    )
-  
-  def _object_finder(self):
+  def _return_object_names(self):
     """
-    Objects are: Notes, Rests, Key Signatures, Time Signatures, etc.
+    For a given object, return all fields
+
+    For example:
+      ['clefs', 'keySignatures', 'notes', 'rests', 'timeSignatures']
     """
     return [item for item in dir(self) if "_" not in item and item not in ["check", "ret"]]
 
-  def _param_finder(self, Object):
+  def _return_parameter_names(self, field):
     """
-    Find all parameters to a given object
+    For a specific field, return all items
+
+    For notes:
+      ['notes_accidental', 'notes_beam', 'notes_duration', 'notes_octave', 'notes_pitch', 'notes_stemdirection']
     """
-    return [item for item in dir(self) if Object in item and item[0] != "_" and len(item) != len(Object)]
+    return [item for item in dir(self) if field in item and "_" in item and "total" not in item]
+
+  def _compare(self, true_object, test_object):
+    for param in self._return_parameter_names(true_object.asname()):
+
+      if true_object.__getattribute__(param.split("_")[-1]) == test_object.__getattribute__(param.split("_")[-1]):
+        self.__getattribute__(param).right += 1
+      else:
+        self.__getattribute__(param).wrong += 1
 
   def _object_split(self, func, true_objects, test_objects):
     """
