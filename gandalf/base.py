@@ -2,6 +2,27 @@ import attr
 
 
 @attr.s
+class GandalfObject():
+  notes = attr.ib(kw_only=True,)
+  rests = attr.ib(kw_only=True,)
+  time_signatures = attr.ib(kw_only=True,)
+  key_signatures = attr.ib(kw_only=True,)
+  clefs = attr.ib(kw_only=True,)
+
+  @notes.validator
+  @rests.validator
+  @time_signatures.validator
+  @key_signatures.validator
+  @clefs.validator
+  def check(self, attribute, value):
+    if not isinstance(value, list) and not isinstance(value, Result):
+      raise ValueError(f"Must be a list or Results Object. {type(value)}")
+
+  def ret(self):
+    return self.notes, self.rests, self.time_signatures, self.key_signatures, self.clefs
+
+
+@attr.s
 class Marking:
   _music21_object = attr.ib()
   part = attr.ib(type=int)
