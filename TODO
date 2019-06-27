@@ -1,39 +1,8 @@
-☐ Write basic diff
+☐ Write basic diff @started(19-06-27 08:50)
+  ✔ Compare note objects @done(19-06-27 08:51)
+  ☐ Expand to all other objects
 ☐ Write skip-diff algorithm with Sylvain
 ☐ Test music21 import filetype differences
 ☐ Workout measures from time signatures in midi files
 
 Archive:
-  ✘ Multi-compare: @cancelled(19-06-20 20:50)
-  ✘ Flesh out conceptually what multi-compare should do @cancelled(19-06-20 20:50)
-  ✘ Testing Framework: @cancelled(19-06-20 20:49)
-  ✘ Create Unittests for checking if Szoch's measure up works @cancelled(19-06-20 20:49)
-  ✘ Create Unittests for checking if Szoch's note up works @cancelled(19-06-20 20:49)
-  ✔ Workout note voices @done(19-06-20 20:49)
-  ✘ Create Unittests and xml files for Sibelius @cancelled(19-06-05 14:49)
-  ✘ Create Unittests and xml files for PhotoScore @cancelled(19-06-05 14:49)
-  ✘ Create Unittests and xml files for SmartScore @cancelled(19-06-05 14:49)
-  ✘ Create Unittests and xml files for GuitarPro @cancelled(19-06-05 14:49)
-  ✘ Create Unittests and xml files for ScoreMaker @cancelled(19-06-05 14:49)
-  ✘ Create Unittests and xml files for Finale @cancelled(19-06-05 14:49)
-✔ Basic Diffing Class: @done(19-05-15 14:01) @project(Gandalf Parser)
-  ✔ Compare lists to lists @done(19-05-15 13:58) @project(Gandalf Parser)
-  ✔ Compare dicts to dicts @done(19-05-15 13:58) @project(Gandalf Parser)
-✔ Create basic testing of parsing through CLI @started(19-05-09 15:50) @done(19-05-09 15:50) @lasted(23s) @project(Gandalf Parser)
-✔ Create basic testing of diffing through CLI @started(19-05-09 15:50) @done(19-05-09 16:23) @lasted(33m14s) @project(Gandalf Parser)
-✘ Compare strings to strings @cancelled(19-05-09 16:33) @project(Gandalf Parser)
-✔ Validator Class: @started(19-05-09 12:17) @done(19-05-09 12:19) @lasted(2m4s) @project(Gandalf Parser)
-  ✘ Rework with attrs instead @started(19-05-09 12:07) @cancelled(19-05-09 12:16) @wasted(9m13s) @project(Gandalf Parser.Validator Class) @project(Gandalf Parser)
-  ✔ Rework as a function instead @done(19-05-09 12:16) @project(Gandalf Parser.Validator Class) @project(Gandalf Parser)
-✔ Classify Page Markers @done(19-05-09 12:06) @project(Gandalf Parser.Basic Diffing Class)
-  ✘ Title @cancelled(19-05-09 12:04) @project(Gandalf Parser.Basic Diffing Class)
-  ✘ Subtitle @cancelled(19-05-09 12:04) @project(Gandalf Parser.Basic Diffing Class)
-  ✔ Page Marker base class @done(19-05-09 12:04) @project(Gandalf Parser.Basic Diffing Class)
-  ✔ Measure Numbers? @done(19-05-09 12:05) @project(Gandalf Parser.Basic Diffing Class)
-✔ Classify musical-events @done(19-05-09 09:51) @project(Gandalf Parser.Basic Diffing Class)
-  ✔ Musical events class @done(19-05-09 09:51) @project(Gandalf Parser.Basic Diffing Class)
-  ✔ Note class @done(19-05-09 09:51) @project(Gandalf Parser.Basic Diffing Class)
-  ✔ Rest class @done(19-05-09 09:51) @project(Gandalf Parser.Basic Diffing Class)
-✔ Classify Music Markers @started(19-05-09 10:00) @done(19-05-09 10:19) @lasted(19m26s) @project(Gandalf Parser.Basic Diffing Class)
-  ✔ Clef class @started(19-05-09 10:16) @done(19-05-09 10:16) @lasted(36s) @project(Gandalf Parser.Basic Diffing Class)
-  ✔ Time Signature class @done(19-05-09 10:17) @project(Gandalf Parser.Basic Diffing Class)
