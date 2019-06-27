@@ -5,11 +5,18 @@ The Symbolic Music File Evaluation Tool.
 - Read the LICENSE.
 
 ### Installation
-Install python poetry
-- `pip3 install --user poetry`
+From a bash terminal, run these commands
+```bash
+# Install python poetry
+pip3 install --user poetry
+# Create a virtual environment, in this example it is named env
+python3 -m venv env
+# Enter the virtual environment
+. ./env/bin/activate
+# Install gandalf (from the project root)
+poetry install
+```
 
-Install the module (from the project root)
-- `poetry install`
 
 ### Usage
 - For up-to-date usage information, run `gandalf` or `gandalf --help`
