@@ -24,7 +24,7 @@ class GandalfObject():
 
 @attr.s
 class Marking:
-  _music21_object = attr.ib()
+  _music21_object = attr.ib(cmp=False)
   part = attr.ib(type=int)
 
   measure = attr.ib(init=False)
@@ -45,7 +45,7 @@ class Marking:
 
 @attr.s
 class MusicalEvent(Marking):
-  duration = attr.ib(init=False, type=str)
+  duration = attr.ib(init=False, type=str, cmp=False)
   @duration.default
   def _get_duration(self):
     return str(self._music21_object.quarterLength)
@@ -58,7 +58,7 @@ class MusicalEvent(Marking):
     else:
       return int(self._music21_object.activeSite.id)
 
-  articulation = attr.ib(init=False)
+  articulation = attr.ib(init=False, cmp=False)
   @articulation.default
   def _get_articulation(self):
     return self._music21_object.articulations
@@ -66,17 +66,17 @@ class MusicalEvent(Marking):
 
 @attr.s
 class NoteObject(MusicalEvent):
-  pitch = attr.ib(init=False)
+  pitch = attr.ib(init=False, cmp=False)
   @pitch.default
   def _get_pitch(self):
     return self._music21_object.step
 
-  octave = attr.ib(init=False)
+  octave = attr.ib(init=False, cmp=False)
   @octave.default
   def _get_octave(self):
     return self._music21_object.octave
 
-  accidental = attr.ib(init=False, type=str)
+  accidental = attr.ib(init=False, type=str, cmp=False)
   @accidental.default
   def _get_accidental(self):
     note = self._music21_object
@@ -85,12 +85,12 @@ class NoteObject(MusicalEvent):
     else:
       return ""
 
-  stem_direction = attr.ib(init=False)
+  stem_direction = attr.ib(init=False, cmp=False)
   @stem_direction.default
   def _get_stem_direction(self):
     return self._music21_object.stemDirection
 
-  beam = attr.ib(init=False)
+  beam = attr.ib(init=False, cmp=False)
   @beam.default
   def _get_beam(self):
     note = self._music21_object
@@ -107,12 +107,12 @@ class RestObject(MusicalEvent):
 
 @attr.s
 class TimeSignature(Marking):
-  numerator = attr.ib(init=False)
+  numerator = attr.ib(init=False, cmp=False)
   @numerator.default
   def _get_numerator(self):
     return self._music21_object._getNumerator()
 
-  denominator = attr.ib(init=False)
+  denominator = attr.ib(init=False, cmp=False)
   @denominator.default
   def _get_denominator(self):
     return self._music21_object._getDenominator()
@@ -120,12 +120,12 @@ class TimeSignature(Marking):
 
 @attr.s
 class KeySignature(Marking):
-  step = attr.ib(init=False)
+  step = attr.ib(init=False, cmp=False)
   @step.default
   def _get_step(self):
     return self._music21_object.asKey().name.split(" ")[0]
 
-  mode = attr.ib(init=False)
+  mode = attr.ib(init=False, cmp=False)
   @mode.default
   def _get_mode(self):
     return self._music21_object.asKey().name.split(" ")[1]
@@ -133,17 +133,17 @@ class KeySignature(Marking):
 
 @attr.s
 class Clef(Marking):
-  name = attr.ib(init=False)
+  name = attr.ib(init=False, cmp=False)
   @name.default
   def _get_name(self):
     return self._music21_object.sign
 
-  line = attr.ib(init=False)
+  line = attr.ib(init=False, cmp=False)
   @line.default
   def _get_line(self):
     return self._music21_object.line
 
-  octave = attr.ib(init=False)
+  octave = attr.ib(init=False, cmp=False)
   @octave.default
   def _get_octave(self):
     return self._music21_object.octaveChange
