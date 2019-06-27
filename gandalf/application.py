@@ -58,6 +58,9 @@ class ParseMusic21(GandalfObject):
       clefs=clefs
     )
 
+  def __iter__(self):
+    return iter(self.ret())
+
 
 class Compare(GandalfObject):
   """
