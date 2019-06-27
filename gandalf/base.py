@@ -42,6 +42,10 @@ class Marking:
     del tmp["_music21_object"]
     return tmp
 
+  def asname(self):
+    string = str(self.__class__).split(".")[-1].replace("Object", "")
+    return string[0].lower() + string[1:-2] + "s"
+
 
 @attr.s
 class MusicalEvent(Marking):
