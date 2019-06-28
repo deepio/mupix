@@ -158,6 +158,11 @@ class Result:
   right = attr.ib(init=False, type=int, default=0)
   wrong = attr.ib(init=False, type=int, default=0)
 
+  name = attr.ib(type=str)
+  @name.default
+  def _get_name(self):
+    return str(self.__class__)[21:-2]
+
   def asdict(self):
     return attr.asdict(self)
 
