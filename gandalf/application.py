@@ -10,7 +10,29 @@ from gandalf.base import RestObject
 from gandalf.base import TimeSignatureObject
 from gandalf.base import KeySignatureObject
 from gandalf.base import ClefObject
-from gandalf.base import Result
+# Result Objects
+from gandalf.base import (
+  NotePitchResult,
+  NoteDurationResult,
+  NoteOctaveResult,
+  NoteAccidentalResult,
+  NoteStemDirectionResult,
+  NoteBeamResult,
+  NoteTotalResult,
+  RestAccidentalResult,
+  RestDurationResult,
+  RestTotalResult,
+  TimeSignatureNumeratorResult,
+  TimeSignatureDenominatorResult,
+  TimeSignatureTotalResult,
+  KeySignatureStepResult,
+  KeySignatureModeResult,
+  KeySignatureTotalResult,
+  ClefNameResult,
+  ClefLineResult,
+  ClefOctaveResult,
+  ClefTotalResult,
+)
 from gandalf.extra import __return_root_path
 
 
@@ -72,38 +94,38 @@ class Compare(GandalfObject):
 
     # Notes
     self.notes = []
-    self.notes_pitch = Result("notes_pitch")
-    self.notes_duration = Result("notes_duration")
-    self.notes_octave = Result("notes_octave")
-    self.notes_accidental = Result("notes_accidental")
-    self.notes_stemdirection = Result("notes_stemdirection")
-    self.notes_beam = Result("notes_beam")
-    self.notes_total = Result("notes_total")
+    self.notes_pitch = NotePitchResult()
+    self.notes_duration = NoteDurationResult()
+    self.notes_octave = NoteOctaveResult()
+    self.notes_accidental = NoteAccidentalResult()
+    self.notes_stemdirection = NoteStemDirectionResult()
+    self.notes_beam = NoteBeamResult()
+    self.notes_total = NoteTotalResult()
 
     # Rests
     self.rests = []
-    self.rests_accidental = Result("rests_accidental")
-    self.rests_duration = Result("rests_duration")
-    self.rests_total = Result("rests_total")
+    self.rests_accidental = RestAccidentalResult()
+    self.rests_duration = RestDurationResult()
+    self.rests_total = RestTotalResult()
 
     # Time Signatures
     self.timeSignatures = []
-    self.timeSignatures_numerator = Result("timeSignatures_numerator")
-    self.timeSignatures_denominator = Result("timeSignatures_denominator")
-    self.timeSignatures_total = Result("timeSignatures_total")
+    self.timeSignatures_numerator = TimeSignatureNumeratorResult()
+    self.timeSignatures_denominator = TimeSignatureDenominatorResult()
+    self.timeSignatures_total = TimeSignatureTotalResult()
 
     # Key Signatures
     self.keySignatures = []
-    self.keySignatures_step = Result("keySignatures_step")
-    self.keySignatures_mode = Result("keySignatures_mode")
-    self.keySignatures_total = Result("keySignatures_total")
+    self.keySignatures_step = KeySignatureStepResult()
+    self.keySignatures_mode = KeySignatureModeResult()
+    self.keySignatures_total = KeySignatureTotalResult()
 
     # Clefs
     self.clefs = []
-    self.clefs_name = Result("clefs_name")
-    self.clefs_line = Result("clefs_line")
-    self.clefs_octave = Result("clefs_octave")
-    self.clefs_total = Result("clefs_total")
+    self.clefs_name = ClefNameResult()
+    self.clefs_line = ClefLineResult()
+    self.clefs_octave = ClefOctaveResult()
+    self.clefs_total = ClefTotalResult()
 
     self._object_split()
     self._total()
