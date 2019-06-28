@@ -25,12 +25,3 @@ def pytest_load_initial_conftests(args):
   if "xdist" in sys.modules:  # pytest-xdist plugin
     num = max(multiprocessing.cpu_count() / 2, 1)
     args[:] = ["-n", str(num)] + args
-
-
-@pytest.fixture(scope="module")
-def load_single_voice_resources():
-  ROOT_DIR = __return_root_path() + "/tests/xml"
-  return Compare(
-    ROOT_DIR + "/compare/ms_F_Lydian_quarter_true.xml",
-    ROOT_DIR + "/compare/ms_F_Lydian_quarter_test.xml",
-  )
