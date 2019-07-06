@@ -24,7 +24,7 @@ def test_basic_parse_xml():
   # You can get the new hash AFTER checking manually for errors by un-commenting this next line and running the test.
   # raise Exception(m.hexdigest())
   # raise Exception(output)
-  correct_hash = "1dd7e4eba9a911e3499bbb856104f8855cf38f4fa8e7e27579ad69f003106aedcdbd523b8c56f3fcfe0985264869ef8d210d4bc54e4f4b5db6ab0c32826ffb5c" # noqa
+  correct_hash = "1fa8e5ca537a41bddaaa0ed185870823c1a235e1694e6a4dbea18ec5030c6cc8d6466926812e4e9c6ef1d79d028e72ce7a2309fcdb0deee302e195ec7892cd07" # noqa
   assert m.hexdigest() == correct_hash
 
 
