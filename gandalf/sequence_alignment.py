@@ -57,7 +57,7 @@ class SequenceAlignment:
     self.populate()
 
   def __str__(self):
-    return "{{\n  true_data: {}\n  test_data: {}\n  aligned_true_data: {}\n  aligned_test_data: {}\n}}".format(
+    return """{{\n  true_data: "{}"\n  test_data: "{}"\n  aligned_true_data: "{}"\n  aligned_test_data: "{}"\n}}""".format(
       "".join(self.true_data),
       "".join(self.test_data),
       "".join(self.aligned_true_data),
