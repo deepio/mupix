@@ -11,6 +11,7 @@ from gandalf.base import (
   TimeSignatureObject,
   KeySignatureObject,
   ClefObject)
+from gandalf.result_objects import (
   NotePitchResult,
   NoteDurationResult,
   NoteOctaveResult,
