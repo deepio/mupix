@@ -10,6 +10,7 @@ class GandalfObject():
   timeSignatures = attr.ib(kw_only=True,)
   keySignatures = attr.ib(kw_only=True,)
   clefs = attr.ib(kw_only=True,)
+  parts = attr.ib(kw_only=True, type=int, validator=[attr.validators.instance_of(int)])
 
   @notes.validator
   @rests.validator
