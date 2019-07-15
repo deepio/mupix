@@ -4,14 +4,13 @@ import attr
 from lxml import etree
 import music21
 
-from gandalf.base import GandalfObject
-from gandalf.base import NoteObject
-from gandalf.base import RestObject
-from gandalf.base import TimeSignatureObject
-from gandalf.base import KeySignatureObject
-from gandalf.base import ClefObject
-# Result Objects
 from gandalf.base import (
+  GandalfObject,
+  NoteObject,
+  RestObject,
+  TimeSignatureObject,
+  KeySignatureObject,
+  ClefObject)
   NotePitchResult,
   NoteDurationResult,
   NoteOctaveResult,
