@@ -125,8 +125,8 @@ class SequenceAlignment:
       self.test_align.append("_")
       self.xpt -= 1
 
-    self.aligned_true_data = reversed(self.true_align)
-    self.aligned_test_data = reversed(self.test_align)
+    self.aligned_true_data = reversed(self.true_align[1:])
+    self.aligned_test_data = reversed(self.test_align[1:])
 
   def traceback(self):
     self.true_align = []
