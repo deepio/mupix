@@ -9,7 +9,7 @@ class Result:
   name = attr.ib(type=str)
   @name.default
   def _get_name(self):
-    return str(self.__class__)[21:-2]
+    return str(self.__class__.__name__)
 
   def asdict(self):
     return attr.asdict(self)
