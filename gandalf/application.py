@@ -150,12 +150,22 @@ class Compare(GandalfObject):
     return [item for item in dir(self) if field in item and "_" in item and "total" not in item]
 
   def _compare(self, true_object, test_object):
-    for param in self._return_parameter_names(true_object.asname()):
-
-      if true_object.__getattribute__(param.split("_")[-1]) == test_object.__getattribute__(param.split("_")[-1]):
-        self.__getattribute__(param).right += 1
-      else:
-        self.__getattribute__(param).wrong += 1
+    """
+    Compare two gandalf
+    """
+    # If there is an extra object in the test data, it's better to just delete the note. + 1 wrong to the total
+    if true_object == "_":
+      self.__getattribute__(f"{test_object.asname()}_total").wrong += 1
+    else:
+      for param in self._return_parameter_names(true_object.asname()):
+        try:
+          if true_object.__getattribute__(param.split("_")[-1]) == test_object.__getattribute__(param.split("_")[-1]):
+            self.__getattribute__(param).right += 1
+          else:
+            self.__getattribute__(param).wrong += 1
+        except AttributeError:
+          # If the object needs to be created, each parameter needs to be added individually, +1 error each.
+          self.__getattribute__(param).wrong += 1
 
   def _object_split(self):
     """
