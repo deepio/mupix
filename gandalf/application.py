@@ -78,7 +78,8 @@ class ParseMusic21(GandalfObject):
       rests=rests,
       timeSignatures=timeSignatures,
       keySignatures=keySignatures,
-      clefs=clefs
+      clefs=clefs,
+      parts=parts_index,
     )
 
   def __iter__(self):
@@ -169,7 +170,7 @@ class Compare(GandalfObject):
 
   def _object_split(self):
     """
-    Align Objects together
+    Align Objects together by comparing voice, measure and onset.
     """
     for obj in self._return_object_names():
       for true_object in self.true_data.__getattribute__(obj):
@@ -178,6 +179,9 @@ class Compare(GandalfObject):
             self._compare(true_object, test_object)
 
   def _total(self):
+    """
+    Automatically add the number of right/wrong attributes to the total of each param (notes, rests).
+    """
     for obj in self._return_object_names():
       for params in self._return_parameter_names(obj):
         # Add the detailed results to the list of objects
