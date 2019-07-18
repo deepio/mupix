@@ -34,6 +34,7 @@ from gandalf.result_objects import (
   ClefTotalResult,
 )
 from gandalf.extra import __return_root_path
+from gandalf.sequence_alignment import AffineNeedlemanWunsch
 
 
 def validate_xml(musicxml_filepath):
@@ -127,7 +128,7 @@ class Compare(GandalfObject):
     self.clefs_octave = ClefOctaveResult()
     self.clefs_total = ClefTotalResult()
 
-    self._object_split()
+    self.sequence_alignment()
     self._total()
 
   def _return_object_names(self):
@@ -175,3 +176,37 @@ class Compare(GandalfObject):
         self.__getattribute__(f"{obj}_total").wrong += self.__getattribute__(params).wrong
 
       self.__getattribute__(obj).append(self.__getattribute__(f"{obj}_total"))
+
+  def _rebuild(self, aligned_data, unaligned_data):
+    output = []
+    track = 0
+    for entry in [i for i in aligned_data]:
+      if entry != "_" and entry != " ":
+        output.append(unaligned_data[track])
+        track += 1
+      else:
+        output.append("_")
+
+    return output
+
+  def sequence_alignment(self):
+
+    # Notes
+    true_notes = [item.pitch for item in self.true_data.notes]
+    test_notes = [item.pitch for item in self.test_data.notes]
+    notes_anw = AffineNeedlemanWunsch(true_notes, test_notes)
+
+    true_note_objects = self._rebuild(notes_anw.aligned_true_data, self.true_data.notes)
+    test_note_objects = self._rebuild(notes_anw.aligned_test_data, self.test_data.notes)
+    for index, objects in enumerate(true_note_objects):
+      self._compare(objects, test_note_objects[index])
+
+    # Rests
+    true_rests = [str(item.voice) for item in self.true_data.rests]
+    test_rests = [str(item.voice) for item in self.test_data.rests]
+    rests_anw = AffineNeedlemanWunsch(true_rests, test_rests)
+
+    true_rest_objects = self._rebuild(rests_anw.aligned_true_data, self.true_data.rests)
+    test_rest_objects = self._rebuild(rests_anw.aligned_test_data, self.test_data.rests)
+    for index, objects in enumerate(true_rest_objects):
+      self._compare(objects, test_rest_objects[index])
