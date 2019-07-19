@@ -3,5 +3,5 @@
     "python.linting.flake8Enabled": true,
     "python.linting.enabled": true,
     "python.pythonPath": "${workspaceFolder}/env/bin/python",
-    "python.jediEnabled": true
+    "python.jediEnabled": false
 }
