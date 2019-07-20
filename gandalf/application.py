@@ -192,6 +192,9 @@ class Compare(GandalfObject):
       self.__getattribute__(obj).append(self.__getattribute__(f"{obj}_total"))
 
   def _rebuild(self, aligned_data, unaligned_data):
+    """
+    Rebuild the list of items according to how the AffineNeedlemanWunsch aligned them.
+    """
     output = []
     track = 0
     for entry in aligned_data:
@@ -204,6 +207,15 @@ class Compare(GandalfObject):
     return output
 
   def sequence_alignment(self):
+    """
+    Align each note object with each other.
+
+    - Notes           are aligned by pitch names
+    - Restes          are aligned by measure number as a single char
+    - TimeSignatures  are aligned by measure number as a single char
+    - KeySignatures   are aligned by measure number as a single char
+    - Clefs           are aligned by measure number as a single char
+    """
 
     # Notes
     true_notes = [item.pitch for item in self.true_data.notes]
