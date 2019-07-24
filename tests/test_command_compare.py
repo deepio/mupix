@@ -3,6 +3,10 @@ import pytest
 from gandalf.application import Compare
 from gandalf.extra import __return_root_path
 
+# Test Files path
+ROOT_DIR = __return_root_path() + "/tests/xml"
+test_file = ROOT_DIR + "/compare/ms_F_Lydian_quarter_test.xml"
+
 
 @pytest.fixture
 def load_single_voice_compare_resources():
