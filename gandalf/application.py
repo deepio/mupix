@@ -33,7 +33,10 @@ from gandalf.result_objects import (
   ClefOctaveResult,
   ClefTotalResult,
 )
-from gandalf.extra import __return_root_path
+from gandalf.extra import (
+  __return_root_path,
+  return_char_except
+)
 from gandalf.sequence_alignment import AffineNeedlemanWunsch
 
 
@@ -228,8 +231,8 @@ class Compare(GandalfObject):
       self._compare(objects, test_note_objects[index])
 
     # Rests
-    true_rests = [chr(item.measure) for item in self.true_data.rests]
-    test_rests = [chr(item.measure) for item in self.test_data.rests]
+    true_rests = [return_char_except(item.measure) for item in self.true_data.rests]
+    test_rests = [return_char_except(item.measure) for item in self.test_data.rests]
     rests_anw = AffineNeedlemanWunsch(true_rests, test_rests)
 
     true_rest_objects = self._rebuild(rests_anw.aligned_true_data, self.true_data.rests)
@@ -238,8 +241,8 @@ class Compare(GandalfObject):
       self._compare(objects, test_rest_objects[index])
 
     # Time Signature
-    true_timeSignatures = [chr(item.measure) for item in self.true_data.timeSignatures]
-    test_timeSignatures = [chr(item.measure) for item in self.test_data.timeSignatures]
+    true_timeSignatures = [return_char_except(item.measure) for item in self.true_data.timeSignatures]
+    test_timeSignatures = [return_char_except(item.measure) for item in self.test_data.timeSignatures]
     timeSignatures_anw = AffineNeedlemanWunsch(true_timeSignatures, test_timeSignatures)
 
     true_timeSignature_objects = self._rebuild(timeSignatures_anw.aligned_true_data, self.true_data.timeSignatures)
@@ -248,8 +251,8 @@ class Compare(GandalfObject):
       self._compare(objects, test_timeSignature_objects[index])
 
     # Key Signature
-    true_keySignatures = [chr(item.measure) for item in self.true_data.keySignatures]
-    test_keySignatures = [chr(item.measure) for item in self.test_data.keySignatures]
+    true_keySignatures = [return_char_except(item.measure) for item in self.true_data.keySignatures]
+    test_keySignatures = [return_char_except(item.measure) for item in self.test_data.keySignatures]
     keySignatures_anw = AffineNeedlemanWunsch(true_keySignatures, test_keySignatures)
 
     true_keySignature_objects = self._rebuild(keySignatures_anw.aligned_true_data, self.true_data.keySignatures)
@@ -258,8 +261,8 @@ class Compare(GandalfObject):
       self._compare(objects, test_keySignature_objects[index])
 
     # Clefs
-    true_clefs = [chr(item.measure) for item in self.true_data.clefs]
-    test_clefs = [chr(item.measure) for item in self.test_data.clefs]
+    true_clefs = [return_char_except(item.measure) for item in self.true_data.clefs]
+    test_clefs = [return_char_except(item.measure) for item in self.test_data.clefs]
     clef_anw = AffineNeedlemanWunsch(true_clefs, test_clefs)
 
     true_clef_objects = self._rebuild(clef_anw.aligned_true_data, self.true_data.clefs)
