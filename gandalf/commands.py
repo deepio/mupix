@@ -23,16 +23,28 @@ def cli(ctx, p, n, r, t, k, c):
   """
 
 
-@cli.command("compare", short_help="Compare two MusicXML files.")
+@cli.command("compare", short_help="Compare two or more MusicXML files. You may also select the type of algorithm you want to use by specifying --sort=anw")  # noqa
+@click.option("--sort", default="basic", help="Note alignment algorithm to use when aligning Gandalf objects.")
 @click.argument("true_data")
 @click.argument("test_data", nargs=-1)
 @click.pass_context
-def compare(ctx, true_data, test_data):
+def compare(ctx, sort, true_data, test_data):
   """
-  Compares two MusicXML files. -c <ground truth file> <file to parse through>
+  Compares two MusicXML files.
+    --sort=basic    Uses a dumb alignment that does not look forward or backward in time.
+    --sort=anw      Uses a simplistic version of the Affine-Needleman-Wunsch based on
+                      a single element from the Gandalf Objects.
+
+    <ground truth file> <file or files to parse through>
   """
   for f in test_data:
-    return output_filter(ctx.parent.params, Compare, true_data, f)
+    output_filter(
+      ctx.parent.params,
+      Compare,
+      true_filepath=true_data,
+      test_filepath=f,
+      sorting_algorithm=sort,
+    )
 
 
 @cli.command("read", short_help="Show the parsed Symbolic file as a list of elements")
@@ -42,7 +54,7 @@ def read(ctx, file_path):
   """
   """
   for f in file_path:
-    return output_filter(ctx.parent.params, ParseMusic21.from_filepath, f)
+    output_filter(ctx.parent.params, ParseMusic21.from_filepath, f)
 
 
 @cli.command("validate", short_help="Check if MusicXML file is valid.")

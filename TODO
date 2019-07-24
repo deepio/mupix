@@ -1,6 +1,6 @@
-☐ Write basic diff @started(19-06-27 08:50)
+✔ Write basic diff @started(19-06-27 08:50) @done(19-07-05 08:31) @lasted(1w23h41m8s)
   ✔ Compare note objects @done(19-06-27 08:51)
-  ☐ Expand to all other objects
+  ✔ Expand to all other objects @done(19-07-24 17:15)
 ☐ Write skip-diff algorithm with Sylvain
 ☐ Test music21 import filetype differences
 ☐ Workout measures from time signatures in midi files

@@ -93,7 +93,7 @@ class Compare(GandalfObject):
   """
   This is a simple class for comparing Gandalf Objects.
   """
-  def __init__(self, true_filepath, test_filepath):
+  def __init__(self, true_filepath, test_filepath, sorting_algorithm="basic"):
     self.true_data = ParseMusic21.from_filepath(true_filepath)
     self.test_data = ParseMusic21.from_filepath(test_filepath)
 
@@ -132,7 +132,13 @@ class Compare(GandalfObject):
     self.clefs_octave = ClefOctaveResult()
     self.clefs_total = ClefTotalResult()
 
-    self.sequence_alignment()
+    if sorting_algorithm == "basic":
+      # Using a "dumb" alignment
+      self._object_split()
+    elif sorting_algorithm == "anw":
+      # Using a simple version of Affine-Needleman-Wunsch
+      self.sequence_alignment()
+
     self._total()
 
   def _return_object_names(self):
