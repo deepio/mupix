@@ -161,7 +161,14 @@ class Compare(GandalfObject):
 
   def _compare(self, true_object, test_object):
     """
-    Compare two gandalf
+    Compare two Gandalf Objects.
+
+      - If the sequence alignment believes there is an extra note in the OMR output, simply deleting the extra note
+        should be the solution. Removing each wrong element individually and finally removing the note is not how a
+        human would fix this type of error.
+
+      - Then check for each parameter available in the type of marking, count an error for each wrong element and a
+        right for every correct. This function should works for all Gandalf objects.
     """
     # If there is an extra object in the test data, it's better to just delete the note. + 1 wrong to the total
     if true_object == "_":
@@ -217,7 +224,8 @@ class Compare(GandalfObject):
 
   def sequence_alignment(self):
     """
-    Align each note object with each other.
+    Align each note object with each other. Understandably this is not the best, but it
+    serves more as a proof-of-concept or a placeholder to be built later.
 
     - Notes           are aligned by pitch names
     - Restes          are aligned by measure number as a single char
