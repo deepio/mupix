@@ -1,0 +1,26 @@
+language: python
+matrix:
+  include:
+  - name: "Python 3.5"
+    python: "3.5"
+  - name: "Python 3.5-dev"
+    python: "3.5-dev"
+  - name: "Python 3.6"
+    python: "3.6"
+  - name: "Python 3.6"
+    python: "3.6-dev"
+  - name: "Python 3.7"
+    python: "3.7"
+  - name: "Python 3.7-dev"
+    python: "3.7-dev"
+  - name: "Python 3.8-dev"
+    python: "3.8-dev"
+  - name: "Python Nightly"
+    python: "nightly"
+
+install:
+- curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
+- poetry install
+
+script:
+- pytest
