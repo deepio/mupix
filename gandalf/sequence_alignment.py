@@ -72,7 +72,7 @@ class SequenceAlignment:
     else:
       raise Exception(
         f"{self.__class__}\n\n" +
-        f"Input data of type {type(input)} is not acceptible.\n" +
+        f"Input data of type {type(input)} is not acceptable.\n" +
         "Please use a String or a List instead."
       )
     return input
