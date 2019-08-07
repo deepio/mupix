@@ -1,4 +1,9 @@
 # GANDALF
+![Travis (.com)](https://img.shields.io/travis/com/deepio/gandalf)
+![GitHub tag (latest by date)](https://img.shields.io/github/tag-date/deepio/gandalf)
+![GitHub last commit](https://img.shields.io/github/last-commit/deepio/gandalf)
+![GitHub repo size](https://img.shields.io/github/repo-size/deepio/gandalf)
+
 The Symbolic Music File Evaluation Tool.
 - Written with the newer format strings `python 3.6+`.
 - Will not support `python 2.x`.

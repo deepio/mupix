@@ -15,6 +15,15 @@ def __return_root_path():
     return "\\".join(os.path.abspath(__file__).split("\\")[0:-2])
 
 
+def return_char_except(value: int) -> str:
+  """
+  Because we are already using the "_" to signal a skipped Gandalf Object.
+  """
+  if value >= 95:
+    value += 1
+  return chr(value)
+
+
 def output_filter(ctx, func, *args, **kwargs):
   """
   This is a helper function to filter the output of all commands into notes, rests, etc.
