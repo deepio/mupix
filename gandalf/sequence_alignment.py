@@ -78,10 +78,10 @@ class SequenceAlignment:
     return input
 
   def scoring_method(self, true, test):
-    if true == test:
-      return 1
-    else:
-      return 0
+    raise Exception(
+      f"{self.__class__}\n\n" +
+      f"You forgot to specify a scoring_method() method."
+    )
 
   def populate(self):
     raise Exception(
@@ -146,6 +146,15 @@ class SequenceAlignment:
 
 @attr.s
 class AffineNeedlemanWunsch(SequenceAlignment):
+  def scoring_method(self, true, test):
+    """
+    Grading method for comparing the two elements in scope.
+    """
+    if true == test:
+      return 1
+    else:
+      return 0
+
   def populate(self):
     for index, value in enumerate(self.true_data):
       self.matrix.m[index][0] = self.gap_extend * index
