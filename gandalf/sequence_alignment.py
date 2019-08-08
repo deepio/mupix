@@ -197,6 +197,89 @@ class AffineNeedlemanWunsch(SequenceAlignment):
     self.traceback()
 
 
+@attr.s
+class AdvancedAffineNeedlemanWunsch(AffineNeedlemanWunsch):
+  def scoring_method(self, true, test):
+    """
+    Grading method for comparing the two elements in scope.
+
+      - Values are randomly chosen
+      - Eventually create a genetic algorithm to find optimal values
+    """
+    score = 0
+
+    # If both objects are Notes
+    if true.asname() == "Note" and test.asname() == "Note":
+      score += 5 if true.octave == test.octave else -5
+      score += 3 if true.voice == test.voice else -3
+      score += 2 if true.pitch == test.pitch else -2
+      score += 1 if true.duration == test.duration else -1
+      score += 1 if true.beam == test.beam else -1
+      score += 1 if true.accidental == test.accidental else -1
+      score += 1 if true.stemdirection == test.stemdirection else -1
+
+    if true.asname() == "Rest" and test.asname() == "Rest":
+      score += 5 if true.voice == test.voice else -5
+      score += 2 if true.duration == test.duration else -2
+
+    if true.asname() == "TimeSignature" and test.asname() == "TimeSignature":
+      score += 2 if true.numerator == test.numerator else -2
+      score += 2 if true.denominator == test.denominator else -2
+
+    if true.asname() == "KeySignature" and test.asname() == "KeySignature":
+      score += 2 if true.step == test.step else -2
+      score += 2 if true.mode == test.mode else -2
+
+    if true.asname() == "Clef" and test.asname() == "Clef":
+      score += 2 if true.name == test.name else -2
+      score += 2 if true.line == test.line else -2
+      score += 2 if true.octave == test.octave else -2
+
+    # If the objects are the same type
+    score += 20 if true.asname() == test.asname() else -20
+    return score
+
+  def populate(self):
+    for index, value in enumerate(self.true_data):
+      self.matrix.m[index][0] = self.gap_extend * index
+      self.matrix.x[index][0] = float("-inf")
+      self.matrix.y[index][0] = float("-inf")
+    for index, value in enumerate(self.test_data):
+      self.matrix.m[0][index] = self.gap_extend * index
+      self.matrix.x[0][index] = self.gap_extend * index
+      self.matrix.y[0][index] = float("-inf")
+
+    for i in range(1, len(self.true_data)):
+      for j in range(1, len(self.test_data)):
+        match_score = self.scoring_method(self.true_data[i - 1], self.test_data[j - 1])
+
+        matrix_values = [
+          self.matrix.m[i - 1][j - 1],
+          self.matrix.x[i - 1][j - 1],
+          self.matrix.y[i - 1][j - 1],
+        ]
+        self.matrix.m[i][j] = max(matrix_values) + match_score
+        self.matrix.pointer[i][j] = matrix_values.index(max(matrix_values))
+
+        x_matrix_values = [
+          self.matrix.m[i - 1][j] + self.gap_open_x + self.gap_extend_x,
+          self.matrix.x[i - 1][j] + self.gap_extend_x,
+          self.matrix.y[i - 1][j] + self.gap_open_x + self.gap_extend_x,
+        ]
+        self.matrix.x[i][j] = max(x_matrix_values)
+        self.matrix.x_pointer[i][j] = x_matrix_values.index(max(x_matrix_values))
+
+        y_matrix_values = [
+          self.matrix.m[i][j - 1] + self.gap_open_y + self.gap_extend_y,
+          self.matrix.x[i][j - 1] + self.gap_open_y + self.gap_extend_y,
+          self.matrix.y[i][j - 1] + self.gap_extend_y,
+        ]
+        self.matrix.y[i][j] = max(y_matrix_values)
+        self.matrix.y_pointer[i][j] = y_matrix_values.index(max(y_matrix_values))
+
+    self.traceback()
+
+
 if __name__ == "__main__":
   seq1 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit '
   seq2 = 'LoLorem fipsudor ..... st emet, c.nnr adizcing eelilit'
