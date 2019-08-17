@@ -1,4 +1,4 @@
-from io import StringIO, BytesIO
+from io import BytesIO
 
 import attr
 from lxml import etree
@@ -40,7 +40,7 @@ from gandalf.extra import (
 from gandalf.sequence_alignment import AffineNeedlemanWunsch
 
 
-def validate_xml(musicxml_filepath):
+def validate_xml(musicxml_filepath, schema_filepath=__return_root_path() + "/tests/xml/musicxml.xsd"):
   """
   Return if the provided musicxml file is valid against the current musicxml schema.
 
@@ -52,13 +52,14 @@ def validate_xml(musicxml_filepath):
   Returns:
     bool
   """
-  schema_filepath = __return_root_path() + "/tests/xml/musicxml.xsd"
-  with open(schema_filepath, "r") as schema:
-    schema = StringIO(schema.read())
   with open(musicxml_filepath, "rb") as xml_file:
     test = BytesIO(xml_file.read())
 
-  xml_schema = etree.XMLSchema(etree.parse(schema_filepath))
+  try:
+    xml_schema = etree.XMLSchema(etree.parse(schema_filepath))
+  except etree.XMLSyntaxError:
+    xml_schema = etree.DTD(schema_filepath)
+
   return xml_schema.validate(etree.parse(test))
 
 

@@ -3,9 +3,6 @@ import sys
 
 import pytest
 
-from gandalf.application import Compare
-from gandalf.extra import __return_root_path
-
 
 def pytest_addoption(parser):
   parser.addoption("--runslow", action="store_true", default=False, help="run slow tests")
