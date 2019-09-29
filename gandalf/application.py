@@ -40,7 +40,7 @@ from gandalf.extra import (
 from gandalf.sequence_alignment import AffineNeedlemanWunsch
 
 
-def validate_xml(musicxml_filepath, schema_filepath=__return_root_path() + "/tests/xml/musicxml.xsd"):
+def xml_validator(musicxml_filepath, schema_filepath=__return_root_path() + "/tests/xml/musicxml.xsd"):
   """
   Return if the provided musicxml file is valid against the current musicxml schema.
 
