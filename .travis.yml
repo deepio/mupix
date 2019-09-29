@@ -24,4 +24,4 @@ install:
   - poetry install
 
 script:
-  - pytest
+  - pytest --runslow
