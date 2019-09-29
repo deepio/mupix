@@ -1,4 +1,4 @@
-from io import StringIO, BytesIO
+from io import BytesIO
 
 import attr
 from lxml import etree
@@ -40,7 +40,7 @@ from gandalf.extra import (
 from gandalf.sequence_alignment import AffineNeedlemanWunsch
 
 
-def validate_xml(musicxml_filepath):
+def xml_validator(musicxml_filepath, schema_filepath=__return_root_path() + "/tests/xml/musicxml.xsd"):
   """
   Return if the provided musicxml file is valid against the current musicxml schema.
 
@@ -52,14 +52,28 @@ def validate_xml(musicxml_filepath):
   Returns:
     bool
   """
-  schema_filepath = __return_root_path() + "/tests/xml/musicxml.xsd"
-  with open(schema_filepath, "r") as schema:
-    schema = StringIO(schema.read())
   with open(musicxml_filepath, "rb") as xml_file:
     test = BytesIO(xml_file.read())
 
-  xml_schema = etree.XMLSchema(etree.parse(schema_filepath))
+  try:
+    xml_schema = etree.XMLSchema(etree.parse(schema_filepath))
+  except etree.XMLSyntaxError:
+    xml_schema = etree.DTD(schema_filepath)
+
   return xml_schema.validate(etree.parse(test))
+
+
+def xml_type_finder(musicxml_filepath):
+  """
+  Check if the xml file is written in a partwise or timewise fashion.
+  """
+  with open(musicxml_filepath, "r") as xml_file:
+    for line in xml_file:
+      if "score-partwise" in line.lower():
+        return "Partwise"
+      elif "score-timewise" in line.lower():
+        return "Timewise"
+    raise Exception("File has neither time-wise or part-wise tags")
 
 
 @attr.s

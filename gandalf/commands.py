@@ -1,6 +1,7 @@
 import click
 
-from gandalf.application import validate_xml
+from gandalf.application import xml_validator
+from gandalf.application import xml_type_finder
 from gandalf.application import Compare
 from gandalf.application import ParseMusic21
 from gandalf.extra import output_filter
@@ -63,4 +64,12 @@ def validate(file_path):
   """
   """
   for f in file_path:
-    print(f"{f}: {validate_xml(f)}")
+    print(f"{f}: {xml_validator(f)}")
+
+@cli.command("xml_type", short_help="Check the format of the musicxml.")
+@click.argument("file_path", nargs=-1)
+def validate(file_path):
+  """
+  """
+  for f in file_path:
+    print(f"{f}: {xml_type_finder(f)}")

@@ -1,8 +1,10 @@
 {
-    "python.linting.pylintEnabled": false,
-    "python.linting.flake8Enabled": true,
-    "python.linting.enabled": true,
-    "python.pythonPath": "${workspaceFolder}/env/bin/python",
-    "python.jediEnabled": false,
-    "editor.formatOnSave": true
+  "python.linting.pylintEnabled": false,
+  "python.linting.flake8Enabled": true,
+  "python.linting.enabled": true,
+  "python.pythonPath": "${workspaceFolder}/env/bin/python",
+  "python.jediEnabled": false,
+  // "editor.formatOnSave": true,
+  "spellright.language": ["en"],
+  "spellright.documentTypes": ["markdown", "latex", "plaintext", "python"]
 }
