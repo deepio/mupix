@@ -63,6 +63,19 @@ def xml_validator(musicxml_filepath, schema_filepath=__return_root_path() + "/te
   return xml_schema.validate(etree.parse(test))
 
 
+def xml_type_finder(musicxml_filepath):
+  """
+  Check if the xml file is written in a partwise or timewise fashion.
+  """
+  with open(musicxml_filepath, "r") as xml_file:
+    for line in xml_file:
+      if "score-partwise" in line.lower():
+        return "Partwise"
+      elif "score-timewise" in line.lower():
+        return "Timewise"
+    raise Exception("File has neither time-wise or part-wise tags")
+
+
 @attr.s
 class ParseMusic21(GandalfObject):
   """
