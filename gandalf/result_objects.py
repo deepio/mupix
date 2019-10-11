@@ -18,14 +18,14 @@ class Result:
   @name.default
   def _get_name(self):
     """
-    Get the name of this Results object, even when it's inherited so its still available 
+    Get the name of this Results object, even when it's inherited so its still available
     when calling an attrs as a dictionary.
     """
     return str(self.__class__.__name__)
 
   def asdict(self):
     """
-    This is a just a method to unify. I'd rather have a method to turn a class object 
+    This is a just a method to unify. I'd rather have a method to turn a class object
     into a dictionary, instead of how attrs works like this.
     """
     return attr.asdict(self)

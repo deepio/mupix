@@ -37,7 +37,10 @@ from gandalf.extra import (
   __return_root_path,
   return_char_except
 )
-from gandalf.sequence_alignment import AffineNeedlemanWunsch
+from gandalf.sequence_alignment import (
+  AffineNeedlemanWunsch,
+  AdvancedAffineNeedlemanWunsch
+)
 
 
 def xml_validator(musicxml_filepath, schema_filepath=__return_root_path() + "/tests/xml/musicxml.xsd"):
@@ -108,9 +111,6 @@ class Compare(GandalfObject):
   This is a simple class for comparing Gandalf Objects.
   """
   def __init__(self, true_filepath, test_filepath, sorting_algorithm="basic"):
-    self.true_data = ParseMusic21.from_filepath(true_filepath)
-    self.test_data = ParseMusic21.from_filepath(test_filepath)
-
     # Notes
     self.notes = []
     self.notes_pitch = NotePitchResult()
@@ -145,6 +145,10 @@ class Compare(GandalfObject):
     self.clefs_line = ClefLineResult()
     self.clefs_octave = ClefOctaveResult()
     self.clefs_total = ClefTotalResult()
+
+    # Parse both files
+    self.true_data = ParseMusic21.from_filepath(true_filepath)
+    self.test_data = ParseMusic21.from_filepath(test_filepath)
 
     if sorting_algorithm == "basic":
       # Using a "dumb" alignment
