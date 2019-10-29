@@ -91,7 +91,8 @@ class ParseMusic21(GandalfObject):
     for parts_index, parts in enumerate(music21.converter.parseFile(filepath).recurse().getElementsByClass("Part"), 1):  # noqa
       notes += [NoteObject(item, parts_index) for item in parts.recurse().notes if not item.isChord]
       rests += [RestObject(item, parts_index) for item in parts.recurse().notesAndRests if not item.isNote]
-      timeSignatures += [TimeSignatureObject(item, parts_index) for item in parts.recurse().getTimeSignatures()]
+      # timeSignatures += [TimeSignatureObject(item, parts_index) for item in parts.recurse().getTimeSignatures()]
+      timeSignatures += [TimeSignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("TimeSignature")]
       keySignatures += [KeySignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("KeySignature")]  # noqa
       clefs += [ClefObject(item, parts_index) for item in parts.recurse().getElementsByClass("Clef")]
 
@@ -220,7 +221,7 @@ class Compare(GandalfObject):
     # If there is an extra object in the test data, it's better to just delete the note. + 1 wrong to the total
     if true_object == "_":
       self.__getattribute__(f"{test_object.asname()}_total").wrong += 1
-      self.error_description[f"part{true_part}_{true_onset}_{true_mu21_obj}"] = f"part{test_part}_{test_onset}_{test_mu21_obj}"
+      self.error_description[f"part{true_part}_{true_onset}_{true_mu21_obj}"] = f"part{test_part}_{test_onset}_{test_mu21_obj}"  # noqa
     else:
       for param in self._return_parameter_names(true_object.asname()):
         try:

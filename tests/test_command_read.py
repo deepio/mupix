@@ -104,22 +104,22 @@ def test_time_signature_parse_xml():
   assert time_signatures[0].denominator == 4
 
   assert time_signatures[1].measure == 2
-  assert time_signatures[1].onset == "4.0"
+  assert time_signatures[1].onset == "0.0"
   assert time_signatures[1].numerator == 7
   assert time_signatures[1].denominator == 8
 
   assert time_signatures[2].measure == 3
-  assert time_signatures[2].onset == "7.5"
+  assert time_signatures[2].onset == "0.0"
   assert time_signatures[2].numerator == 25
   assert time_signatures[2].denominator == 16
 
   assert time_signatures[3].measure == 4
-  assert time_signatures[3].onset == "13.75"
+  assert time_signatures[3].onset == "0.0"
   assert time_signatures[3].numerator == 4
   assert time_signatures[3].denominator == 4
 
   assert time_signatures[4].measure == 5
-  assert time_signatures[4].onset == "17.75"
+  assert time_signatures[4].onset == "0.0"
   assert time_signatures[4].numerator == 2
   assert time_signatures[4].denominator == 2
 
