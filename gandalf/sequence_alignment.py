@@ -208,6 +208,12 @@ class AdvancedAffineNeedlemanWunsch(AffineNeedlemanWunsch):
     """
     score = 0
 
+    try:
+      true.asname()
+      test.asname()
+    except AttributeError:
+      return score
+
     # If both objects are Notes
     if true.asname() == "Note" and test.asname() == "Note":
       score += 5 if true.octave == test.octave else -5
@@ -237,6 +243,7 @@ class AdvancedAffineNeedlemanWunsch(AffineNeedlemanWunsch):
 
     # If the objects are the same type
     score += 20 if true.asname() == test.asname() else -20
+
     return score
 
   def populate(self):
@@ -249,8 +256,8 @@ class AdvancedAffineNeedlemanWunsch(AffineNeedlemanWunsch):
       self.matrix.x[0][index] = self.gap_extend * index
       self.matrix.y[0][index] = float("-inf")
 
-    for i in range(1, len(self.true_data)):
-      for j in range(1, len(self.test_data)):
+    for i, _ in enumerate(self.true_data):
+      for j, _ in enumerate(self.test_data):
         match_score = self.scoring_method(self.true_data[i - 1], self.test_data[j - 1])
 
         matrix_values = [
