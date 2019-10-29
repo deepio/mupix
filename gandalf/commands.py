@@ -17,10 +17,9 @@ from gandalf.extra import output_filter
 @click.pass_context
 def cli(ctx, p, n, r, t, k, c):
   """
-  This tool helps parse MusicXML files and can list how many discrepancies there are, and what they are.
-  Feed it any musicXML file and it will list all of its contents, or compare a musicXML file with a
-  "ground truth" musicXML file that you know to be correct. It will list how many mistakes there are, and
-  what they are as well.
+  This tool helps parse MusicXML files and can list how many discrepancies there are, and what type they are.
+
+  Feed it any musicXML file and it will list all of its contents, or compare a musicXML file with a "ground truth" musicXML file that you know to be correct. It will list how many mistakes there are, and what they are as well.
   """
 
 
@@ -33,13 +32,22 @@ def compare(ctx, sort, true_data, test_data):
   """
   Compares two MusicXML files.
 
-  Arguments:
-    --sort=basic    Uses a dumb alignment that does not look forward or backward in time.
-    --sort=anw      Uses a simplistic version of the Affine-Needleman-Wunsch based on
-                      a single element from the Gandalf Objects.
+  OPTIONS:
 
-  Accepts as input:
+    --sort=basic    Uses a dumb alignment that does not look forward or backward in time.                                                
+
+    --sort=anw      Uses a simplistic version of the Affine-Needleman-Wunsch based on a single element from the Gandalf Objects.
+
+    --sort=anw-1    Uses the first version of the Affine-Needleman-Wunsch algorithm, based on multiple elements from each of the Gandalf Objects.
+
+  TRUE_DATA:
+
     <file>                        A single file
+
+  [TEST_DATA]:
+
+    <file>                        A single file
+
     <file A> <file B> <file C>    A list of files delineated with a space
   """
   for f in test_data:
@@ -58,8 +66,11 @@ def compare(ctx, sort, true_data, test_data):
 def read(ctx, file_path):
   """
   Prints to screen the parsed symbolic file as a list of elements.
-  Accepts as input:
+
+  [FILE_PATH]:
+
     <file>                        A single file
+
     <file A> <file B> <file C>    A list of files delineated with a space
   """
   for f in file_path:
@@ -71,8 +82,11 @@ def read(ctx, file_path):
 def validate(file_path):
   """
   Checks if the given file is a valid musicXML file.
-  Accepts as input:
+
+  [FILE_PATH]:
+
     <file>                        A single file
+
     <file A> <file B> <file C>    A list of files delineated with a space
   """
   for f in file_path:
@@ -84,8 +98,11 @@ def validate(file_path):
 def xml_finder(file_path):
   """
   Checks if the given musicXML file is written in a part-wise or time-wise fashion.
-  Accepts as input:
+
+  [FILE_PATH]:
+
     <file>                        A single file
+
     <file A> <file B> <file C>    A list of files delineated with a space
   """
   for f in file_path:

@@ -83,8 +83,16 @@ class NoteTotalResult(Result):
 @attr.s
 class RestAccidentalResult(Result):
   """
-  I remeber tthere was a reason why this was here, but I can not
-  for the life of me remember what that was.
+  It sounds weird, but rests are note objects in musicxml. In the event one is added erroneously, 
+  we should count it.
+  """
+
+
+@attr.s
+class RestArticulationResult(Result):
+  """
+  Articulations can not exist by themselves in an empty measure. They must be attached to a note
+  or a rest.
   """
 
 
