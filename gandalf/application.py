@@ -92,7 +92,7 @@ class ParseMusic21(GandalfObject):
       notes += [NoteObject(item, parts_index) for item in parts.recurse().notes if not item.isChord]
       rests += [RestObject(item, parts_index) for item in parts.recurse().notesAndRests if not item.isNote]
       # timeSignatures += [TimeSignatureObject(item, parts_index) for item in parts.recurse().getTimeSignatures()]
-      timeSignatures += [TimeSignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("TimeSignature")]
+      timeSignatures += [TimeSignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("TimeSignature")]  # noqa
       keySignatures += [KeySignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("KeySignature")]  # noqa
       clefs += [ClefObject(item, parts_index) for item in parts.recurse().getElementsByClass("Clef")]
 
