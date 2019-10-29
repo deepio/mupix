@@ -51,13 +51,15 @@ def output_filter(ctx, func, *args, **kwargs):
 
   msg = {}
   # If no filtering options are defined, output all information
-  if all(value == False for value in ctx.values()) or ctx["p"]:  # noqa
+  if all(value == False for value in [ctx["n"], ctx["r"], ctx["t"], ctx["k"], ctx["c"], ctx["z"]]):  # noqa
+    raise Exception(f"Hmm {ctx.values()} {ctx}")
     # turn to json serializable.
     msg["Notes"] = [i.asdict() for i in output.notes]
     msg["Rests"] = [i.asdict() for i in output.rests]
     msg["TimeSignatures"] = [i.asdict() for i in output.timeSignatures]
     msg["KeySignatures"] = [i.asdict() for i in output.keySignatures]
     msg["Clefs"] = [i.asdict() for i in output.clefs]
+    msg["ErrorDescription"] = output.error_description
   else:
     # Not Pretty Print with a combination
     if ctx["n"]:
@@ -70,6 +72,8 @@ def output_filter(ctx, func, *args, **kwargs):
       msg["KeySignatures"] = [i.asdict() for i in output.keySignatures]
     if ctx["c"]:
       msg["Clefs"] = [i.asdict() for i in output.clefs]
+    if ctx["z"]:
+      msg["ErrorDescription"] = output.error_description
 
   if not ctx["p"]:
     print(msg)

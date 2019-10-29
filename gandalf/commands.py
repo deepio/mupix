@@ -14,8 +14,9 @@ from gandalf.extra import output_filter
 @click.option("-t/--time-signatures", default=False, help="Show the time signatures")
 @click.option("-k/--key-signatures", default=False, help="Show the key signatures")
 @click.option("-c/--clefs", default=False, help="Show the clefs")
+@click.option("-z/--error-description", default=False,)
 @click.pass_context
-def cli(ctx, p, n, r, t, k, c):
+def cli(ctx, p, n, r, t, k, c, z):
   """
   This tool helps parse MusicXML files and can list how many discrepancies there are, and what type they are.
 

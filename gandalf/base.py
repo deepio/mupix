@@ -11,6 +11,7 @@ class GandalfObject():
   keySignatures = attr.ib(kw_only=True,)
   clefs = attr.ib(kw_only=True,)
   parts = attr.ib(kw_only=True, type=int, validator=[attr.validators.instance_of(int)])
+  error_description = attr.ib(kw_only=True, type=dict, validator=[attr.validators.instance_of(dict)])
 
   @notes.validator
   @rests.validator
@@ -22,7 +23,7 @@ class GandalfObject():
       raise ValueError(f"Must be a list or Results Object. {type(value)}")
 
   def ret(self):
-    return self.notes, self.rests, self.timeSignatures, self.keySignatures, self.clefs
+    return self.notes, self.rests, self.timeSignatures, self.keySignatures, self.clefs, self.error_description
 
 
 @attr.s

@@ -93,6 +93,7 @@ class ParseMusic21(GandalfObject):
       timeSignatures += [TimeSignatureObject(item, parts_index) for item in parts.recurse().getTimeSignatures()]
       keySignatures += [KeySignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("KeySignature")]  # noqa
       clefs += [ClefObject(item, parts_index) for item in parts.recurse().getElementsByClass("Clef")]
+
     return cls(
       notes=notes,
       rests=rests,
@@ -100,6 +101,7 @@ class ParseMusic21(GandalfObject):
       keySignatures=keySignatures,
       clefs=clefs,
       parts=parts_index,
+      error_description={},
     )
 
   def __iter__(self):
@@ -150,6 +152,8 @@ class Compare(GandalfObject):
     self.true_data = ParseMusic21.from_filepath(true_filepath)
     self.test_data = ParseMusic21.from_filepath(test_filepath)
 
+    self.error_description = {}
+
     if sorting_algorithm == "basic":
       # Using a "dumb" alignment
       self._object_split()
@@ -188,9 +192,30 @@ class Compare(GandalfObject):
       - Then check for each parameter available in the type of marking, count an error for each wrong element and a
         right for every correct. This function should works for all Gandalf objects.
     """
+    # If object is missaligned
+    try:
+      true_part = true_object.part
+      true_onset = true_object.onset
+      true_mu21_obj = true_object._music21_object
+    except AttributeError:
+      true_part = "_"
+      true_onset = ""
+      true_mu21_obj = ""
+
+    # If object is missaligned
+    try:
+      test_part = test_object.part
+      test_onset = test_object.onset
+      test_mu21_obj = test_object._music21_object
+    except AttributeError:
+      test_part = "_"
+      test_onset = ""
+      test_mu21_obj = ""
+
     # If there is an extra object in the test data, it's better to just delete the note. + 1 wrong to the total
     if true_object == "_":
       self.__getattribute__(f"{test_object.asname()}_total").wrong += 1
+      self.error_description[f"part{true_part}_{true_onset}_{true_mu21_obj}"] = f"part{test_part}_{test_onset}_{test_mu21_obj}"
     else:
       for param in self._return_parameter_names(true_object.asname()):
         try:
@@ -198,9 +223,11 @@ class Compare(GandalfObject):
             self.__getattribute__(param).right += 1
           else:
             self.__getattribute__(param).wrong += 1
+            self.error_description[f"part{true_part}_{true_onset}_{true_mu21_obj}"] = f"part{test_part}_{test_onset}_{test_mu21_obj}"  # noqa
         except AttributeError:
           # If the object needs to be created, each parameter needs to be added individually, +1 error each.
           self.__getattribute__(param).wrong += 1
+          self.error_description[f"part{true_part}_{true_onset}_{true_mu21_obj}"] = f"part{test_part}_{test_onset}_{test_mu21_obj}"  # noqa
 
   def _object_split(self):
     """
