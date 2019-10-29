@@ -20,6 +20,7 @@ from gandalf.result_objects import (
   NoteBeamResult,
   NoteTotalResult,
   RestAccidentalResult,
+  RestArticulationResult,
   RestDurationResult,
   RestTotalResult,
   TimeSignatureNumeratorResult,
@@ -126,6 +127,7 @@ class Compare(GandalfObject):
     # Rests
     self.rests = []
     self.rests_accidental = RestAccidentalResult()
+    self.rests_articulation = RestArticulationResult()
     self.rests_duration = RestDurationResult()
     self.rests_total = RestTotalResult()
 
