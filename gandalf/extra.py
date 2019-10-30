@@ -48,33 +48,38 @@ def output_filter(ctx, func, *args, **kwargs):
   This is a helper function to filter the output of all commands into notes, rests, etc.
   """
   output = func(*args, **kwargs)
-
   msg = {}
+
   # If no filtering options are defined, output all information
-  if all(value == False for value in [ctx["n"], ctx["r"], ctx["t"], ctx["k"], ctx["c"], ctx["z"]]):  # noqa
+  if all(value == False for value in [ctx["notes"], ctx["rests"], ctx["time_signatures"], ctx["key_signatures"], ctx["clefs"]]):  # noqa
     # turn to json serializable.
     msg["Notes"] = [i.asdict() for i in output.notes]
     msg["Rests"] = [i.asdict() for i in output.rests]
     msg["TimeSignatures"] = [i.asdict() for i in output.timeSignatures]
     msg["KeySignatures"] = [i.asdict() for i in output.keySignatures]
     msg["Clefs"] = [i.asdict() for i in output.clefs]
-    msg["ErrorDescription"] = output.error_description
+    # Leave out of the regular output
+    # msg["ErrorDescription"] = output.error_description
   else:
     # Not Pretty Print with a combination
-    if ctx["n"]:
+    if ctx["notes"]:
       msg["Notes"] = [i.asdict() for i in output.notes]
-    if ctx["r"]:
+    if ctx["rests"]:
       msg["Rests"] = [i.asdict() for i in output.rests]
-    if ctx["t"]:
+    if ctx["time_signatures"]:
       msg["TimeSignatures"] = [i.asdict() for i in output.timeSignatures]
-    if ctx["k"]:
+    if ctx["key_signatures"]:
       msg["KeySignatures"] = [i.asdict() for i in output.keySignatures]
-    if ctx["c"]:
+    if ctx["clefs"]:
       msg["Clefs"] = [i.asdict() for i in output.clefs]
-    if ctx["z"]:
+    if ctx["error_description"]:
       msg["ErrorDescription"] = output.error_description
 
-  if not ctx["p"]:
+  if ctx["total_only"]:
+    for category in msg:
+      msg[category] = [item for item in msg[category] if 'Total' in item['name']]
+
+  if not ctx["pretty_print"]:
     print(msg)
   else:
     print(json.dumps(msg, indent=2))

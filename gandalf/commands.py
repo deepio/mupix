@@ -8,15 +8,16 @@ from gandalf.extra import output_filter
 
 
 @click.group()
-@click.option("-p/--pretty-print", default=False, help="Print the output with and automatic indent.")
-@click.option("-n/--notes", default=False, help="Show note objects")
-@click.option("-r/--rests", default=False, help="Show rest objects")
-@click.option("-t/--time-signatures", default=False, help="Show the time signatures")
-@click.option("-k/--key-signatures", default=False, help="Show the key signatures")
-@click.option("-c/--clefs", default=False, help="Show the clefs")
-@click.option("-z/--error-description", default=False,)
+@click.option("-p", "--pretty-print", is_flag=True, help="Print the output with and automatic indent.")
+@click.option("-n", "--notes", is_flag=True, help="Show note objects")
+@click.option("-r", "--rests", is_flag=True, help="Show rest objects")
+@click.option("-t", "--time-signatures", is_flag=True, help="Show the time signatures")
+@click.option("-k", "--key-signatures", is_flag=True, help="Show the key signatures")
+@click.option("-c", "--clefs", is_flag=True, help="Show the clefs")
+@click.option("-z", "--error-description", is_flag=True, help="What element matched with what")
+@click.option("-T", "--total-only", is_flag=True, help="Show the total of each category")
 @click.pass_context
-def cli(ctx, p, n, r, t, k, c, z):
+def cli(ctx, pretty_print, notes, rests, time_signatures, key_signatures, clefs, error_description, total_only):
   """
   This tool helps parse MusicXML files and can list how many discrepancies there are, and what type they are.
 
