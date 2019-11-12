@@ -5,6 +5,12 @@
   "python.pythonPath": "${workspaceFolder}/env/bin/python",
   "python.jediEnabled": false,
   // "editor.formatOnSave": true,
-  "spellright.language": ["en"],
-  "spellright.documentTypes": ["markdown", "latex", "plaintext", "python"]
+  "spellright.language": [
+    "en"
+  ],
+  "spellright.documentTypes": [
+    "markdown",
+    "latex",
+    "plaintext"
+  ]
 }
