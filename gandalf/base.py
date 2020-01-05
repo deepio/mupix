@@ -1,3 +1,5 @@
+import copy
+
 import attr
 
 from gandalf.result_objects import Result
@@ -155,3 +157,54 @@ class ClefObject(Marking):
   @octave.default
   def _get_octave(self):
     return self._music21_object.octaveChange
+
+
+def normalize_object_list(input_list, maximum):
+  """
+  Different software vendors encode time signatures, key signatures, and clefs in a peculiar way.
+  Some repeat the previous object in every following measure:
+    eg: Let's say this hypothetical score has 44 measures. When parsing a problematic musicXML file,
+      you will notice there are 44 treble clefs in the same instrument part. Meaning the same,
+      unchanging clef, was repeated once per measure in the file. The same can happen on a per-system
+      basis. It is not a bad way to explain the music because each element implied, even if it is missing.
+  To avoid any further complication, the clefs, time signatures, and key signatures have been
+  "normalized" to always be repeated on every measure, because they are still "acting" on a measure when
+  they are omitted.
+
+  [TODO] Clean up the algorithm, maybe splitting it into an iter and a yielder or something with dequeue
+  for better readability. This is just a PoC anyway. 
+
+  Args:
+    input_list (list): A list of objects (KeySignatureObject, TimeSignatureObject or ClefObject).
+    maximum (int): How many measures should the objects be expanded for.
+
+  Returns:
+    list: The expanded object list
+  """
+
+  measure = 1
+  output_list = []
+
+  while measure <= maximum:
+    try:
+      # Next element follows sequential number
+      if input_list[0].measure == measure:
+        output_list.append(input_list.pop(0))
+        measure += 1
+      # Missing element, create a new one and add it at the end of the list
+      elif input_list[0].measure > measure:
+        last_object = copy.deepcopy(output_list[-1])
+        last_object.measure += 1
+        output_list.append(last_object)
+        measure += 1
+      # Next element has the same number as the previous one, but the other attributes are different.
+      elif input_list[0].measure < measure:
+        output_list.append(input_list.pop(0))
+    # `input_list` last item's number was smaller than maximum.
+    # Keep creating a duplicate of the last item until maximum is reached.
+    except IndexError:
+      tail_object = copy.deepcopy(output_list[-1])
+      tail_object.measure += 1
+      output_list.append(tail_object)
+      measure += 1
+  return output_list

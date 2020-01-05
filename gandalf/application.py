@@ -1,4 +1,5 @@
 from io import BytesIO
+import operator
 
 import attr
 from lxml import etree
@@ -10,7 +11,8 @@ from gandalf.base import (
   RestObject,
   TimeSignatureObject,
   KeySignatureObject,
-  ClefObject)
+  ClefObject,
+  normalize_object_list)
 from gandalf.result_objects import (
   NotePitchResult,
   NoteDurationResult,
@@ -84,6 +86,8 @@ def xml_type_finder(musicxml_filepath):
 class ParseMusic21(GandalfObject):
   """
   This is just a simplifying wrapper around Music21, so it can import anything Music21 can.
+  Not using bare music21 because:
+    https://github.com/cuthbertLab/music21/issues/462
   """
   @classmethod
   def from_filepath(cls, filepath):
@@ -95,6 +99,11 @@ class ParseMusic21(GandalfObject):
       timeSignatures += [TimeSignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("TimeSignature")]  # noqa
       keySignatures += [KeySignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("KeySignature")]  # noqa
       clefs += [ClefObject(item, parts_index) for item in parts.recurse().getElementsByClass("Clef")]
+
+    measuresInScore = max(notes + rests, key=operator.attrgetter('measure')).measure
+    timeSignatures = normalize_object_list(input_list=timeSignatures, maximum=measuresInScore,)
+    keySignatures = normalize_object_list(input_list=keySignatures, maximum=measuresInScore,)
+    clefs = normalize_object_list(input_list=clefs, maximum=measuresInScore,)
 
     return cls(
       notes=notes,
