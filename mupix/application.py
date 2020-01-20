@@ -5,25 +5,28 @@ import attr
 from lxml import etree
 import music21
 
-from gandalf.base import (
-  GandalfObject,
+from mupix.base import (
+  MupixObject,
   NoteObject,
   RestObject,
   TimeSignatureObject,
   KeySignatureObject,
   ClefObject,
   normalize_object_list)
-from gandalf.result_objects import (
+from mupix.result_objects import (
   NotePitchResult,
   NoteDurationResult,
   NoteOctaveResult,
   NoteAccidentalResult,
+  NoteArticulationResult,
   NoteStemDirectionResult,
   NoteBeamResult,
+  NoteVoiceResult,
   NoteTotalResult,
   RestAccidentalResult,
   RestArticulationResult,
   RestDurationResult,
+  RestVoiceResult,
   RestTotalResult,
   TimeSignatureNumeratorResult,
   TimeSignatureDenominatorResult,
@@ -36,11 +39,11 @@ from gandalf.result_objects import (
   ClefOctaveResult,
   ClefTotalResult,
 )
-from gandalf.extra import (
+from mupix.extra import (
   __return_root_path,
   return_char_except
 )
-from gandalf.sequence_alignment import (
+from mupix.sequence_alignment import (
   AffineNeedlemanWunsch,
   AdvancedAffineNeedlemanWunsch
 )
@@ -83,7 +86,7 @@ def xml_type_finder(musicxml_filepath):
 
 
 @attr.s
-class ParseMusic21(GandalfObject):
+class ParseMusic21(MupixObject):
   """
   This is just a simplifying wrapper around Music21, so it can import anything Music21 can.
   Not using bare music21 because:
@@ -100,10 +103,11 @@ class ParseMusic21(GandalfObject):
       keySignatures += [KeySignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("KeySignature")]  # noqa
       clefs += [ClefObject(item, parts_index) for item in parts.recurse().getElementsByClass("Clef")]
 
-    measuresInScore = max(notes + rests, key=operator.attrgetter('measure')).measure
-    timeSignatures = normalize_object_list(input_list=timeSignatures, maximum=measuresInScore,)
-    keySignatures = normalize_object_list(input_list=keySignatures, maximum=measuresInScore,)
-    clefs = normalize_object_list(input_list=clefs, maximum=measuresInScore,)
+    # print(timeSignatures)
+    # measuresInScore = max(notes + rests, key=operator.attrgetter('measure')).measure
+    # timeSignatures = normalize_object_list(input_list=timeSignatures, maximum=measuresInScore,)
+    # keySignatures = normalize_object_list(input_list=keySignatures, maximum=measuresInScore,)
+    # clefs = normalize_object_list(input_list=clefs, maximum=measuresInScore,)
 
     return cls(
       notes=notes,
@@ -119,9 +123,9 @@ class ParseMusic21(GandalfObject):
     return iter(self.ret())
 
 
-class Compare(GandalfObject):
+class Compare(MupixObject):
   """
-  This is a simple class for comparing Gandalf Objects.
+  This is a simple class for comparing Mupix Objects.
   """
   def __init__(self, true_filepath, test_filepath, sorting_algorithm="basic"):
     # Notes
@@ -130,8 +134,10 @@ class Compare(GandalfObject):
     self.notes_duration = NoteDurationResult()
     self.notes_octave = NoteOctaveResult()
     self.notes_accidental = NoteAccidentalResult()
+    self.notes_articulation = NoteArticulationResult()
     self.notes_stemdirection = NoteStemDirectionResult()
     self.notes_beam = NoteBeamResult()
+    self.notes_voice = NoteVoiceResult()
     self.notes_total = NoteTotalResult()
 
     # Rests
@@ -139,6 +145,7 @@ class Compare(GandalfObject):
     self.rests_accidental = RestAccidentalResult()
     self.rests_articulation = RestArticulationResult()
     self.rests_duration = RestDurationResult()
+    self.rests_voice = RestVoiceResult()
     self.rests_total = RestTotalResult()
 
     # Time Signatures
@@ -192,20 +199,20 @@ class Compare(GandalfObject):
     For a specific field, return all items
 
     For notes:
-      ['notes_accidental', 'notes_beam', 'notes_duration', 'notes_octave', 'notes_pitch', 'notes_stemdirection']
+      ['notes_accidental', 'notes_articulation', 'notes_beam', 'notes_duration', 'notes_octave', 'notes_pitch', 'notes_stemdirection']
     """
     return [item for item in dir(self) if field in item and "_" in item and "total" not in item]
 
   def _compare(self, true_object, test_object):
     """
-    Compare two Gandalf Objects.
+    Compare two Mupix Objects.
 
       - If the sequence alignment believes there is an extra note in the OMR output, simply deleting the extra note
         should be the solution. Removing each wrong element individually and finally removing the note is not how a
         human would fix this type of error.
 
       - Then check for each parameter available in the type of marking, count an error for each wrong element and a
-        right for every correct. This function should works for all Gandalf objects.
+        right for every correct. This function should works for all Mupix objects.
     """
     # If object is missaligned
     try:
@@ -248,6 +255,7 @@ class Compare(GandalfObject):
     """
     Align Objects together by comparing voice, measure and onset.
     """
+    # print(self._return_object_names())
     for obj in self._return_object_names():
       for true_object in self.true_data.__getattribute__(obj):
         for test_object in self.test_data.__getattribute__(obj):

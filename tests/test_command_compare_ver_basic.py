@@ -1,7 +1,7 @@
 import pytest
 
-from gandalf.application import Compare
-from gandalf.extra import __return_root_path
+from mupix.application import Compare
+from mupix.extra import __return_root_path
 
 # Test Files path
 ROOT_DIR = __return_root_path() + "/tests/xml"
@@ -20,7 +20,7 @@ def load_single_voice_compare_resources():
 
 def test_compare_single_voice_notes_total(load_single_voice_compare_resources):
   # raise Exception(load_single_voice_compare_resources.notes[-1])
-  assert load_single_voice_compare_resources.notes[-1].right == 46
+  assert load_single_voice_compare_resources.notes[-1].right == 62
   assert load_single_voice_compare_resources.notes[-1].wrong == 2
 
 

@@ -18,7 +18,7 @@ def __return_root_path() -> str:
 
 def return_char_except(value: int) -> str:
   """
-  Because we are already using the "_" to signal a skipped Gandalf Object.
+  Because we are already using the "_" to signal a skipped Mupix Object.
   """
   if value >= 95:
     value += 1

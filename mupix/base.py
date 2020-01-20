@@ -2,11 +2,11 @@ import copy
 
 import attr
 
-from gandalf.result_objects import Result
+from mupix.result_objects import Result
 
 
 @attr.s
-class GandalfObject():
+class MupixObject():
   notes = attr.ib(kw_only=True,)
   rests = attr.ib(kw_only=True,)
   timeSignatures = attr.ib(kw_only=True,)
@@ -172,7 +172,7 @@ def normalize_object_list(input_list, maximum):
   they are omitted.
 
   [TODO] Clean up the algorithm, maybe splitting it into an iter and a yielder or something with dequeue
-  for better readability. This is just a PoC anyway. 
+  for better readability. This is just a PoC anyway.
 
   Args:
     input_list (list): A list of objects (KeySignatureObject, TimeSignatureObject or ClefObject).
@@ -184,6 +184,9 @@ def normalize_object_list(input_list, maximum):
 
   measure = 1
   output_list = []
+  # If there are no inputs given, skip everything.
+  if len(input_list) == 0:
+    return []
 
   while measure <= maximum:
     try:
@@ -193,17 +196,27 @@ def normalize_object_list(input_list, maximum):
         measure += 1
       # Missing element, create a new one and add it at the end of the list
       elif input_list[0].measure > measure:
-        last_object = copy.deepcopy(output_list[-1])
-        last_object.measure += 1
-        output_list.append(last_object)
-        measure += 1
+        # If there is no information in the first measure, pick the information from the first element and duplicate
+        if len(output_list) == 0:
+          last_object = copy.deepcopy(input_list[0])
+          last_object.measure = measure
+          output_list.append(last_object)
+          measure += 1
+        else:
+          last_object = copy.deepcopy(output_list[-1])
+          last_object.measure += 1
+          output_list.append(last_object)
+          measure += 1
       # Next element has the same number as the previous one, but the other attributes are different.
       elif input_list[0].measure < measure:
         output_list.append(input_list.pop(0))
     # `input_list` last item's number was smaller than maximum.
     # Keep creating a duplicate of the last item until maximum is reached.
     except IndexError:
-      tail_object = copy.deepcopy(output_list[-1])
+      try:
+        tail_object = copy.deepcopy(output_list[-1])
+      except IndexError:
+        raise Exception(len(input_list), input_list, output_list)
       tail_object.measure += 1
       output_list.append(tail_object)
       measure += 1

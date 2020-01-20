@@ -1,10 +1,10 @@
 import click
 
-from gandalf.application import xml_validator
-from gandalf.application import xml_type_finder
-from gandalf.application import Compare
-from gandalf.application import ParseMusic21
-from gandalf.extra import output_filter
+from mupix.application import xml_validator
+from mupix.application import xml_type_finder
+from mupix.application import Compare
+from mupix.application import ParseMusic21
+from mupix.extra import output_filter
 
 
 @click.group()
@@ -26,7 +26,7 @@ def cli(ctx, pretty_print, notes, rests, time_signatures, key_signatures, clefs,
 
 
 @cli.command("compare", short_help="Compare two or more MusicXML files. You may also select the type of algorithm you want to use by specifying --sort=anw")  # noqa
-@click.option("--sort", default="basic", help="Note alignment algorithm to use when aligning Gandalf objects.")
+@click.option("--sort", default="basic", help="Note alignment algorithm to use when aligning Mupix objects.")
 @click.argument("true_data")
 @click.argument("test_data", nargs=-1)
 @click.pass_context
@@ -38,9 +38,9 @@ def compare(ctx, sort, true_data, test_data):
 
     --sort=basic    Uses a dumb alignment that does not look forward or backward in time.                                                
 
-    --sort=anw      Uses a simplistic version of the Affine-Needleman-Wunsch based on a single element from the Gandalf Objects.
+    --sort=anw      Uses a simplistic version of the Affine-Needleman-Wunsch based on a single element from the Mupix Objects.
 
-    --sort=anw-1    Uses the first version of the Affine-Needleman-Wunsch algorithm, based on multiple elements from each of the Gandalf Objects.
+    --sort=anw-1    Uses the first version of the Affine-Needleman-Wunsch algorithm, based on multiple elements from each of the Mupix Objects.
 
   TRUE_DATA:
 

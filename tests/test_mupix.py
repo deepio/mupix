@@ -1,4 +1,4 @@
-from gandalf import __version__
+from mupix import __version__
 
 
 def test_version():
