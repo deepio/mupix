@@ -1,7 +1,7 @@
 import hashlib
 
-from gandalf.application import ParseMusic21
-from gandalf.extra import __return_root_path
+from mupix.application import ParseMusic21
+from mupix.extra import __return_root_path
 
 # Test Files path
 ROOT_DIR = __return_root_path() + "/tests/xml"
@@ -11,8 +11,12 @@ test_file = ROOT_DIR + "/compare/ms_F_Lydian_quarter_test.xml"
 def test_basic_parse_xml():
   """
   Using base64 is not ideal, because it will just get huge!
-  gandalf read ms_F_Lydian_quarter_true.xml | openssl base64 -e
+    mupix read ms_F_Lydian_quarter_true.xml | openssl base64 -e
+      or 
+    mupix read ms_F_Lydian_quarter_true.xml | base64
   b'KHsnMC4wLjAnOiBOb3RlT2JqZWN0KGR1cmF0aW9uPSdlaWdodGgnLCBwaXRjaD0nRicsIG9jdGF2ZT00LCBhY2NpZGVudGFsPScnLCBzdGVtX2RpcmVjdGlvbj0ndXAnKSwgJzAuMC4xJzogTm90ZU9iamVjdChkdXJhdGlvbj0nZWlnaHRoJywgcGl0Y2g9J0cnLCBvY3RhdmU9NCwgYWNjaWRlbnRhbD0nJywgc3RlbV9kaXJlY3Rpb249J3VwJyksICcwLjAuMic6IE5vdGVPYmplY3QoZHVyYXRpb249J2VpZ2h0aCcsIHBpdGNoPSdBJywgb2N0YXZlPTQsIGFjY2lkZW50YWw9JycsIHN0ZW1fZGlyZWN0aW9uPSd1cCcpLCAnMC4wLjMnOiBOb3RlT2JqZWN0KGR1cmF0aW9uPSdlaWdodGgnLCBwaXRjaD0nQicsIG9jdGF2ZT00LCBhY2NpZGVudGFsPScnLCBzdGVtX2RpcmVjdGlvbj0nZG93bicpLCAnMC4xLjAnOiBOb3RlT2JqZWN0KGR1cmF0aW9uPSdlaWdodGgnLCBwaXRjaD0nQycsIG9jdGF2ZT01LCBhY2NpZGVudGFsPScnLCBzdGVtX2RpcmVjdGlvbj0nZG93bicpLCAnMC4xLjEnOiBOb3RlT2JqZWN0KGR1cmF0aW9uPSdlaWdodGgnLCBwaXRjaD0nRCcsIG9jdGF2ZT01LCBhY2NpZGVudGFsPScnLCBzdGVtX2RpcmVjdGlvbj0nZG93bicpLCAnMC4xLjInOiBOb3RlT2JqZWN0KGR1cmF0aW9uPSdlaWdodGgnLCBwaXRjaD0nRScsIG9jdGF2ZT01LCBhY2NpZGVudGFsPScnLCBzdGVtX2RpcmVjdGlvbj0nZG93bicpLCAnMC4xLjMnOiBOb3RlT2JqZWN0KGR1cmF0aW9uPSdlaWdodGgnLCBwaXRjaD0nRicsIG9jdGF2ZT01LCBhY2NpZGVudGFsPScnLCBzdGVtX2RpcmVjdGlvbj0nZG93bicpfSwgeycwLjAuMCc6IFRpbWVTaWduYXR1cmUobnVtZXJhdG9yPTQsIGRlbm9taW5hdG9yPTQpfSwgeycwLjAuMCc6IEtleVNpZ25hdHVyZShzdGVwPSdDJywgc2NhbGU9J21ham9yJyl9KQ=='
+
+  But maybe that's not such a bad idea...
   """
   m = hashlib.sha512()
   output = ParseMusic21.from_filepath(ROOT_DIR + "/compare/ms_F_Lydian_quarter_true.xml")
@@ -24,7 +28,7 @@ def test_basic_parse_xml():
   # You can get the new hash AFTER checking manually for errors by un-commenting this next line and running the test.
   # raise Exception(m.hexdigest())
   # raise Exception(output)
-  correct_hash = "a15a1d096f9f991c634c18682f9d20a98741909abbccad23e1fb80b2c33823ce0e33c0241f42abf6c3bb5caaadc4f1190b03a5a17d025fb4b9dc50a7196ece09" # noqa
+  correct_hash = "73e3de07ba071d0b6f0a45b5b8252794ac40fc0c34fcff014b2782bc193810e75cd4aff4055e6dba6340786c689a5ec04f04a1e20ae2cce837e207de40a020ae" # noqa
   assert m.hexdigest() == correct_hash
 
 
@@ -104,22 +108,22 @@ def test_time_signature_parse_xml():
   assert time_signatures[0].denominator == 4
 
   assert time_signatures[1].measure == 2
-  assert time_signatures[1].onset == "4.0"
+  assert time_signatures[1].onset == "0.0"
   assert time_signatures[1].numerator == 7
   assert time_signatures[1].denominator == 8
 
   assert time_signatures[2].measure == 3
-  assert time_signatures[2].onset == "7.5"
+  assert time_signatures[2].onset == "0.0"
   assert time_signatures[2].numerator == 25
   assert time_signatures[2].denominator == 16
 
   assert time_signatures[3].measure == 4
-  assert time_signatures[3].onset == "13.75"
+  assert time_signatures[3].onset == "0.0"
   assert time_signatures[3].numerator == 4
   assert time_signatures[3].denominator == 4
 
   assert time_signatures[4].measure == 5
-  assert time_signatures[4].onset == "17.75"
+  assert time_signatures[4].onset == "0.0"
   assert time_signatures[4].numerator == 2
   assert time_signatures[4].denominator == 2
 

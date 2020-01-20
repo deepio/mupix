@@ -1,10 +1,10 @@
-# GANDALF
-![Travis (.com)](https://img.shields.io/travis/com/deepio/gandalf)
-![GitHub tag (latest by date)](https://img.shields.io/github/tag-date/deepio/gandalf)
-![GitHub last commit](https://img.shields.io/github/last-commit/deepio/gandalf)
-![GitHub repo size](https://img.shields.io/github/repo-size/deepio/gandalf)
+# MUPIX
+![Travis (.com)](https://img.shields.io/travis/com/deepio/mupix)
+![GitHub tag (latest by date)](https://img.shields.io/github/tag-date/deepio/mupix)
+![GitHub last commit](https://img.shields.io/github/last-commit/deepio/mupix)
+![GitHub repo size](https://img.shields.io/github/repo-size/deepio/mupix)
 
-The Symbolic Music File Evaluation Tool.
+The symbolic music-file evaluation tool.
 - Written with the newer format strings `python 3.6+`.
 - Will not support `python 2.x`.
 - Read the LICENSE.
@@ -18,10 +18,10 @@ pip3 install --user poetry
 python3 -m venv env
 # Enter the virtual environment
 . ./env/bin/activate
-# Install gandalf (from the project root)
+# Install mupix (from the project root)
 poetry install
 ```
 
 
 ### Usage
-- For up-to-date usage information, run `gandalf` or `gandalf --help`
+- For up-to-date usage information, run `mupix` or `mupix --help`

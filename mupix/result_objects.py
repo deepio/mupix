@@ -7,8 +7,8 @@ class Result:
   Base results object that holds the number of right and wrong notes.
 
   Arg
-    right (int): The number of correct Gandalf Object Elements
-    wrong (int): The number of wrong Gandalf Object Elements
+    right (int): The number of correct Mupix Object Elements
+    wrong (int): The number of wrong Mupix Object Elements
     name (str): The name this results object
   """
   right = attr.ib(init=False, type=int, default=0)
@@ -18,14 +18,14 @@ class Result:
   @name.default
   def _get_name(self):
     """
-    Get the name of this Results object, even when it's inherited so its still available 
+    Get the name of this Results object, even when it's inherited so its still available
     when calling an attrs as a dictionary.
     """
     return str(self.__class__.__name__)
 
   def asdict(self):
     """
-    This is a just a method to unify. I'd rather have a method to turn a class object 
+    This is a just a method to unify. I'd rather have a method to turn a class object
     into a dictionary, instead of how attrs works like this.
     """
     return attr.asdict(self)
@@ -60,6 +60,13 @@ class NoteAccidentalResult(Result):
 
 
 @attr.s
+class NoteArticulationResult(Result):
+  """
+  Results Object that holds the number of correct and incorrect Note Articulations
+  """
+
+
+@attr.s
 class NoteStemDirectionResult(Result):
   """
   Results Object that holds the number of correct and incorrect Note Stem Directions
@@ -74,6 +81,13 @@ class NoteBeamResult(Result):
 
 
 @attr.s
+class NoteVoiceResult(Result):
+  """
+  Results Object that holds the number of correct and incorrect Note Voices
+  """
+
+
+@attr.s
 class NoteTotalResult(Result):
   """
   The accumulated total of all the Note related Results Objects
@@ -83,8 +97,16 @@ class NoteTotalResult(Result):
 @attr.s
 class RestAccidentalResult(Result):
   """
-  I remeber tthere was a reason why this was here, but I can not
-  for the life of me remember what that was.
+  It sounds weird, but rests are note objects in musicxml. In the event one is added erroneously,
+  we should count it.
+  """
+
+
+@attr.s
+class RestArticulationResult(Result):
+  """
+  Articulations can not exist by themselves in an empty measure. They must be attached to a note
+  or a rest.
   """
 
 
@@ -92,6 +114,13 @@ class RestAccidentalResult(Result):
 class RestDurationResult(Result):
   """
   Results Object that holds the number of correct and incorrect Rest Durations
+  """
+
+
+@attr.s
+class RestVoiceResult(Result):
+  """
+  Results Object that holds the number of correct and incorrect Rest Voices
   """
 
 
