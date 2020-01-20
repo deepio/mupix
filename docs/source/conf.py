@@ -22,7 +22,11 @@ copyright = '2020, Alex Daigle'
 author = 'Alex Daigle'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1.0'
+# release = '0.1.0'
+import re
+with open("../../mupix/__init__.py") as f:
+  pattern = f"(?<=__version__ = ')(.*?)(?=')"
+  release = re.findall(pattern, f.read(), re.DOTALL)[0]
 
 
 # -- General configuration ---------------------------------------------------
@@ -30,8 +34,7 @@ release = '0.1.0'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = [
-]
+extensions = ['recommonmark', 'sphinx.ext.autodoc']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

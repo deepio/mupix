@@ -5,10 +5,17 @@
 
 Welcome to Mupix's documentation!
 =================================
+Version |release| |version|
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
+
+   license
+   compat
+   python2
+   contribute
+   overview
 
 
 
