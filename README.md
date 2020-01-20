@@ -1,8 +1,8 @@
 # MUPIX
-![Travis (.com)](https://img.shields.io/travis/com/deepio/gandalf)
-![GitHub tag (latest by date)](https://img.shields.io/github/tag-date/deepio/gandalf)
-![GitHub last commit](https://img.shields.io/github/last-commit/deepio/gandalf)
-![GitHub repo size](https://img.shields.io/github/repo-size/deepio/gandalf)
+![Travis (.com)](https://img.shields.io/travis/com/deepio/mupix)
+![GitHub tag (latest by date)](https://img.shields.io/github/tag-date/deepio/mupix)
+![GitHub last commit](https://img.shields.io/github/last-commit/deepio/mupix)
+![GitHub repo size](https://img.shields.io/github/repo-size/deepio/mupix)
 
 The symbolic music-file evaluation tool.
 - Written with the newer format strings `python 3.6+`.
