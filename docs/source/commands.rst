@@ -8,9 +8,3 @@ Commands
 
 .. automodule:: mupix.commands
    :members:
-
-.. autofunction:: mupix.commands.read
-.. autofunction:: mupix.commands.compare
-.. autofunction:: mupix.commands.validate
-.. autofunction:: mupix.commands.xml_finder
-
