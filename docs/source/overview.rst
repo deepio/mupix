@@ -7,3 +7,6 @@ Overview
 
 .. automodule:: mupix.application
    :members:
+
+.. automodule:: mupix.base
+   :members:

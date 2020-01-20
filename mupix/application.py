@@ -151,7 +151,7 @@ class ParseMusic21(MupixObject):
 
 class Compare(MupixObject):
   """
-  This is a simple class for comparing Mupix Objects.
+  This is a simple class for comparing two Mupix Objects.
   """
   def __init__(self, true_filepath, test_filepath, sorting_algorithm="basic"):
     # Notes
