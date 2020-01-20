@@ -49,9 +49,9 @@ Mupix Validate
 
     $ mupix validate ./testing_xml.xml
 
-***************
+****************
 Mupix xml_finder
-***************
+****************
 
   You can identify the type of MusicXML file, either part-wise or time-wise by using
   the `xml_finder` command.::
