@@ -7,4 +7,6 @@
   // "editor.formatOnSave": true,
   "spellright.language": ["en"],
   "spellright.documentTypes": ["markdown", "latex", "plaintext", "python"]
+  "editor.tabSize": 2,
+  "prettier.tabWidth": 2
 }
