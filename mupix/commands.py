@@ -1,12 +1,19 @@
 # -*- coding: utf-8 -*-
 """
+
+Mupix is available as a command line application. If all you want to do is 
+compare files, there is no need to write any code. Just install it and run
+it from the command line. It should work on most platforms. **All commands
+return JSON data.**
+
 **********
 Mupix Read
 **********
 
-Mupix is available as a command line application. If all you want to do is 
-compare files, there is no need to write any code. Just install it and run
-it from the command line. It should work on most platforms.
+Mupix will read symbolic music-files and return json data with Notes, Rests,
+Time Signatures, Key Signatures, and, Clefs. You can even choose what data
+you want to read by using flags `-n`, `-r`, `-t`, `-k`, `-c`, or have the
+data be indented on output by using `-p`.
 
 Example
 #######
@@ -14,11 +21,22 @@ Example
 
     $ mupix read ./my_musicxml_file.xml
 
+  You can `pretty-print` the text by using the `-p` option::
+
+    $ mupix -p read ./my_musicxml_file.xml
+  
+  You can also use bash expansion for multiple files::
+
+    $ mupix -p read ./xml/*
+
 *************
 Mupix Compare
 *************
 
-Comparing two files using the command line.
+Comparing two files using the command line. You can even choose what data
+you want to read by using flags `-n`, `-r`, `-t`, `-k`, `-c`, or have the
+data be indented on output by using `-p`. Or if you're just interested in
+the total, you can pass `-T`.
 
 Example
 #######
@@ -41,11 +59,19 @@ Example
     $ mupix -rk compare --sort=anw-1 ./ground_truth.xml ./5-D.xml
     $ mupix -ntk compare --sort=basic ./ground_truth.xml ./5-D.xml
 
+  Just the total with `pretty-print`::
+
+    $ mupix -pT compare ./ground_truth.xml ./5-D.xml
+
+  You can even use bash expansion for multiple files to test against a single ground truth::
+
+    $ mupix -pT compare ./ground_truth.xml ./xml/*
+
 **************
 Mupix Validate
 **************
 
-  You can validate MusicXML files, this process can take ~20 seconds per file.::
+  You can validate MusicXML files, this process can take ~20 seconds per file::
 
     $ mupix validate ./testing_xml.xml
 
@@ -54,14 +80,10 @@ Mupix xml_finder
 ****************
 
   You can identify the type of MusicXML file, either part-wise or time-wise by using
-  the `xml_finder` command.::
+  the `xml_finder` command::
 
     $ mupix xml_finder ./testing_xml.xml
 
-
-*************
-Documentation
-*************
 """
 
 import click
