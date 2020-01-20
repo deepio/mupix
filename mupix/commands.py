@@ -1,3 +1,69 @@
+# -*- coding: utf-8 -*-
+"""
+**********
+Mupix Read
+**********
+
+Mupix is available as a command line application. If all you want to do is 
+compare files, there is no need to write any code. Just install it and run
+it from the command line. It should work on most platforms.
+
+Example
+#######
+  You could read a file using the folloing::
+
+    $ mupix read ./my_musicxml_file.xml
+
+*************
+Mupix Compare
+*************
+
+Comparing two files using the command line.
+
+Example
+#######
+
+  You can compare two files using the following::
+
+    $ mupix compare ./ground_truth.xml ./5-D.xml
+
+  You can `pretty-print` the output::
+
+    $ mupix -p compare ./ground_truth.xml ./5-D.xml
+
+  You can change the Musical Marking alignment algorithm::
+
+    $ mupix compare --sort=anw-1 ./ground_truth.xml ./5-D.xml
+
+  You can choose what you wish to display, and combine commands together too::
+
+    $ mupix -nt compare ./ground_truth.xml ./5-D.xml
+    $ mupix -rk compare --sort=anw-1 ./ground_truth.xml ./5-D.xml
+    $ mupix -ntk compare --sort=basic ./ground_truth.xml ./5-D.xml
+
+**************
+Mupix Validate
+**************
+
+  You can validate MusicXML files, this process can take ~20 seconds per file.::
+
+    $ mupix validate ./testing_xml.xml
+
+***************
+Mupix xml_finder
+***************
+
+  You can identify the type of MusicXML file, either part-wise or time-wise by using
+  the `xml_finder` command.::
+
+    $ mupix xml_finder ./testing_xml.xml
+
+
+*************
+Documentation
+*************
+"""
+
 import click
 
 from mupix.application import xml_validator

@@ -5,5 +5,5 @@ Overview
    :maxdepth: 2
    :caption: Contents:
 
-.. automodule:: mupix
+.. automodule:: mupix.application
    :members:

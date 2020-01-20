@@ -8,7 +8,7 @@ Welcome to Mupix's documentation!
 Version |release| |version|
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
 
    license
@@ -16,6 +16,7 @@ Version |release| |version|
    python2
    contribute
    overview
+   commands
 
 
 
