@@ -9,7 +9,6 @@ Version |release| |version|
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
    license
    compat

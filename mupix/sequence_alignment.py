@@ -4,6 +4,8 @@ import numpy
 
 @attr.s
 class Matrix:
+  """Matrix object for Sequence Alignment
+  """
   true_data_len = attr.ib(type=int)
   test_data_len = attr.ib(type=int)
 
@@ -22,7 +24,7 @@ class Matrix:
 
 @attr.s
 class SequenceAlignment:
-  """
+  """Sequence alignment abstraction class
   @timothydereuse 2019
   https://github.com/DDMAL/text-alignment/blob/ba44cb090caf63514cfe925abcc3afd1f2585a1d/textSeqCompare.py#L1-L191
   """
@@ -146,6 +148,25 @@ class SequenceAlignment:
 
 @attr.s
 class AffineNeedlemanWunsch(SequenceAlignment):
+  """Basic Needleman-Wunsch abstraction class.
+
+  As you can see, you just need to overwrite the `scoring_method` and define
+  how to populate your matrix by overwriting the `populate` method. Once both
+  these methods are defined, make sure you call `self.traceback()` at the end
+  of your `populate` method to create your fully-formed matrix and give output
+  the algorithms best guess.
+
+  :param [true_data]: A character string that represents what needs to be aligned,
+    or a list of objects, this is where you put your ground truth.
+  :type [true_data]: String, List
+
+  :param [test_data]: A character string that represents what needs to be aligned,
+    or a list of objects, this is where you put your ground truth.
+  :type [true_data]: String, List
+
+  :return: Returns a json object with 4 keys (both original data, and both aligned data)
+  :rtype: JSON
+  """
   def scoring_method(self, true, test):
     """
     Grading method for comparing the two elements in scope.
