@@ -1,3 +1,16 @@
+# -*- coding: utf-8 -*-
+"""
+This project wraps around `Music21` and `lxml` to make certain tasks easier and
+provide code for lining up and evaluating multiple symbolic music-files. I 
+do not agree with certain design decisions `Music21` has taken regarding the
+handling of the MusicXML format. Issues which become observable when examining
+the output of multiple music engraving software.
+
+*************
+Documentation
+*************
+"""
+
 from io import BytesIO
 import operator
 
@@ -50,16 +63,16 @@ from mupix.sequence_alignment import (
 
 
 def xml_validator(musicxml_filepath, schema_filepath=__return_root_path() + "/tests/xml/musicxml.xsd"):
-  """
-  Return if the provided musicxml file is valid against the current musicxml schema.
+  """Return if the provided musicxml file is valid against the current musicxml schema.
 
-  Args:
-    schema_filepath (string): a filepath to the musicxml schema.
+  :param [musicxml_filepath]: A character string that represents the filepath and filename of the file to open.
+  :type [musicxml_filepath]: String
 
-    musicxml_filepath (string): a filepath to the musicxml file to be validated.
+  :param [schema_filepath](optional): A character string that represents the filepath and filename of the schema to use.
+  :type [schema_filepath]: String
 
-  Returns:
-    bool
+  :return: Returns a boolean value, either it is a valid MusicXML file or it is not.
+  :rtype: Bool
   """
   with open(musicxml_filepath, "rb") as xml_file:
     test = BytesIO(xml_file.read())
@@ -75,6 +88,12 @@ def xml_validator(musicxml_filepath, schema_filepath=__return_root_path() + "/te
 def xml_type_finder(musicxml_filepath):
   """
   Check if the xml file is written in a partwise or timewise fashion.
+
+  :param [filepath]: A character string that represents the filepath and filename of the file to open.
+  :type [filepath]: String
+
+  :return: Either a Partwise or a Timewise string will return.
+  :rtype: String
   """
   with open(musicxml_filepath, "r") as xml_file:
     for line in xml_file:
@@ -88,26 +107,33 @@ def xml_type_finder(musicxml_filepath):
 @attr.s
 class ParseMusic21(MupixObject):
   """
-  This is just a simplifying wrapper around Music21, so it can import anything Music21 can.
-  Not using bare music21 because:
-    https://github.com/cuthbertLab/music21/issues/462
+  A Mupix Object contains multiple lists of the contents within a symbolic music-file.
+
+  It is really only intended to be used with `from_filepath` but others may exist in
+  the future.
   """
   @classmethod
   def from_filepath(cls, filepath):
+    """
+    :param [filepath]: A character string that represents the filepath and filename of the file to open.
+    :type [filepath]: String
+
+    :return: A fully populated Mupix Object, with all the components of the symbolic music file analysized and sorted in their sections.
+    :rtype: Mupix Object
+    """
     notes, rests, timeSignatures, keySignatures, clefs = [], [], [], [], []
     for parts_index, parts in enumerate(music21.converter.parseFile(filepath).recurse().getElementsByClass("Part"), 1):  # noqa
       notes += [NoteObject(item, parts_index) for item in parts.recurse().notes if not item.isChord]
       rests += [RestObject(item, parts_index) for item in parts.recurse().notesAndRests if not item.isNote]
-      # timeSignatures += [TimeSignatureObject(item, parts_index) for item in parts.recurse().getTimeSignatures()]
       timeSignatures += [TimeSignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("TimeSignature")]  # noqa
       keySignatures += [KeySignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("KeySignature")]  # noqa
       clefs += [ClefObject(item, parts_index) for item in parts.recurse().getElementsByClass("Clef")]
 
-    # print(timeSignatures)
-    # measuresInScore = max(notes + rests, key=operator.attrgetter('measure')).measure
-    # timeSignatures = normalize_object_list(input_list=timeSignatures, maximum=measuresInScore,)
-    # keySignatures = normalize_object_list(input_list=keySignatures, maximum=measuresInScore,)
-    # clefs = normalize_object_list(input_list=clefs, maximum=measuresInScore,)
+    measuresInScore = max(notes + rests, key=operator.attrgetter('measure')).measure
+
+    timeSignatures = normalize_object_list(input_list=timeSignatures, maximum=measuresInScore,)
+    keySignatures = normalize_object_list(input_list=keySignatures, maximum=measuresInScore,)
+    clefs = normalize_object_list(input_list=clefs, maximum=measuresInScore,)
 
     return cls(
       notes=notes,
@@ -125,7 +151,7 @@ class ParseMusic21(MupixObject):
 
 class Compare(MupixObject):
   """
-  This is a simple class for comparing Mupix Objects.
+  This is a simple class for comparing two Mupix Objects.
   """
   def __init__(self, true_filepath, test_filepath, sorting_algorithm="basic"):
     # Notes

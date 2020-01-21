@@ -162,11 +162,13 @@ class ClefObject(Marking):
 def normalize_object_list(input_list, maximum):
   """
   Different software vendors encode time signatures, key signatures, and clefs in a peculiar way.
-  Some repeat the previous object in every following measure:
-    eg: Let's say this hypothetical score has 44 measures. When parsing a problematic musicXML file,
-      you will notice there are 44 treble clefs in the same instrument part. Meaning the same,
-      unchanging clef, was repeated once per measure in the file. The same can happen on a per-system
-      basis. It is not a bad way to explain the music because each element implied, even if it is missing.
+  Some repeat the previous object in every following measure.
+
+    Let's say this hypothetical score has 44 measures. When parsing a problematic musicXML file,
+    you will notice there are 44 treble clefs in the same instrument part. Meaning the same,
+    unchanging clef, was repeated once per measure in the file. The same can happen on a per-system
+    basis. It is not a bad way to explain the music because each element implied, even if it is missing.
+
   To avoid any further complication, the clefs, time signatures, and key signatures have been
   "normalized" to always be repeated on every measure, because they are still "acting" on a measure when
   they are omitted.
@@ -174,12 +176,14 @@ def normalize_object_list(input_list, maximum):
   [TODO] Clean up the algorithm, maybe splitting it into an iter and a yielder or something with dequeue
   for better readability. This is just a PoC anyway.
 
-  Args:
-    input_list (list): A list of objects (KeySignatureObject, TimeSignatureObject or ClefObject).
-    maximum (int): How many measures should the objects be expanded for.
+  :param [input_list]: A list of objects (KeySignatureObject, TimeSignatureObject or ClefObject).
+  :type [input_list]: List
 
-  Returns:
-    list: The expanded object list
+  :param [maximum]: An integer that represents the maximum number of measures in the score. In other words, how many measures should the objects be expanded for.
+  :type [maximum]: Integer
+
+  :return: Returns a the original list with added objects if they are missing from each measure.
+  :rtype: List
   """
 
   measure = 1
