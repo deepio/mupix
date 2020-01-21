@@ -24,7 +24,7 @@ author = 'Alex Daigle'
 # The full version, including alpha/beta/rc tags
 # release = '0.1.0'
 import re
-with open("../../mupix/__init__.py") as f:
+with open("../mupix/__init__.py") as f:
   pattern = f"(?<=__version__ = ')(.*?)(?=')"
   release = re.findall(pattern, f.read(), re.DOTALL)[0]
 
