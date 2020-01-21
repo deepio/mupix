@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Commands &#8212; Mupix 0.1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Overview" href="overview.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-mupix.commands">
+<span id="commands"></span><h1>Commands<a class="headerlink" href="#module-mupix.commands" title="Permalink to this headline">¶</a></h1>
+<p>Mupix is available as a command line application. If all you want to do is 
+compare files, there is no need to write any code. Just install it and run
+it from the command line. It should work on most platforms. <strong>All commands
+return JSON data.</strong></p>
+<div class="section" id="mupix-read">
+<h2>Mupix Read<a class="headerlink" href="#mupix-read" title="Permalink to this headline">¶</a></h2>
+<p>Mupix will read symbolic music-files and return json data with Notes, Rests,
+Time Signatures, Key Signatures, and, Clefs. You can even choose what data
+you want to read by using flags <cite>-n</cite>, <cite>-r</cite>, <cite>-t</cite>, <cite>-k</cite>, <cite>-c</cite>, or have the
+data be indented on output by using <cite>-p</cite>.</p>
+<div class="section" id="example">
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>You could read a file using the folloing:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mupix read ./my_musicxml_file.xml
+</pre></div>
+</div>
+<p>You can <cite>pretty-print</cite> the text by using the <cite>-p</cite> option:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mupix -p read ./my_musicxml_file.xml
+</pre></div>
+</div>
+<p>You can also use bash expansion for multiple files:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mupix -p read ./xml/*
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="mupix-compare">
+<h2>Mupix Compare<a class="headerlink" href="#mupix-compare" title="Permalink to this headline">¶</a></h2>
+<p>Comparing two files using the command line. You can even choose what data
+you want to read by using flags <cite>-n</cite>, <cite>-r</cite>, <cite>-t</cite>, <cite>-k</cite>, <cite>-c</cite>, or have the
+data be indented on output by using <cite>-p</cite>. Or if you’re just interested in
+the total, you can pass <cite>-T</cite>.</p>
+<div class="section" id="id1">
+<h3>Example<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>You can compare two files using the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mupix compare ./ground_truth.xml ./5-D.xml
+</pre></div>
+</div>
+<p>You can <cite>pretty-print</cite> the output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mupix -p compare ./ground_truth.xml ./5-D.xml
+</pre></div>
+</div>
+<p>You can change the Musical Marking alignment algorithm:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mupix compare --sort=anw-1 ./ground_truth.xml ./5-D.xml
+</pre></div>
+</div>
+<p>You can choose what you wish to display, and combine commands together too:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mupix -nt compare ./ground_truth.xml ./5-D.xml
+$ mupix -rk compare --sort=anw-1 ./ground_truth.xml ./5-D.xml
+$ mupix -ntk compare --sort=basic ./ground_truth.xml ./5-D.xml
+</pre></div>
+</div>
+<p>Just the total with <cite>pretty-print</cite>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mupix -pT compare ./ground_truth.xml ./5-D.xml
+</pre></div>
+</div>
+<p>You can even use bash expansion for multiple files to test against a single ground truth:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mupix -pT compare ./ground_truth.xml ./xml/*
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="mupix-validate">
+<h2>Mupix Validate<a class="headerlink" href="#mupix-validate" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>You can validate MusicXML files, this process can take ~20 seconds per file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mupix validate ./testing_xml.xml
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mupix-xml-finder">
+<h2>Mupix xml_finder<a class="headerlink" href="#mupix-xml-finder" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>You can identify the type of MusicXML file, either part-wise or time-wise by using
+the <cite>xml_finder</cite> command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mupix xml_finder ./testing_xml.xml
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Mupix</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compat.html">Backward Compatibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python2.html">Python 2 Statement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#mupix-read">Mupix Read</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mupix-compare">Mupix Compare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mupix-validate">Mupix Validate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mupix-xml-finder">Mupix xml_finder</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="overview.html" title="previous chapter">Overview</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Alex Daigle.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/commands.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
