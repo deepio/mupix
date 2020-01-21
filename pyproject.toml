@@ -26,5 +26,5 @@ Sphinx = "^2.3"
 [tool.poetry.scripts]
 mupix = 'mupix:commands.cli'
 [build-system]
-requires = ["poetry>=0.12"]
+requires = ["poetry>=1.0.0"]
 build-backend = "poetry.masonry.api"
