@@ -33,7 +33,7 @@
             
   <div class="section" id="module-mupix.commands">
 <span id="commands"></span><h1>Commands<a class="headerlink" href="#module-mupix.commands" title="Permalink to this headline">¶</a></h1>
-<p>Mupix is available as a command line application. If all you want to do is 
+<p>Mupix is available as a command line application. If all you want to do is
 compare files, there is no need to write any code. Just install it and run
 it from the command line. It should work on most platforms. <strong>All commands
 return JSON data.</strong></p>
@@ -102,10 +102,14 @@ $ mupix -ntk compare --sort=basic ./ground_truth.xml ./5-D.xml
 <div class="section" id="mupix-validate">
 <h2>Mupix Validate<a class="headerlink" href="#mupix-validate" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>You can validate MusicXML files, this process can take ~20 seconds per file:</p>
+<div><p>You can check to see if the file is valid against the official MusicXML specification, this process can take ~20 seconds per file:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mupix validate ./testing_xml.xml
 </pre></div>
 </div>
+<p>Or of multiple files:</p>
+<blockquote>
+<div><p>$ mupix validate ./*</p>
+</div></blockquote>
 </div></blockquote>
 </div>
 <div class="section" id="mupix-xml-finder">

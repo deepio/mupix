@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 
-Mupix is available as a command line application. If all you want to do is 
+Mupix is available as a command line application. If all you want to do is
 compare files, there is no need to write any code. Just install it and run
 it from the command line. It should work on most platforms. **All commands
 return JSON data.**
@@ -24,7 +24,7 @@ Example
   You can `pretty-print` the text by using the `-p` option::
 
     $ mupix -p read ./my_musicxml_file.xml
-  
+
   You can also use bash expansion for multiple files::
 
     $ mupix -p read ./xml/*
@@ -71,9 +71,13 @@ Example
 Mupix Validate
 **************
 
-  You can validate MusicXML files, this process can take ~20 seconds per file::
+  You can check to see if the file is valid against the official MusicXML specification, this process can take ~20 seconds per file::
 
     $ mupix validate ./testing_xml.xml
+
+  Or of multiple files:
+
+    $ mupix validate ./*
 
 ****************
 Mupix xml_finder
@@ -124,7 +128,7 @@ def compare(ctx, sort, true_data, test_data):
 
   OPTIONS:
 
-    --sort=basic    Uses a dumb alignment that does not look forward or backward in time.                                                
+    --sort=basic    Uses a dumb alignment that does not look forward or backward in time.
 
     --sort=anw      Uses a simplistic version of the Affine-Needleman-Wunsch based on a single element from the Mupix Objects.
 
@@ -138,7 +142,7 @@ def compare(ctx, sort, true_data, test_data):
 
     <file>                        A single file
 
-    <file A> <file B> <file C>    A list of files delineated with a space
+    <file A> <file B> <file C>    Or a list of files with spaces for separation
   """
   for f in test_data:
     output_filter(
@@ -161,7 +165,7 @@ def read(ctx, file_path):
 
     <file>                        A single file
 
-    <file A> <file B> <file C>    A list of files delineated with a space
+    <file A> <file B> <file C>    Or a list of files with spaces for separation
   """
   for f in file_path:
     output_filter(ctx.parent.params, ParseMusic21.from_filepath, f)
@@ -177,7 +181,7 @@ def validate(file_path):
 
     <file>                        A single file
 
-    <file A> <file B> <file C>    A list of files delineated with a space
+    <file A> <file B> <file C>    Or a list of files with spaces for separation
   """
   for f in file_path:
     print(f"{f}: {xml_validator(f)}")
@@ -193,7 +197,7 @@ def xml_finder(file_path):
 
     <file>                        A single file
 
-    <file A> <file B> <file C>    A list of files delineated with a space
+    <file A> <file B> <file C>    Or a list of files with spaces for separation
   """
   for f in file_path:
     print(f"{f}: {xml_type_finder(f)}")
