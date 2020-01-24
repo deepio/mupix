@@ -129,11 +129,16 @@ class ParseMusic21(MupixObject):
       keySignatures += [KeySignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("KeySignature")]  # noqa
       clefs += [ClefObject(item, parts_index) for item in parts.recurse().getElementsByClass("Clef")]
 
-    measuresInScore = max(notes + rests, key=operator.attrgetter('measure')).measure
+    try:
+      measuresInScore = max(notes + rests, key=operator.attrgetter('measure')).measure
+    except ValueError:
+      measuresInScore = 0
+      parts_index = 0
 
     timeSignatures = normalize_object_list(input_list=timeSignatures, maximum=measuresInScore,)
     keySignatures = normalize_object_list(input_list=keySignatures, maximum=measuresInScore,)
     clefs = normalize_object_list(input_list=clefs, maximum=measuresInScore,)
+
 
     return cls(
       notes=notes,
