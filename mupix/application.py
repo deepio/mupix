@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 This project wraps around `Music21` and `lxml` to make certain tasks easier and
-provide code for lining up and evaluating multiple symbolic music-files. I 
+provide code for lining up and evaluating multiple symbolic music-files. I
 do not agree with certain design decisions `Music21` has taken regarding the
 handling of the MusicXML format. Issues which become observable when examining
 the output of multiple music engraving software.
@@ -140,7 +140,6 @@ class ParseMusic21(MupixObject):
     keySignatures = normalize_object_list(input_list=keySignatures, maximum=measuresInScore,)
     clefs = normalize_object_list(input_list=clefs, maximum=measuresInScore,)
 
-
     return cls(
       notes=notes,
       rests=rests,
@@ -204,6 +203,9 @@ class Compare(MupixObject):
     self.test_data = ParseMusic21.from_filepath(test_filepath)
 
     self.error_description = {}
+
+    # Check the key signatures of each instrument before tallying all of the errors here.
+    # That way we can transpose the notes.
 
     if sorting_algorithm == "basic":
       # Using a "dumb" alignment

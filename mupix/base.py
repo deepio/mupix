@@ -1,3 +1,9 @@
+"""
+The properties of these objects are named in a specific way for a reason. Any
+property that is not to be evaluated has an underscore in them
+(eg: _music21_object). If the property requires more than a word to describe
+it, then write it in camelCase style.
+"""
 import copy
 
 import attr
@@ -7,6 +13,9 @@ from mupix.result_objects import Result
 
 @attr.s
 class MupixObject():
+  """A MupixObject holds information for an entire score.
+  It holds an ordered list of all the musical events in the score.
+  """
   notes = attr.ib(kw_only=True,)
   rests = attr.ib(kw_only=True,)
   timeSignatures = attr.ib(kw_only=True,)
@@ -21,6 +30,10 @@ class MupixObject():
   @keySignatures.validator
   @clefs.validator
   def check(self, attribute, value):
+    """
+    Typecheck for notes, rests, time signatures, key signatures, and, clefs.
+    They should be either a list, or a Result object for eventual output.
+    """
     if not isinstance(value, list) and not isinstance(value, Result):
       raise ValueError(f"Must be a list or Results Object. {type(value)}")
 
