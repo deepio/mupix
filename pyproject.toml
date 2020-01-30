@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mupix"
-version = "0.1.0"
+version = "0.2.1"
 description = "MusicXML Evaluation Tool"
 authors = ["Deepio <global2alex@gmail.com>"]
 license = "GPL-3.0"
@@ -22,6 +22,7 @@ pytest-xdist = "^1.28"
 alabaster = "^0.7.12"
 recommonmark = "^0.6.0"
 Sphinx = "^2.3"
+m2r = "^0.2.1"
 
 [tool.poetry.scripts]
 mupix = 'mupix:commands.cli'

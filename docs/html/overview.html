@@ -14,7 +14,7 @@
     <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Commands" href="commands.html" />
+    <link rel="next" title="Basic Objects" href="base.html" />
     <link rel="prev" title="How to contribute" href="contribute.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -35,7 +35,7 @@
   <div class="section" id="module-mupix.application">
 <span id="overview"></span><h1>Overview<a class="headerlink" href="#module-mupix.application" title="Permalink to this headline">¶</a></h1>
 <p>This project wraps around <cite>Music21</cite> and <cite>lxml</cite> to make certain tasks easier and
-provide code for lining up and evaluating multiple symbolic music-files. I 
+provide code for lining up and evaluating multiple symbolic music-files. I
 do not agree with certain design decisions <cite>Music21</cite> has taken regarding the
 handling of the MusicXML format. Issues which become observable when examining
 the output of multiple music engraving software.</p>
@@ -51,7 +51,7 @@ the output of multiple music engraving software.</p>
 <dd><p>Align each note object with each other. Understandably this is not the best, but it
 serves more as a proof-of-concept or a placeholder to be built later.</p>
 <ul class="simple">
-<li><p>Notes           are aligned by pitch names</p></li>
+<li><p>Notes           are aligned by noteName names</p></li>
 <li><p>Restes          are aligned by measure number as a single char</p></li>
 <li><p>TimeSignatures  are aligned by measure number as a single char</p></li>
 <li><p>KeySignatures   are aligned by measure number as a single char</p></li>
@@ -130,38 +130,6 @@ the future.</p>
 </dd></dl>
 
 </div>
-<span class="target" id="module-mupix.base"></span><dl class="function">
-<dt id="mupix.base.normalize_object_list">
-<code class="sig-prename descclassname">mupix.base.</code><code class="sig-name descname">normalize_object_list</code><span class="sig-paren">(</span><em class="sig-param">input_list</em>, <em class="sig-param">maximum</em><span class="sig-paren">)</span><a class="headerlink" href="#mupix.base.normalize_object_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Different software vendors encode time signatures, key signatures, and clefs in a peculiar way.
-Some repeat the previous object in every following measure.</p>
-<blockquote>
-<div><p>Let’s say this hypothetical score has 44 measures. When parsing a problematic musicXML file,
-you will notice there are 44 treble clefs in the same instrument part. Meaning the same,
-unchanging clef, was repeated once per measure in the file. The same can happen on a per-system
-basis. It is not a bad way to explain the music because each element implied, even if it is missing.</p>
-</div></blockquote>
-<p>To avoid any further complication, the clefs, time signatures, and key signatures have been
-“normalized” to always be repeated on every measure, because they are still “acting” on a measure when
-they are omitted.</p>
-<p>[TODO] Clean up the algorithm, maybe splitting it into an iter and a yielder or something with dequeue
-for better readability. This is just a PoC anyway.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>[</strong><strong>input_list</strong><strong>]</strong> (<em>List</em>) – A list of objects (KeySignatureObject, TimeSignatureObject or ClefObject).</p></li>
-<li><p><strong>[</strong><strong>maximum</strong><strong>]</strong> (<em>Integer</em>) – An integer that represents the maximum number of measures in the score. In other words, how many measures should the objects be expanded for.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Returns a the original list with added objects if they are missing from each measure.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>List</p>
-</dd>
-</dl>
-</dd></dl>
-
 <span class="target" id="module-mupix.sequence_alignment"></span><dl class="class">
 <dt id="mupix.sequence_alignment.AdvancedAffineNeedlemanWunsch">
 <em class="property">class </em><code class="sig-prename descclassname">mupix.sequence_alignment.</code><code class="sig-name descname">AdvancedAffineNeedlemanWunsch</code><span class="sig-paren">(</span><em class="sig-param">true_data</em>, <em class="sig-param">test_data</em>, <em class="sig-param">*</em>, <em class="sig-param">match=10</em>, <em class="sig-param">mismatch=-5</em>, <em class="sig-param">gap_extend=-1</em>, <em class="sig-param">gap_open_x=-10</em>, <em class="sig-param">gap_extend_x=-1</em>, <em class="sig-param">gap_open_y=-10</em>, <em class="sig-param">gap_extend_y=-1</em><span class="sig-paren">)</span><a class="headerlink" href="#mupix.sequence_alignment.AdvancedAffineNeedlemanWunsch" title="Permalink to this definition">¶</a></dt>
@@ -260,6 +228,7 @@ or a list of objects, this is where you put your ground truth.</p></li>
 <li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="base.html">Basic Objects</a></li>
 <li class="toctree-l1"><a class="reference internal" href="commands.html">Commands</a></li>
 </ul>
 
@@ -268,7 +237,7 @@ or a list of objects, this is where you put your ground truth.</p></li>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="contribute.html" title="previous chapter">How to contribute</a></li>
-      <li>Next: <a href="commands.html" title="next chapter">Commands</a></li>
+      <li>Next: <a href="base.html" title="next chapter">Basic Objects</a></li>
   </ul></li>
 </ul>
 </div>

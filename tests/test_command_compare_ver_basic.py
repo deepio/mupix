@@ -18,25 +18,30 @@ def load_single_voice_compare_resources():
   )
 
 
-def test_compare_single_voice_notes_total(load_single_voice_compare_resources):
-  # raise Exception(load_single_voice_compare_resources.notes[-1])
-  assert load_single_voice_compare_resources.notes[-1].right == 62
-  assert load_single_voice_compare_resources.notes[-1].wrong == 2
+def test_compare_basic_single_voice_notes_total(load_single_voice_compare_resources):
+  # raise Exception(
+  #   load_single_voice_compare_resources.error_description,
+  #   load_single_voice_compare_resources.notes,
+  #   load_single_voice_compare_resources.notes[-1].right,
+  #   load_single_voice_compare_resources.notes[-1].wrong
+  # )
+  assert load_single_voice_compare_resources.notes[-1].right == 61
+  assert load_single_voice_compare_resources.notes[-1].wrong == 3
 
 
-def test_compare_single_voice_notes_accidental(load_single_voice_compare_resources):
+def test_compare_basic_single_voice_notes_accidental(load_single_voice_compare_resources):
   # raise Exception(load_single_voice_compare_resources.notes[0])
   assert load_single_voice_compare_resources.notes[0].right == 7
   assert load_single_voice_compare_resources.notes[0].wrong == 1
 
 
-def test_compare_single_voice_notes_beam(load_single_voice_compare_resources):
+def test_compare_basic_single_voice_notes_beam(load_single_voice_compare_resources):
   # raise Exception(load_single_voice_compare_resources.notes[1])
   assert load_single_voice_compare_resources.notes[1].right == 8
   assert load_single_voice_compare_resources.notes[1].wrong == 0
 
 
-def test_compare_single_voice_notes_duration(load_single_voice_compare_resources):
+def test_compare_basic_single_voice_notes_duration(load_single_voice_compare_resources):
   # raise Exception(load_single_voice_compare_resources.notes[2])
   assert load_single_voice_compare_resources.notes[2].right == 8
   assert load_single_voice_compare_resources.notes[2].wrong == 0

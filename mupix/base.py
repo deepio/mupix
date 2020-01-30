@@ -1,12 +1,45 @@
+"""
+The properties of these objects are named in a specific way for a reason. Any
+property that is not to be evaluated has an underscore in them
+(eg: _music21_object). If the property requires more than a word to describe
+it, then write it in camelCase style.
+"""
 import copy
 
 import attr
+from music21.interval import Interval
+from music21.key import Key
+from music21.note import Note
 
 from mupix.result_objects import Result
 
 
 @attr.s
 class MupixObject():
+  """A MupixObject holds information for an entire score.
+  It holds an ordered list of all the musical events in the score.
+
+  :param [notes]: A list of objects related to notes
+  :type [notes]: List or Result object
+
+  :param [rests]: A list of objects related to rests
+  :type [rests]: List or Result object
+
+  :param [timeSignatures]: A list of objects related to time signatures
+  :type [timeSignatures]: List or Result object
+
+  :param [keySignatures]: A list of objects related to key signatures
+  :type [keySignatures]: List or Result object
+
+  :param [clefs]: A list of objects related to clefs
+  :type [clefs]: List or Result object
+
+  :param [parts]: A number representing the number of total staffs per system
+  :type [parts]: Integer
+
+  :param [error_description]: More detailed error information
+  :type [error_description]: Dictionary
+  """
   notes = attr.ib(kw_only=True,)
   rests = attr.ib(kw_only=True,)
   timeSignatures = attr.ib(kw_only=True,)
@@ -21,15 +54,35 @@ class MupixObject():
   @keySignatures.validator
   @clefs.validator
   def check(self, attribute, value):
+    """
+    Type-check for notes, rests, time signatures, key signatures, and, clefs.
+    They should be either a list, or a Result object for eventual output.
+    """
     if not isinstance(value, list) and not isinstance(value, Result):
       raise ValueError(f"Must be a list or Results Object. {type(value)}")
 
   def ret(self):
+    """
+    Return all information about the Mupix object as a tuple.
+    """
     return self.notes, self.rests, self.timeSignatures, self.keySignatures, self.clefs, self.error_description
 
 
 @attr.s
 class Marking:
+  """
+  The base class for all the components of a Mupix object
+
+  :property [_music21_object]: The original music21 object, in case it is needed.
+
+  :property [part]: An integer representing the instrument (1 for the first instrument, etc.)
+
+  :property [measure]: The measure in which this object can be found. It is
+    inferred by the music21 object.
+
+  :property [onset]: The time in the measure where this event occurs. It is
+    inferred by the music21 object.
+  """
   _music21_object = attr.ib(eq=False)
   part = attr.ib(type=int)
 
@@ -44,17 +97,35 @@ class Marking:
     return str(self._music21_object.offset)
 
   def asdict(self):
+    """
+    Return the object as a JSON serializable python dictionary.
+    """
     tmp = attr.asdict(self)
     del tmp["_music21_object"]
     return tmp
 
   def asname(self):
+    """
+    Returns the name of the current class (or subclass)
+    """
     string = str(self.__class__).split(".")[-1].replace("Object", "")
     return string[0].lower() + string[1:-2] + "s"
 
 
 @attr.s
 class MusicalEvent(Marking):
+  """
+  A musical event is an **active** marking in a score, rather than **passive**
+  marking like a key signature or a time signature. Active markings are
+  effective when read and discarded when finished.
+
+  :property [duration]: The amount of time the event will last.
+
+  :property [voice]: In the case of multiple instruments within a staff, this
+    is a numerical representation of which instrument it represents.
+
+  :property [articulation]: A musical articulation (staccato, tenuto, accents, etc.)
+  """
   duration = attr.ib(init=False, type=str, eq=False)
   @duration.default
   def _get_duration(self):
@@ -76,10 +147,48 @@ class MusicalEvent(Marking):
 
 @attr.s
 class NoteObject(MusicalEvent):
-  pitch = attr.ib(init=False, eq=False)
-  @pitch.default
-  def _get_pitch(self):
-    return self._music21_object.step
+  """
+  A NoteObject holds information useful to Mupix for symbolic music
+  file differentiation.
+
+  :property [step]: I believe the step in Music21 should be renamed to a
+    `note.name`. A step should be similar to the concept of a scale degree,
+    except that all the distances are counted in semitones relative to the key
+    signature. Also note that octave differences are also removed, much like
+    scale degrees.
+
+    .. note:: For example
+      In the key of C Major, if the octave information is removed
+
+        C2 -> C8  = 0 (C, C)
+
+        C2 -> C#8 = 1 (C, C#) that's one semitone
+
+        C8 -> C#2 = 1 (C, C#) Still one semitone
+
+        C2 -> G4  = 7 (C, C#, D, D#, E, F, F#, G) still 7 semitones
+
+  :property [pitch]:
+    This is what Music21 defines as a step (C, D, E, F, G, etc.)
+    For continued use, grab the pitch by referencing the music21 object.
+
+    .. warning:: This property will be deprecated in **version 0.2.0**. Use **noteObject._music21_object.step** instead.
+
+  :property [octave]: The octave of the note (middle C is C4)
+
+  :property [accidental]: Any note alterations of pitch (#, ##, b, bb, natural)
+
+  :property [stemdirection]: The direction (up or down) of the note stem (if present).
+
+  :property [beam]: How note beams are connected between adjacent notes.
+
+  """
+  step = attr.ib(kw_only=True, eq=False, default=None)
+
+  # noteName = attr.ib(init=False, eq=False)
+  # @noteName.default
+  # def _get_noteName(self):
+  #   return self._music21_object.step
 
   octave = attr.ib(init=False, eq=False)
   @octave.default
@@ -112,6 +221,9 @@ class NoteObject(MusicalEvent):
 
 @attr.s
 class RestObject(MusicalEvent):
+  """
+  Same as :func:`mupix.base.MusicalEvent`
+  """
   pass
 
 
@@ -159,10 +271,11 @@ class ClefObject(Marking):
     return self._music21_object.octaveChange
 
 
-def normalize_object_list(input_list, maximum):
+def _populate_list(input_list, maximum):
   """
-  Different software vendors encode time signatures, key signatures, and clefs in a peculiar way.
-  Some repeat the previous object in every following measure.
+  Different music engraving software encode time signatures, key signatures,
+    and clefs in a peculiar way. Some repeat the previous object in every
+    following measure.
 
     Let's say this hypothetical score has 44 measures. When parsing a problematic musicXML file,
     you will notice there are 44 treble clefs in the same instrument part. Meaning the same,
@@ -225,3 +338,64 @@ def normalize_object_list(input_list, maximum):
       output_list.append(tail_object)
       measure += 1
   return output_list
+
+
+def normalize_object_list(object_list, total_measures, total_parts):
+  """
+  Without changing the order of the objects, iterate through each instrumental
+  part and populate missing information in place.
+  """
+  obj = []
+  for part in range(1, total_parts + 1):
+    obj += _populate_list([x for x in object_list if x.part == part], total_measures)
+  return obj
+
+
+def add_step_information(notes, keySignatures):
+  """
+  This function will populate the step information into Mupix note objects, it
+  is required because music21 will not keep key signature information in
+  measure other than the measure the key is defined in when reading musicXML.
+  The maintainers of music21 don't believe this is an issue and won't fix it,
+  so this and others must exist.
+
+  :param [notes]: A list of Mupix NoteObjects.
+  :type [notes]: List
+
+  :param [keySignatures]: A list of Mupix KeySignatureObjects.
+  :type [keySignatures]: List
+
+  :return [List]: The original list of Mupix NoteObjects (in order) with step information included.
+  :rtype: List
+  """
+  for key in keySignatures:
+    key_name = key.step.upper() if key.mode == "major" else key.step.lower()
+
+    for note in notes:
+      if note.part == key.part and note.measure == key.measure:
+        note.step = Interval(noteStart=Note(Key(key_name).asKey().tonic), noteEnd=note._music21_object).semitones % 12
+
+  return notes
+
+
+if __name__ == "__main__":
+  """
+  How to create Mupix Objects.
+  """
+  from music21.stream import Score, Part, Measure
+  from music21.key import KeySignature
+  from music21.note import Note  # noqa
+
+  s = Score()
+  p1 = Part(id="part1")
+  m1 = Measure(number=1)
+  m1.append(KeySignature(3))
+  m1.append(Note("C4", type="eighth"))
+  m2 = Measure(number=2)
+  m2.append(KeySignature(0))
+  m2.append(Note("G4", type="eighth"))
+  p1.append([m1, m2])
+  s.append([p1])
+
+  notes = [NoteObject(item, 1) for item in s.recurse().notes if not item.isChord]
+  print(notes)

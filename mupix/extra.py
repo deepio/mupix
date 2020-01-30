@@ -51,7 +51,7 @@ def output_filter(ctx, func, *args, **kwargs):
   msg = {}
 
   # If no filtering options are defined, output all information
-  if all(value == False for value in [ctx["notes"], ctx["rests"], ctx["time_signatures"], ctx["key_signatures"], ctx["clefs"]]):  # noqa
+  if all(value == False for value in [ctx["notes"], ctx["rests"], ctx["time_signatures"], ctx["key_signatures"], ctx["clefs"], ctx["error_description"]]):  # noqa
     # turn to json serializable.
     msg["Notes"] = [i.asdict() for i in output.notes]
     msg["Rests"] = [i.asdict() for i in output.rests]

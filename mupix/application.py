@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 This project wraps around `Music21` and `lxml` to make certain tasks easier and
-provide code for lining up and evaluating multiple symbolic music-files. I 
+provide code for lining up and evaluating multiple symbolic music-files. I
 do not agree with certain design decisions `Music21` has taken regarding the
 handling of the MusicXML format. Issues which become observable when examining
 the output of multiple music engraving software.
@@ -25,9 +25,11 @@ from mupix.base import (
   TimeSignatureObject,
   KeySignatureObject,
   ClefObject,
-  normalize_object_list)
+  normalize_object_list,
+  add_step_information
+)
 from mupix.result_objects import (
-  NotePitchResult,
+  NoteStepResult,
   NoteDurationResult,
   NoteOctaveResult,
   NoteAccidentalResult,
@@ -62,48 +64,6 @@ from mupix.sequence_alignment import (
 )
 
 
-def xml_validator(musicxml_filepath, schema_filepath=__return_root_path() + "/tests/xml/musicxml.xsd"):
-  """Return if the provided musicxml file is valid against the current musicxml schema.
-
-  :param [musicxml_filepath]: A character string that represents the filepath and filename of the file to open.
-  :type [musicxml_filepath]: String
-
-  :param [schema_filepath](optional): A character string that represents the filepath and filename of the schema to use.
-  :type [schema_filepath]: String
-
-  :return: Returns a boolean value, either it is a valid MusicXML file or it is not.
-  :rtype: Bool
-  """
-  with open(musicxml_filepath, "rb") as xml_file:
-    test = BytesIO(xml_file.read())
-
-  try:
-    xml_schema = etree.XMLSchema(etree.parse(schema_filepath))
-  except etree.XMLSyntaxError:
-    xml_schema = etree.DTD(schema_filepath)
-
-  return xml_schema.validate(etree.parse(test))
-
-
-def xml_type_finder(musicxml_filepath):
-  """
-  Check if the xml file is written in a partwise or timewise fashion.
-
-  :param [filepath]: A character string that represents the filepath and filename of the file to open.
-  :type [filepath]: String
-
-  :return: Either a Partwise or a Timewise string will return.
-  :rtype: String
-  """
-  with open(musicxml_filepath, "r") as xml_file:
-    for line in xml_file:
-      if "score-partwise" in line.lower():
-        return "Partwise"
-      elif "score-timewise" in line.lower():
-        return "Timewise"
-    raise Exception("File has neither time-wise or part-wise tags")
-
-
 @attr.s
 class ParseMusic21(MupixObject):
   """
@@ -123,17 +83,35 @@ class ParseMusic21(MupixObject):
     """
     notes, rests, timeSignatures, keySignatures, clefs = [], [], [], [], []
     for parts_index, parts in enumerate(music21.converter.parseFile(filepath).recurse().getElementsByClass("Part"), 1):  # noqa
+
+      # This won't work because the key signature would be in measure one, and
+      # in measure two there is no information about key anymore. So
+      # add_step_information was written.
+      #
+      # notes += [NoteObject(
+      #   item,           # Music21 Object
+      #   parts_index,    # Part number
+      #   step=Interval(  # A step defined in the NoteObjects from mupix/base.py
+      #     noteStart=item._getActiveSite().keySignature.asKey().tonic,
+      #     noteEnd=item).semitones % 12) for item in parts.recurse().notes if not item.isChord]
+
       notes += [NoteObject(item, parts_index) for item in parts.recurse().notes if not item.isChord]
       rests += [RestObject(item, parts_index) for item in parts.recurse().notesAndRests if not item.isNote]
       timeSignatures += [TimeSignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("TimeSignature")]  # noqa
       keySignatures += [KeySignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("KeySignature")]  # noqa
       clefs += [ClefObject(item, parts_index) for item in parts.recurse().getElementsByClass("Clef")]
 
-    measuresInScore = max(notes + rests, key=operator.attrgetter('measure')).measure
+    try:
+      measuresInScore = max(notes + rests, key=operator.attrgetter('measure')).measure
+    except ValueError:
+      measuresInScore = 0
+      parts_index = 0
 
-    timeSignatures = normalize_object_list(input_list=timeSignatures, maximum=measuresInScore,)
-    keySignatures = normalize_object_list(input_list=keySignatures, maximum=measuresInScore,)
-    clefs = normalize_object_list(input_list=clefs, maximum=measuresInScore,)
+    timeSignatures = normalize_object_list(object_list=timeSignatures, total_measures=measuresInScore, total_parts=parts_index)
+    keySignatures = normalize_object_list(object_list=keySignatures, total_measures=measuresInScore, total_parts=parts_index)
+    clefs = normalize_object_list(object_list=clefs, total_measures=measuresInScore, total_parts=parts_index)
+
+    notes = add_step_information(notes, keySignatures)  # only once keySignatures are normalized can we add the step information.
 
     return cls(
       notes=notes,
@@ -156,7 +134,7 @@ class Compare(MupixObject):
   def __init__(self, true_filepath, test_filepath, sorting_algorithm="basic"):
     # Notes
     self.notes = []
-    self.notes_pitch = NotePitchResult()
+    self.notes_step = NoteStepResult()
     self.notes_duration = NoteDurationResult()
     self.notes_octave = NoteOctaveResult()
     self.notes_accidental = NoteAccidentalResult()
@@ -199,6 +177,9 @@ class Compare(MupixObject):
 
     self.error_description = {}
 
+    # Check the key signatures of each instrument before tallying all of the errors here.
+    # That way we can transpose the notes.
+
     if sorting_algorithm == "basic":
       # Using a "dumb" alignment
       self._object_split()
@@ -225,7 +206,7 @@ class Compare(MupixObject):
     For a specific field, return all items
 
     For notes:
-      ['notes_accidental', 'notes_articulation', 'notes_beam', 'notes_duration', 'notes_octave', 'notes_pitch', 'notes_stemdirection']
+      ['notes_accidental', 'notes_articulation', 'notes_beam', 'notes_duration', 'notes_octave', 'notes_step', 'notes_stemdirection']
     """
     return [item for item in dir(self) if field in item and "_" in item and "total" not in item]
 
@@ -321,7 +302,7 @@ class Compare(MupixObject):
     Align each note object with each other. Understandably this is not the best, but it
     serves more as a proof-of-concept or a placeholder to be built later.
 
-    - Notes           are aligned by pitch names
+    - Notes           are aligned by step names
     - Restes          are aligned by measure number as a single char
     - TimeSignatures  are aligned by measure number as a single char
     - KeySignatures   are aligned by measure number as a single char
@@ -329,8 +310,8 @@ class Compare(MupixObject):
     """
 
     # Notes
-    true_notes = [item.pitch for item in self.true_data.notes]
-    test_notes = [item.pitch for item in self.test_data.notes]
+    true_notes = [item.step for item in self.true_data.notes]
+    test_notes = [item.step for item in self.test_data.notes]
     notes_anw = func(true_notes, test_notes)
 
     true_note_objects = self._rebuild(notes_anw.aligned_true_data, self.true_data.notes)
@@ -433,3 +414,45 @@ class Compare(MupixObject):
     test_clef_objects = self._rebuild(clef_anw.aligned_test_data, self.test_data.clefs)
     for index, objects in enumerate(true_clef_objects):
       self._compare(objects, test_clef_objects[index])
+
+
+def xml_validator(musicxml_filepath, schema_filepath=__return_root_path() + "/tests/xml/musicxml.xsd"):
+  """Return if the provided musicxml file is valid against the current musicxml schema.
+
+  :param [musicxml_filepath]: A character string that represents the filepath and filename of the file to open.
+  :type [musicxml_filepath]: String
+
+  :param [schema_filepath](optional): A character string that represents the filepath and filename of the schema to use.
+  :type [schema_filepath]: String
+
+  :return: Returns a boolean value, either it is a valid MusicXML file or it is not.
+  :rtype: Bool
+  """
+  with open(musicxml_filepath, "rb") as xml_file:
+    test = BytesIO(xml_file.read())
+
+  try:
+    xml_schema = etree.XMLSchema(etree.parse(schema_filepath))
+  except etree.XMLSyntaxError:
+    xml_schema = etree.DTD(schema_filepath)
+
+  return xml_schema.validate(etree.parse(test))
+
+
+def xml_type_finder(musicxml_filepath):
+  """
+  Check if the xml file is written in a partwise or timewise fashion.
+
+  :param [filepath]: A character string that represents the filepath and filename of the file to open.
+  :type [filepath]: String
+
+  :return: Either a Partwise or a Timewise string will return.
+  :rtype: String
+  """
+  with open(musicxml_filepath, "r") as xml_file:
+    for line in xml_file:
+      if "score-partwise" in line.lower():
+        return "Partwise"
+      elif "score-timewise" in line.lower():
+        return "Timewise"
+    raise Exception("File has neither time-wise or part-wise tags")

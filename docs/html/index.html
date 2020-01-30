@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Welcome to Mupix’s documentation! &#8212; Mupix 0.1.0 documentation</title>
+    <title>Mupix - musicfile comparison for humans &#8212; Mupix 0.1.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -31,9 +31,88 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="welcome-to-mupix-s-documentation">
-<h1>Welcome to Mupix’s documentation!<a class="headerlink" href="#welcome-to-mupix-s-documentation" title="Permalink to this headline">¶</a></h1>
-<p>Version 0.1.0 </p>
+  <div class="section" id="mupix-musicfile-comparison-for-humans">
+<h1>Mupix - musicfile comparison for humans<a class="headerlink" href="#mupix-musicfile-comparison-for-humans" title="Permalink to this headline">¶</a></h1>
+<a class="reference external image-reference" href="https://img.shields.io/travis/com/deepio/mupix"><img alt="Travis (.com)" src="https://img.shields.io/travis/com/deepio/mupix" /></a>
+<a class="reference external image-reference" href="https://img.shields.io/github/last-commit/deepio/mupix"><img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/deepio/mupix" /></a>
+<a class="reference external image-reference" href="https://img.shields.io/github/tag-date/deepio/mupix"><img alt="GitHub tag (latest by date)" src="https://img.shields.io/github/tag-date/deepio/mupix" /></a>
+<a class="reference external image-reference" href="https://img.shields.io/github/repo-size/deepio/mupix"><img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/deepio/mupix" /></a>
+<a class="reference external image-reference" href="https://img.shields.io/pypi/pyversions/mupix"><img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/mupix" /></a>
+<a class="reference external image-reference" href="https://img.shields.io/github/license/deepio/mupix"><img alt="License" src="https://img.shields.io/github/license/deepio/mupix" /></a>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Build the latest version using poetry</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">install</span></code></p></li>
+</ul>
+<p>Build the latest version using pip</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code></p></li>
+</ul>
+<p>Install it from PyPi</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">mupix</span></code></p></li>
+</ul>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>For up-to-date usage information</p>
+<ul class="simple">
+<li><p>Checkout the <a class="reference external" href="https://mupix.readthedocs.io/en/latest/commands/">ReadTheDocs</a>!</p></li>
+<li><p>For the offline version run <code class="docutils literal notranslate"><span class="pre">mupix</span></code> or <code class="docutils literal notranslate"><span class="pre">mupix</span> <span class="pre">--help</span></code></p></li>
+</ul>
+</div>
+<div class="section" id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>Outputs valid <code class="docutils literal notranslate"><span class="pre">JSON</span></code> data</p></li>
+<li><p>Open and read (output to screen as JSON) symbolic music files</p></li>
+<li><p>Align musical markings from two or more symbolic files using sequence alignment algorithms</p></li>
+<li><p>Output the deferences between two files as full <code class="docutils literal notranslate"><span class="pre">error</span> <span class="pre">descriptions</span></code> or as <code class="docutils literal notranslate"><span class="pre">counted</span> <span class="pre">types</span></code>.</p>
+<ul class="simple">
+<li><p><strong>Error Description</strong></p></li>
+</ul>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;ErrorDescription&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;part2_0.0_C major&quot;</span><span class="p">:</span> <span class="s2">&quot;part2_0.0_G major&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;part2_0.0_&lt;music21.note.Note C&gt;&quot;</span><span class="p">:</span> <span class="s2">&quot;part2_0.0_&lt;music21.note.Note G&gt;&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;part2_1.0_&lt;music21.note.Note D&gt;&quot;</span><span class="p">:</span> <span class="s2">&quot;part2_1.0_&lt;music21.note.Note A&gt;&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;part2_2.0_&lt;music21.note.Note E&gt;&quot;</span><span class="p">:</span> <span class="s2">&quot;part2_2.0_&lt;music21.note.Note B&gt;&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;part2_3.0_&lt;music21.note.Note F&gt;&quot;</span><span class="p">:</span> <span class="s2">&quot;part2_3.0_&lt;music21.note.Note C&gt;&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;part2_0.0_&lt;music21.note.Note G&gt;&quot;</span><span class="p">:</span> <span class="s2">&quot;part2_0.0_&lt;music21.note.Note D&gt;&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;part2_1.0_&lt;music21.note.Note A&gt;&quot;</span><span class="p">:</span> <span class="s2">&quot;part2_1.0_&lt;music21.note.Note E&gt;&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;part2_2.0_&lt;music21.note.Note B&gt;&quot;</span><span class="p">:</span> <span class="s2">&quot;part2_2.0_&lt;music21.note.Note F#&gt;&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;part2_3.0_&lt;music21.note.Note C&gt;&quot;</span><span class="p">:</span> <span class="s2">&quot;part2_3.0_&lt;music21.note.Note G&gt;&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Counted error types</strong></p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Syntax highlighting as python because of the need for comments.</span>
+<span class="p">{</span>
+  <span class="s2">&quot;Notes&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;right&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+      <span class="s2">&quot;wrong&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+      <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;NoteNameResult&quot;</span>
+    <span class="p">},</span> <span class="c1"># example was truncated</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;right&quot;</span><span class="p">:</span> <span class="mi">111</span><span class="p">,</span>
+      <span class="s2">&quot;wrong&quot;</span><span class="p">:</span> <span class="mi">17</span><span class="p">,</span>
+      <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;NoteTotalResult&quot;</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="contents">
+<h1>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
@@ -44,6 +123,7 @@
 <li class="toctree-l2"><a class="reference internal" href="overview.html#documentation">Documentation</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="base.html">Basic Objects</a></li>
 <li class="toctree-l1"><a class="reference internal" href="commands.html">Commands</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="commands.html#mupix-read">Mupix Read</a></li>
 <li class="toctree-l2"><a class="reference internal" href="commands.html#mupix-compare">Mupix Compare</a></li>
@@ -86,6 +166,7 @@
 <li class="toctree-l1"><a class="reference internal" href="python2.html">Python 2 Statement</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contribute.html">How to contribute</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="base.html">Basic Objects</a></li>
 <li class="toctree-l1"><a class="reference internal" href="commands.html">Commands</a></li>
 </ul>
 
@@ -127,7 +208,7 @@
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="_sources/index.rst.txt"
+      <a href="_sources/index.md.txt"
           rel="nofollow">Page source</a>
     </div>
 
