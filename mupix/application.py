@@ -63,48 +63,6 @@ from mupix.sequence_alignment import (
 )
 
 
-def xml_validator(musicxml_filepath, schema_filepath=__return_root_path() + "/tests/xml/musicxml.xsd"):
-  """Return if the provided musicxml file is valid against the current musicxml schema.
-
-  :param [musicxml_filepath]: A character string that represents the filepath and filename of the file to open.
-  :type [musicxml_filepath]: String
-
-  :param [schema_filepath](optional): A character string that represents the filepath and filename of the schema to use.
-  :type [schema_filepath]: String
-
-  :return: Returns a boolean value, either it is a valid MusicXML file or it is not.
-  :rtype: Bool
-  """
-  with open(musicxml_filepath, "rb") as xml_file:
-    test = BytesIO(xml_file.read())
-
-  try:
-    xml_schema = etree.XMLSchema(etree.parse(schema_filepath))
-  except etree.XMLSyntaxError:
-    xml_schema = etree.DTD(schema_filepath)
-
-  return xml_schema.validate(etree.parse(test))
-
-
-def xml_type_finder(musicxml_filepath):
-  """
-  Check if the xml file is written in a partwise or timewise fashion.
-
-  :param [filepath]: A character string that represents the filepath and filename of the file to open.
-  :type [filepath]: String
-
-  :return: Either a Partwise or a Timewise string will return.
-  :rtype: String
-  """
-  with open(musicxml_filepath, "r") as xml_file:
-    for line in xml_file:
-      if "score-partwise" in line.lower():
-        return "Partwise"
-      elif "score-timewise" in line.lower():
-        return "Timewise"
-    raise Exception("File has neither time-wise or part-wise tags")
-
-
 @attr.s
 class ParseMusic21(MupixObject):
   """
@@ -441,3 +399,45 @@ class Compare(MupixObject):
     test_clef_objects = self._rebuild(clef_anw.aligned_test_data, self.test_data.clefs)
     for index, objects in enumerate(true_clef_objects):
       self._compare(objects, test_clef_objects[index])
+
+
+def xml_validator(musicxml_filepath, schema_filepath=__return_root_path() + "/tests/xml/musicxml.xsd"):
+  """Return if the provided musicxml file is valid against the current musicxml schema.
+
+  :param [musicxml_filepath]: A character string that represents the filepath and filename of the file to open.
+  :type [musicxml_filepath]: String
+
+  :param [schema_filepath](optional): A character string that represents the filepath and filename of the schema to use.
+  :type [schema_filepath]: String
+
+  :return: Returns a boolean value, either it is a valid MusicXML file or it is not.
+  :rtype: Bool
+  """
+  with open(musicxml_filepath, "rb") as xml_file:
+    test = BytesIO(xml_file.read())
+
+  try:
+    xml_schema = etree.XMLSchema(etree.parse(schema_filepath))
+  except etree.XMLSyntaxError:
+    xml_schema = etree.DTD(schema_filepath)
+
+  return xml_schema.validate(etree.parse(test))
+
+
+def xml_type_finder(musicxml_filepath):
+  """
+  Check if the xml file is written in a partwise or timewise fashion.
+
+  :param [filepath]: A character string that represents the filepath and filename of the file to open.
+  :type [filepath]: String
+
+  :return: Either a Partwise or a Timewise string will return.
+  :rtype: String
+  """
+  with open(musicxml_filepath, "r") as xml_file:
+    for line in xml_file:
+      if "score-partwise" in line.lower():
+        return "Partwise"
+      elif "score-timewise" in line.lower():
+        return "Timewise"
+    raise Exception("File has neither time-wise or part-wise tags")
