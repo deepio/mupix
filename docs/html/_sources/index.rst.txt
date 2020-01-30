@@ -17,7 +17,7 @@ Version |release| |version|
    overview
    commands
 
-
+.. include:: ../README.md
 
 Indices and tables
 ==================
