@@ -32,7 +32,7 @@ class Result:
 
 
 @attr.s
-class NotePitchResult(Result):
+class NoteStepResult(Result):
   """
   Results Object that holds the number of correct and incorrect Note Pitches.
   """

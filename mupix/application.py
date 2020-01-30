@@ -26,9 +26,10 @@ from mupix.base import (
   KeySignatureObject,
   ClefObject,
   normalize_object_list,
+  add_step_information
 )
 from mupix.result_objects import (
-  NotePitchResult,
+  NoteStepResult,
   NoteDurationResult,
   NoteOctaveResult,
   NoteAccidentalResult,
@@ -82,6 +83,18 @@ class ParseMusic21(MupixObject):
     """
     notes, rests, timeSignatures, keySignatures, clefs = [], [], [], [], []
     for parts_index, parts in enumerate(music21.converter.parseFile(filepath).recurse().getElementsByClass("Part"), 1):  # noqa
+
+      # This won't work because the key signature would be in measure one, and
+      # in measure two there is no information about key anymore. So
+      # add_step_information was written.
+      #
+      # notes += [NoteObject(
+      #   item,           # Music21 Object
+      #   parts_index,    # Part number
+      #   step=Interval(  # A step defined in the NoteObjects from mupix/base.py
+      #     noteStart=item._getActiveSite().keySignature.asKey().tonic,
+      #     noteEnd=item).semitones % 12) for item in parts.recurse().notes if not item.isChord]
+
       notes += [NoteObject(item, parts_index) for item in parts.recurse().notes if not item.isChord]
       rests += [RestObject(item, parts_index) for item in parts.recurse().notesAndRests if not item.isNote]
       timeSignatures += [TimeSignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("TimeSignature")]  # noqa
@@ -94,9 +107,11 @@ class ParseMusic21(MupixObject):
       measuresInScore = 0
       parts_index = 0
 
-    timeSignatures = normalize_object_list(input_list=timeSignatures, maximum=measuresInScore,)
-    keySignatures = normalize_object_list(input_list=keySignatures, maximum=measuresInScore,)
-    clefs = normalize_object_list(input_list=clefs, maximum=measuresInScore,)
+    timeSignatures = normalize_object_list(object_list=timeSignatures, total_measures=measuresInScore, total_parts=parts_index)
+    keySignatures = normalize_object_list(object_list=keySignatures, total_measures=measuresInScore, total_parts=parts_index)
+    clefs = normalize_object_list(object_list=clefs, total_measures=measuresInScore, total_parts=parts_index)
+
+    notes = add_step_information(notes, keySignatures)  # only once keySignatures are normalized can we add the step information.
 
     return cls(
       notes=notes,
@@ -119,7 +134,7 @@ class Compare(MupixObject):
   def __init__(self, true_filepath, test_filepath, sorting_algorithm="basic"):
     # Notes
     self.notes = []
-    self.notes_pitch = NotePitchResult()
+    self.notes_step = NoteStepResult()
     self.notes_duration = NoteDurationResult()
     self.notes_octave = NoteOctaveResult()
     self.notes_accidental = NoteAccidentalResult()
@@ -191,7 +206,7 @@ class Compare(MupixObject):
     For a specific field, return all items
 
     For notes:
-      ['notes_accidental', 'notes_articulation', 'notes_beam', 'notes_duration', 'notes_octave', 'notes_pitch', 'notes_stemdirection']
+      ['notes_accidental', 'notes_articulation', 'notes_beam', 'notes_duration', 'notes_octave', 'notes_step', 'notes_stemdirection']
     """
     return [item for item in dir(self) if field in item and "_" in item and "total" not in item]
 
@@ -287,7 +302,7 @@ class Compare(MupixObject):
     Align each note object with each other. Understandably this is not the best, but it
     serves more as a proof-of-concept or a placeholder to be built later.
 
-    - Notes           are aligned by pitch names
+    - Notes           are aligned by step names
     - Restes          are aligned by measure number as a single char
     - TimeSignatures  are aligned by measure number as a single char
     - KeySignatures   are aligned by measure number as a single char
@@ -295,8 +310,8 @@ class Compare(MupixObject):
     """
 
     # Notes
-    true_notes = [item.pitch for item in self.true_data.notes]
-    test_notes = [item.pitch for item in self.test_data.notes]
+    true_notes = [item.step for item in self.true_data.notes]
+    test_notes = [item.step for item in self.test_data.notes]
     notes_anw = func(true_notes, test_notes)
 
     true_note_objects = self._rebuild(notes_anw.aligned_true_data, self.true_data.notes)

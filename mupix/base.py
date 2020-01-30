@@ -147,10 +147,48 @@ class MusicalEvent(Marking):
 
 @attr.s
 class NoteObject(MusicalEvent):
-  pitch = attr.ib(init=False, eq=False)
-  @pitch.default
-  def _get_pitch(self):
-    return self._music21_object.step
+  """
+  A NoteObject holds information useful to Mupix for symbolic music
+  file differentiation.
+
+  :property [step]: I believe the step in Music21 should be renamed to a
+    `note.name`. A step should be similar to the concept of a scale degree,
+    except that all the distances are counted in semitones relative to the key
+    signature. Also note that octave differences are also removed, much like
+    scale degrees.
+
+    .. note:: For example
+      In the key of C Major, if the octave information is removed
+
+        C2 -> C8  = 0 (C, C)
+
+        C2 -> C#8 = 1 (C, C#) that's one semitone
+
+        C8 -> C#2 = 1 (C, C#) Still one semitone
+
+        C2 -> G4  = 7 (C, C#, D, D#, E, F, F#, G) still 7 semitones
+
+  :property [pitch]:
+    This is what Music21 defines as a step (C, D, E, F, G, etc.)
+    For continued use, grab the pitch by referencing the music21 object.
+
+    .. warning:: This property will be deprecated in **version 0.2.0**. Use **noteObject._music21_object.step** instead.
+
+  :property [octave]: The octave of the note (middle C is C4)
+
+  :property [accidental]: Any note alterations of pitch (#, ##, b, bb, natural)
+
+  :property [stemdirection]: The direction (up or down) of the note stem (if present).
+
+  :property [beam]: How note beams are connected between adjacent notes.
+
+  """
+  step = attr.ib(kw_only=True, eq=False, default=None)
+
+  # noteName = attr.ib(init=False, eq=False)
+  # @noteName.default
+  # def _get_noteName(self):
+  #   return self._music21_object.step
 
   octave = attr.ib(init=False, eq=False)
   @octave.default
@@ -312,3 +350,52 @@ def normalize_object_list(object_list, total_measures, total_parts):
     obj += _populate_list([x for x in object_list if x.part == part], total_measures)
   return obj
 
+
+def add_step_information(notes, keySignatures):
+  """
+  This function will populate the step information into Mupix note objects, it
+  is required because music21 will not keep key signature information in
+  measure other than the measure the key is defined in when reading musicXML.
+  The maintainers of music21 don't believe this is an issue and won't fix it,
+  so this and others must exist.
+
+  :param [notes]: A list of Mupix NoteObjects.
+  :type [notes]: List
+
+  :param [keySignatures]: A list of Mupix KeySignatureObjects.
+  :type [keySignatures]: List
+
+  :return [List]: The original list of Mupix NoteObjects (in order) with step information included.
+  :rtype: List
+  """
+  for key in keySignatures:
+    key_name = key.step.upper() if key.mode == "major" else key.step.lower()
+
+    for note in notes:
+      if note.part == key.part and note.measure == key.measure:
+        note.step = Interval(noteStart=Note(Key(key_name).asKey().tonic), noteEnd=note._music21_object).semitones % 12
+
+  return notes
+
+
+if __name__ == "__main__":
+  """
+  How to create Mupix Objects.
+  """
+  from music21.stream import Score, Part, Measure
+  from music21.key import KeySignature
+  from music21.note import Note  # noqa
+
+  s = Score()
+  p1 = Part(id="part1")
+  m1 = Measure(number=1)
+  m1.append(KeySignature(3))
+  m1.append(Note("C4", type="eighth"))
+  m2 = Measure(number=2)
+  m2.append(KeySignature(0))
+  m2.append(Note("G4", type="eighth"))
+  p1.append([m1, m2])
+  s.append([p1])
+
+  notes = [NoteObject(item, 1) for item in s.recurse().notes if not item.isChord]
+  print(notes)
