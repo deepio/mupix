@@ -25,7 +25,7 @@ from mupix.base import (
   TimeSignatureObject,
   KeySignatureObject,
   ClefObject,
-  normalize_object_list
+  normalize_object_list,
 )
 from mupix.result_objects import (
   NotePitchResult,

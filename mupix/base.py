@@ -7,6 +7,9 @@ it, then write it in camelCase style.
 import copy
 
 import attr
+from music21.interval import Interval
+from music21.key import Key
+from music21.note import Note
 
 from mupix.result_objects import Result
 
@@ -297,3 +300,15 @@ def _populate_list(input_list, maximum):
       output_list.append(tail_object)
       measure += 1
   return output_list
+
+
+def normalize_object_list(object_list, total_measures, total_parts):
+  """
+  Without changing the order of the objects, iterate through each instrumental
+  part and populate missing information in place.
+  """
+  obj = []
+  for part in range(1, total_parts + 1):
+    obj += _populate_list([x for x in object_list if x.part == part], total_measures)
+  return obj
+
