@@ -1,7 +1,5 @@
 # Mupix - musicfile comparison for humans
 
-Release v\ |version|
-_____
 ![Travis (.com)](https://img.shields.io/travis/com/deepio/mupix)
 ![GitHub last commit](https://img.shields.io/github/last-commit/deepio/mupix)
 ![GitHub tag (latest by date)](https://img.shields.io/github/tag-date/deepio/mupix)
@@ -48,7 +46,7 @@ For up-to-date usage information
   }
   ```
 
-  - **Counted Types**
+  - **Counted error types**
 
   ```python
   # Syntax highlighting as python because of the need for comments.
