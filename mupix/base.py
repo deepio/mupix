@@ -15,6 +15,27 @@ from mupix.result_objects import Result
 class MupixObject():
   """A MupixObject holds information for an entire score.
   It holds an ordered list of all the musical events in the score.
+
+  :param [notes]: A list of objects related to notes
+  :type [notes]: List or Result object
+
+  :param [rests]: A list of objects related to rests
+  :type [rests]: List or Result object
+
+  :param [timeSignatures]: A list of objects related to time signatures
+  :type [timeSignatures]: List or Result object
+
+  :param [keySignatures]: A list of objects related to key signatures
+  :type [keySignatures]: List or Result object
+
+  :param [clefs]: A list of objects related to clefs
+  :type [clefs]: List or Result object
+
+  :param [parts]: A number representing the number of total staffs per system
+  :type [parts]: Integer
+
+  :param [error_description]: More detailed error information
+  :type [error_description]: Dictionary
   """
   notes = attr.ib(kw_only=True,)
   rests = attr.ib(kw_only=True,)
@@ -31,18 +52,34 @@ class MupixObject():
   @clefs.validator
   def check(self, attribute, value):
     """
-    Typecheck for notes, rests, time signatures, key signatures, and, clefs.
+    Type-check for notes, rests, time signatures, key signatures, and, clefs.
     They should be either a list, or a Result object for eventual output.
     """
     if not isinstance(value, list) and not isinstance(value, Result):
       raise ValueError(f"Must be a list or Results Object. {type(value)}")
 
   def ret(self):
+    """
+    Return all information about the Mupix object as a tuple.
+    """
     return self.notes, self.rests, self.timeSignatures, self.keySignatures, self.clefs, self.error_description
 
 
 @attr.s
 class Marking:
+  """
+  The base class for all the components of a Mupix object
+
+  :property [_music21_object]: The original music21 object, in case it is needed.
+
+  :property [part]: An integer representing the instrument (1 for the first instrument, etc.)
+
+  :property [measure]: The measure in which this object can be found. It is
+    inferred by the music21 object.
+
+  :property [onset]: The time in the measure where this event occurs. It is
+    inferred by the music21 object.
+  """
   _music21_object = attr.ib(eq=False)
   part = attr.ib(type=int)
 
@@ -57,17 +94,35 @@ class Marking:
     return str(self._music21_object.offset)
 
   def asdict(self):
+    """
+    Return the object as a JSON serializable python dictionary.
+    """
     tmp = attr.asdict(self)
     del tmp["_music21_object"]
     return tmp
 
   def asname(self):
+    """
+    Returns the name of the current class (or subclass)
+    """
     string = str(self.__class__).split(".")[-1].replace("Object", "")
     return string[0].lower() + string[1:-2] + "s"
 
 
 @attr.s
 class MusicalEvent(Marking):
+  """
+  A musical event is an **active** marking in a score, rather than **passive**
+  marking like a key signature or a time signature. Active markings are
+  effective when read and discarded when finished.
+
+  :property [duration]: The amount of time the event will last.
+
+  :property [voice]: In the case of multiple instruments within a staff, this
+    is a numerical representation of which instrument it represents.
+
+  :property [articulation]: A musical articulation (staccato, tenuto, accents, etc.)
+  """
   duration = attr.ib(init=False, type=str, eq=False)
   @duration.default
   def _get_duration(self):
@@ -125,6 +180,9 @@ class NoteObject(MusicalEvent):
 
 @attr.s
 class RestObject(MusicalEvent):
+  """
+  Same as :func:`mupix.base.MusicalEvent`
+  """
   pass
 
 
@@ -172,10 +230,11 @@ class ClefObject(Marking):
     return self._music21_object.octaveChange
 
 
-def normalize_object_list(input_list, maximum):
+def _populate_list(input_list, maximum):
   """
-  Different software vendors encode time signatures, key signatures, and clefs in a peculiar way.
-  Some repeat the previous object in every following measure.
+  Different music engraving software encode time signatures, key signatures,
+    and clefs in a peculiar way. Some repeat the previous object in every
+    following measure.
 
     Let's say this hypothetical score has 44 measures. When parsing a problematic musicXML file,
     you will notice there are 44 treble clefs in the same instrument part. Meaning the same,
