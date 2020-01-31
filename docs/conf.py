@@ -14,6 +14,14 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 import mupix
+import os
+import subprocess
+
+# RTD doesn't want to install with poetry all the well... so we're going to
+# install this manually :)
+on_rtd = os.environ.get('READTHEDOCS') == 'True'
+if on_rtd:
+  subprocess.check_output(["pip", "install", "m2r"])
 
 
 # -- Project information -----------------------------------------------------
