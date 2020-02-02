@@ -94,12 +94,13 @@ class NoteTotalResult(Result):
   """
 
 
-@attr.s
-class RestAccidentalResult(Result):
-  """
-  It sounds weird, but rests are note objects in musicxml. In the event one is added erroneously,
-  we should count it.
-  """
+# @attr.s
+# class RestAccidentalResult(Result):
+#   """
+#   It sounds weird, but rests are note objects in musicxml. In the event an 
+#   accidental is added erroneously, we should count it? Maybe not... Music21
+#   complains about this all the time.
+#   """
 
 
 @attr.s
