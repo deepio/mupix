@@ -1,5 +1,0 @@
-Base Classes
-============
-
-.. automodule:: mupix.base
-   :members:
