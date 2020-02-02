@@ -482,50 +482,50 @@ class BaseCompareClass(MupixObject):
   """
   The base comparison class for Mupix Objects.
   """
-  # Notes
-  notes = []
-  notes_step = NoteStepResult()
-  notes_name = NoteNameResult()
-  notes_duration = NoteDurationResult()
-  notes_octave = NoteOctaveResult()
-  notes_accidental = NoteAccidentalResult()
-  notes_articulation = NoteArticulationResult()
-  notes_stemdirection = NoteStemDirectionResult()
-  notes_beam = NoteBeamResult()
-  notes_voice = NoteVoiceResult()
-  notes_total = NoteTotalResult()
-
-  # Rests
-  rests = []
-  rests_articulation = RestArticulationResult()
-  rests_duration = RestDurationResult()
-  rests_voice = RestVoiceResult()
-  rests_total = RestTotalResult()
-
-  # Time Signatures
-  timeSignatures = []
-  timeSignatures_numerator = TimeSignatureNumeratorResult()
-  timeSignatures_denominator = TimeSignatureDenominatorResult()
-  timeSignatures_total = TimeSignatureTotalResult()
-
-  # Key Signatures
-  keySignatures = []
-  keySignatures_step = KeySignatureStepResult()
-  keySignatures_mode = KeySignatureModeResult()
-  keySignatures_total = KeySignatureTotalResult()
-
-  # Clefs
-  clefs = []
-  clefs_name = ClefNameResult()
-  clefs_line = ClefLineResult()
-  clefs_octave = ClefOctaveResult()
-  clefs_total = ClefTotalResult()
-
-  error_description = {}
-
   def __init__(self, true_filepath: str, test_filepath: str, do_not_count: list = []):
     # for result_to_exclude in do_not_count:
     #   del self.__getattribute__(result_to_exclude)
+
+    # Notes
+    self.notes = []
+    self.notes_step = NoteStepResult()
+    self.notes_name = NoteNameResult()
+    self.notes_duration = NoteDurationResult()
+    self.notes_octave = NoteOctaveResult()
+    self.notes_accidental = NoteAccidentalResult()
+    self.notes_articulation = NoteArticulationResult()
+    self.notes_stemdirection = NoteStemDirectionResult()
+    self.notes_beam = NoteBeamResult()
+    self.notes_voice = NoteVoiceResult()
+    self.notes_total = NoteTotalResult()
+
+    # Rests
+    self.rests = []
+    self.rests_articulation = RestArticulationResult()
+    self.rests_duration = RestDurationResult()
+    self.rests_voice = RestVoiceResult()
+    self.rests_total = RestTotalResult()
+
+    # Time Signatures
+    self.timeSignatures = []
+    self.timeSignatures_numerator = TimeSignatureNumeratorResult()
+    self.timeSignatures_denominator = TimeSignatureDenominatorResult()
+    self.timeSignatures_total = TimeSignatureTotalResult()
+
+    # Key Signatures
+    self.keySignatures = []
+    self.keySignatures_step = KeySignatureStepResult()
+    self.keySignatures_mode = KeySignatureModeResult()
+    self.keySignatures_total = KeySignatureTotalResult()
+
+    # Clefs
+    self.clefs = []
+    self.clefs_name = ClefNameResult()
+    self.clefs_line = ClefLineResult()
+    self.clefs_octave = ClefOctaveResult()
+    self.clefs_total = ClefTotalResult()
+
+    self.error_description = {}
 
     # Parse both files
     self.true_data = MupixObject.from_filepath(true_filepath)
