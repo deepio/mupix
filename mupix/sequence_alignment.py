@@ -156,6 +156,15 @@ class AffineNeedlemanWunsch(SequenceAlignment):
   of your `populate` method to create your fully-formed matrix and give output
   the algorithms best guess.
 
+  Align each note object with each other. Understandably this is not the best, but it
+    serves more as a proof-of-concept or a placeholder to be built later.
+
+    - Notes           are aligned by step names
+    - Restes          are aligned by measure number as a single char
+    - TimeSignatures  are aligned by measure number as a single char
+    - KeySignatures   are aligned by measure number as a single char
+    - Clefs           are aligned by measure number as a single char
+
   :param [true_data]: A character string that represents what needs to be aligned,
     or a list of objects, this is where you put your ground truth.
   :type [true_data]: String, List

@@ -75,7 +75,7 @@ Mupix Validate
 
     $ mupix validate ./testing_xml.xml
 
-  Or of multiple files:
+  Or of multiple files::
 
     $ mupix validate ./*
 
@@ -94,8 +94,10 @@ import click
 
 from mupix.application import xml_validator
 from mupix.application import xml_type_finder
-from mupix.application import Compare
-from mupix.application import ParseMusic21
+from mupix.application import BasicCompare
+from mupix.application import SimpleNeedlemanWunsch
+from mupix.application import WeightedNeedlemanWunsch
+from mupix.base import MupixObject
 from mupix.extra import output_filter
 
 
@@ -144,13 +146,19 @@ def compare(ctx, sort, true_data, test_data):
 
     <file A> <file B> <file C>    Or a list of files with spaces for separation
   """
+  algorithms_dispatcher = {
+    "basic": BasicCompare,
+    "anw": SimpleNeedlemanWunsch,
+    "anw-1": WeightedNeedlemanWunsch
+  }
+
   for f in test_data:
     output_filter(
       ctx.parent.params,
-      Compare,
-      true_filepath=true_data,
-      test_filepath=f,
-      sorting_algorithm=sort,
+      algorithms_dispatcher[sort],
+        true_data,  # true_filepath
+        f,  # test_filepath
+        [],  # do_not_count will be implemented gradually
     )
 
 
@@ -168,7 +176,7 @@ def read(ctx, file_path):
     <file A> <file B> <file C>    Or a list of files with spaces for separation
   """
   for f in file_path:
-    output_filter(ctx.parent.params, ParseMusic21.from_filepath, f)
+    output_filter(ctx.parent.params, MupixObject.from_filepath, f)
 
 
 @cli.command("validate", short_help="Check if MusicXML file is valid.")

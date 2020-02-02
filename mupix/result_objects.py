@@ -39,6 +39,13 @@ class NoteStepResult(Result):
 
 
 @attr.s
+class NoteNameResult(Result):
+  """
+  Results Object that holds the number of correct and incorrect Note Pitches.
+  """
+
+
+@attr.s
 class NoteDurationResult(Result):
   """
   Results Object that holds the number of correct and incorrect Note Durations.
@@ -156,6 +163,8 @@ class TimeSignatureTotalResult(Result):
 @attr.s
 class KeySignatureStepResult(Result):
   """
+  Results Object that holds the number of correct and incorrect Key Signature
+  steps.
   """
 
 
