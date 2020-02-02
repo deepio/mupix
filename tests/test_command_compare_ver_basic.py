@@ -1,6 +1,7 @@
 import pytest
+import json
 
-from mupix.application import Compare
+from mupix.application import BasicCompare
 from mupix.extra import __return_root_path
 
 # Test Files path
@@ -11,10 +12,10 @@ test_file = ROOT_DIR + "/compare/ms_F_Lydian_quarter_test.xml"
 @pytest.fixture
 def load_single_voice_compare_resources():
   ROOT_DIR = __return_root_path() + "/tests/xml"
-  return Compare(
+  return BasicCompare(
     true_filepath=ROOT_DIR + "/compare/ms_F_Lydian_quarter_true.xml",
     test_filepath=ROOT_DIR + "/compare/ms_F_Lydian_quarter_test.xml",
-    sorting_algorithm="basic",
+    do_not_count=[],
   )
 
 
@@ -25,8 +26,8 @@ def test_compare_basic_single_voice_notes_total(load_single_voice_compare_resour
   #   load_single_voice_compare_resources.notes[-1].right,
   #   load_single_voice_compare_resources.notes[-1].wrong
   # )
-  assert load_single_voice_compare_resources.notes[-1].right == 61
-  assert load_single_voice_compare_resources.notes[-1].wrong == 3
+  assert load_single_voice_compare_resources.notes[-1].right == 62
+  assert load_single_voice_compare_resources.notes[-1].wrong == 2
 
 
 def test_compare_basic_single_voice_notes_accidental(load_single_voice_compare_resources):

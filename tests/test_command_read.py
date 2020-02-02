@@ -1,6 +1,6 @@
 import hashlib
 
-from mupix.application import ParseMusic21
+from mupix.base import MupixObject
 from mupix.extra import __return_root_path
 
 # Test Files path
@@ -19,7 +19,7 @@ def test_basic_parse_xml():
   But maybe that's not such a bad idea...
   """
   m = hashlib.sha512()
-  output = ParseMusic21.from_filepath(ROOT_DIR + "/compare/ms_F_Lydian_quarter_true.xml")
+  output = MupixObject.from_filepath(ROOT_DIR + "/compare/ms_F_Lydian_quarter_true.xml")
   output = bytes(str(output), encoding="utf-8")
   m.update(output)
   # If you want to change the structure of how elements are stored, or add fields to the classes,
@@ -28,7 +28,7 @@ def test_basic_parse_xml():
   # You can get the new hash AFTER checking manually for errors by un-commenting this next line and running the test.
   # raise Exception(output)
   # raise Exception(m.hexdigest())
-  correct_hash = "b19b5dee4119c441c9a5993904f775ffe39f3c25211d732cfd5d6ab6b2d7d9f00a24f40ba5f3bd1d8655123dd037d4348c7807ac5a44750966d5b7c1f9f6c961" # noqa
+  correct_hash = "381d38e217575a4855985793736c38a1665b92713e5c1f655650fb4a4e1cb5128e98545a65641a199e7daa7106440674aee1a62c300265a3c5aef644bcb36d79" # noqa
   assert m.hexdigest() == correct_hash
 
 
@@ -65,7 +65,7 @@ def test_key_signature_parse_xml():
     "mode": "major"
   }
   """
-  key_signatures = ParseMusic21.from_filepath(ROOT_DIR + "/read/key_signature.xml").ret()[3]
+  key_signatures = MupixObject.from_filepath(ROOT_DIR + "/read/key_signature.xml").ret()[3]
 
   assert key_signatures[0].part == 1
   assert key_signatures[0].measure == 1
@@ -91,7 +91,7 @@ def test_key_signature_parse_xml():
 def test_beam_parse_xml():
   """
   """
-  notes = ParseMusic21.from_filepath(ROOT_DIR + "/read/beam.xml").ret()[0]
+  notes = MupixObject.from_filepath(ROOT_DIR + "/read/beam.xml").ret()[0]
   assert notes[0].beam == {'start'}
   assert notes[1].beam == {'continue', 'partial'}
   assert notes[2].beam == {'partial', 'stop'}
@@ -100,7 +100,7 @@ def test_beam_parse_xml():
 def test_time_signature_parse_xml():
   """
   """
-  time_signatures = ParseMusic21.from_filepath(ROOT_DIR + "/read/time_signature.xml").ret()[2]
+  time_signatures = MupixObject.from_filepath(ROOT_DIR + "/read/time_signature.xml").ret()[2]
 
   assert time_signatures[0].measure == 1
   assert time_signatures[0].onset == "0.0"
@@ -131,7 +131,7 @@ def test_time_signature_parse_xml():
 def test_voice_parse_xml():
   """
   """
-  voices = ParseMusic21.from_filepath(ROOT_DIR + "/read/voice.xml").ret()[0]
+  voices = MupixObject.from_filepath(ROOT_DIR + "/read/voice.xml").ret()[0]
 
   assert voices[0].voice == 1
   assert voices[1].voice == 2
