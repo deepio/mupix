@@ -17,7 +17,7 @@ import mupix
 import os
 import subprocess
 
-# RTD doesn't want to install with poetry all the well... so we're going to
+# RTD doesn't want to install with poetry all that well... so we're going to
 # install this manually :)
 on_rtd = os.environ.get('READTHEDOCS') == 'True'
 if on_rtd:
@@ -63,6 +63,8 @@ templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 autosectionlabel_prefix_document = True
 source_suffix = ['.rst', '.md']
+# [Autodoc] Order documentation by source order, not alphabetically.
+autodoc_member_order = 'bysource'
 
 
 # -- Options for HTML output -------------------------------------------------
