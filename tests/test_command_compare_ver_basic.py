@@ -1,5 +1,4 @@
 import pytest
-import json
 
 from mupix.application import BasicCompare
 from mupix.extra import __return_root_path

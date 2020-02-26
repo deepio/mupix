@@ -17,17 +17,17 @@ data be indented on output by using `-p`.
 
 Example
 #######
-  You could read a file using the folloing::
+	You could read a file using the folloing::
 
-    $ mupix read ./my_musicxml_file.xml
+		$ mupix read ./my_musicxml_file.xml
 
-  You can `pretty-print` the text by using the `-p` option::
+	You can `pretty-print` the text by using the `-p` option::
 
-    $ mupix -p read ./my_musicxml_file.xml
+		$ mupix -p read ./my_musicxml_file.xml
 
-  You can also use bash expansion for multiple files::
+	You can also use bash expansion for multiple files::
 
-    $ mupix -p read ./xml/*
+		$ mupix -p read ./xml/*
 
 *************
 Mupix Compare
@@ -41,52 +41,52 @@ the total, you can pass `-T`.
 Example
 #######
 
-  You can compare two files using the following::
+	You can compare two files using the following::
 
-    $ mupix compare ./ground_truth.xml ./5-D.xml
+		$ mupix compare ./ground_truth.xml ./5-D.xml
 
-  You can `pretty-print` the output::
+	You can `pretty-print` the output::
 
-    $ mupix -p compare ./ground_truth.xml ./5-D.xml
+		$ mupix -p compare ./ground_truth.xml ./5-D.xml
 
-  You can change the Musical Marking alignment algorithm::
+	You can change the Musical Marking alignment algorithm::
 
-    $ mupix compare --sort=anw-1 ./ground_truth.xml ./5-D.xml
+		$ mupix compare --sort=anw-1 ./ground_truth.xml ./5-D.xml
 
-  You can choose what you wish to display, and combine commands together too::
+	You can choose what you wish to display, and combine commands together too::
 
-    $ mupix -nt compare ./ground_truth.xml ./5-D.xml
-    $ mupix -rk compare --sort=anw-1 ./ground_truth.xml ./5-D.xml
-    $ mupix -ntk compare --sort=basic ./ground_truth.xml ./5-D.xml
+		$ mupix -nt compare ./ground_truth.xml ./5-D.xml
+		$ mupix -rk compare --sort=anw-1 ./ground_truth.xml ./5-D.xml
+		$ mupix -ntk compare --sort=basic ./ground_truth.xml ./5-D.xml
 
-  Just the total with `pretty-print`::
+	Just the total with `pretty-print`::
 
-    $ mupix -pT compare ./ground_truth.xml ./5-D.xml
+		$ mupix -pT compare ./ground_truth.xml ./5-D.xml
 
-  You can even use bash expansion for multiple files to test against a single ground truth::
+	You can even use bash expansion for multiple files to test against a single ground truth::
 
-    $ mupix -pT compare ./ground_truth.xml ./xml/*
+		$ mupix -pT compare ./ground_truth.xml ./xml/*
 
 **************
 Mupix Validate
 **************
 
-  You can check to see if the file is valid against the official MusicXML specification, this process can take ~20 seconds per file::
+	You can check to see if the file is valid against the official MusicXML specification, this process can take ~20 seconds per file::
 
-    $ mupix validate ./testing_xml.xml
+		$ mupix validate ./testing_xml.xml
 
-  Or of multiple files::
+	Or of multiple files::
 
-    $ mupix validate ./*
+		$ mupix validate ./*
 
 ****************
 Mupix xml_finder
 ****************
 
-  You can identify the type of MusicXML file, either part-wise or time-wise by using
-  the `xml_finder` command::
+	You can identify the type of MusicXML file, either part-wise or time-wise by using
+	the `xml_finder` command::
 
-    $ mupix xml_finder ./testing_xml.xml
+		$ mupix xml_finder ./testing_xml.xml
 
 """
 
@@ -97,6 +97,7 @@ from mupix.application import xml_type_finder
 from mupix.application import BasicCompare
 from mupix.application import SimpleNeedlemanWunsch
 from mupix.application import WeightedNeedlemanWunsch
+from mupix.application import PartwiseWeightedNeedlemanWunsch
 from mupix.base import MupixObject
 from mupix.extra import output_filter
 
@@ -112,11 +113,11 @@ from mupix.extra import output_filter
 @click.option("-T", "--total-only", is_flag=True, help="Show the total of each category")
 @click.pass_context
 def cli(ctx, pretty_print, notes, rests, time_signatures, key_signatures, clefs, error_description, total_only):
-  """
-  This tool helps parse MusicXML files and can list how many discrepancies there are, and what type they are.
+	"""
+	This tool helps parse MusicXML files and can list how many discrepancies there are, and what type they are.
 
-  Feed it any musicXML file and it will list all of its contents, or compare a musicXML file with a "ground truth" musicXML file that you know to be correct. It will list how many mistakes there are, and what they are as well.
-  """
+	Feed it any musicXML file and it will list all of its contents, or compare a musicXML file with a "ground truth" musicXML file that you know to be correct. It will list how many mistakes there are, and what they are as well.
+	"""
 
 
 @cli.command("compare", short_help="Compare two or more MusicXML files. You may also select the type of algorithm you want to use by specifying --sort=anw")  # noqa
@@ -125,87 +126,88 @@ def cli(ctx, pretty_print, notes, rests, time_signatures, key_signatures, clefs,
 @click.argument("test_data", nargs=-1)
 @click.pass_context
 def compare(ctx, sort, true_data, test_data):
-  """
-  Compares two MusicXML files.
+	"""
+	Compares two MusicXML files.
 
-  OPTIONS:
+	OPTIONS:
 
-    --sort=basic    Uses a dumb alignment that does not look forward or backward in time.
+		--sort=basic    Uses a dumb alignment that does not look forward or backward in time.
 
-    --sort=anw      Uses a simplistic version of the Affine-Needleman-Wunsch based on a single element from the Mupix Objects.
+		--sort=anw      Uses a simplistic version of the Affine-Needleman-Wunsch based on a single element from the Mupix Objects.
 
-    --sort=anw-1    Uses the first version of the Affine-Needleman-Wunsch algorithm, based on multiple elements from each of the Mupix Objects.
+		--sort=anw-1    Uses the first version of the Affine-Needleman-Wunsch algorithm, based on multiple elements from each of the Mupix Objects.
 
-  TRUE_DATA:
+	TRUE_DATA:
 
-    <file>                        A single file
+		<file>                        A single file
 
-  [TEST_DATA]:
+	[TEST_DATA]:
 
-    <file>                        A single file
+		<file>                        A single file
 
-    <file A> <file B> <file C>    Or a list of files with spaces for separation
-  """
-  algorithms_dispatcher = {
-    "basic": BasicCompare,
-    "anw": SimpleNeedlemanWunsch,
-    "anw-1": WeightedNeedlemanWunsch
-  }
+		<file A> <file B> <file C>    Or a list of files with spaces for separation
+	"""
+	algorithms_dispatcher = {
+		"basic": BasicCompare,
+		"anw": SimpleNeedlemanWunsch,
+		"anw-1": WeightedNeedlemanWunsch,
+		"pw-anw-1": PartwiseWeightedNeedlemanWunsch,
+	}
 
-  for f in test_data:
-    output_filter(
-      ctx.parent.params,
-      algorithms_dispatcher[sort],
-        true_data,  # true_filepath
-        f,  # test_filepath
-        [],  # do_not_count will be implemented gradually
-    )
+	for f in test_data:
+		output_filter(
+			ctx.parent.params,
+			algorithms_dispatcher[sort],
+			true_data,  # true_filepath
+			f,  # test_filepath
+			[],  # do_not_count will be implemented gradually
+		)
 
 
 @cli.command("read", short_help="Show the parsed Symbolic file as a list of elements")
 @click.argument("file_path", nargs=-1)
 @click.pass_context
 def read(ctx, file_path):
-  """
-  Prints to screen the parsed symbolic file as a list of elements.
+	"""
+	Prints to screen the parsed symbolic file as a list of elements.
 
-  [FILE_PATH]:
+	[FILE_PATH]:
 
-    <file>                        A single file
+		<file>                        A single file
 
-    <file A> <file B> <file C>    Or a list of files with spaces for separation
-  """
-  for f in file_path:
-    output_filter(ctx.parent.params, MupixObject.from_filepath, f)
+		<file A> <file B> <file C>    Or a list of files with spaces for separation
+	"""
+	for f in file_path:
+		output_filter(ctx.parent.params, MupixObject.from_filepath, f)
 
 
 @cli.command("validate", short_help="Check if MusicXML file is valid.")
 @click.argument("file_path", nargs=-1)
 def validate(file_path):
-  """
-  Checks if the given file is a valid musicXML file.
+	"""
+	Checks if the given file is a valid musicXML file.
 
-  [FILE_PATH]:
+	[FILE_PATH]:
 
-    <file>                        A single file
+		<file>                        A single file
 
-    <file A> <file B> <file C>    Or a list of files with spaces for separation
-  """
-  for f in file_path:
-    print(f"{f}: {xml_validator(f)}")
+		<file A> <file B> <file C>    Or a list of files with spaces for separation
+	"""
+	for f in file_path:
+		print(f"{f}: {xml_validator(f)}")
 
 
 @cli.command("xml_type", short_help="Check the format of the musicxml.")
 @click.argument("file_path", nargs=-1)
 def xml_finder(file_path):
-  """
-  Checks if the given musicXML file is written in a part-wise or time-wise fashion.
+	"""
+	Checks if the given musicXML file is written in a part-wise or time-wise fashion.
 
-  [FILE_PATH]:
+	[FILE_PATH]:
 
-    <file>                        A single file
+		<file>                        A single file
 
-    <file A> <file B> <file C>    Or a list of files with spaces for separation
-  """
-  for f in file_path:
-    print(f"{f}: {xml_type_finder(f)}")
+		<file A> <file B> <file C>    Or a list of files with spaces for separation
+	"""
+	for f in file_path:
+		print(f"{f}: {xml_type_finder(f)}")
