@@ -630,10 +630,21 @@ class BaseCompareClass(MupixObject):
 	def _compare_expand_objects_different(self, true_object, test_object, object_):
 		for parameter in self._return_parameter_names(object_):
 
-			out = (
-				f"{true_object.part}-{true_object.measure}-{true_object.onset}=>{test_object.part}"
-				f"-{test_object.measure}-{test_object.onset}__{parameter}"
-			)
+			if isinstance(test_object, str):
+				out = (
+					f"{true_object.part}-{true_object.measure}-{true_object.onset}=>"
+					"skip adjustment"
+				)
+			elif isinstance(true_object, str):
+				out = (
+					f"skip adjustment=>{test_object.part}"
+					f"-{test_object.measure}-{test_object.onset}__{parameter}"
+				)
+			else:
+				out = (
+					f"{true_object.part}-{true_object.measure}-{true_object.onset}=>{test_object.part}"
+					f"-{test_object.measure}-{test_object.onset}__{parameter}"
+				)
 			try:
 				self.error_description[parameter].append(out)
 			except KeyError:
