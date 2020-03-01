@@ -40,10 +40,12 @@ def cli():
 @click.argument("description", nargs=-1)
 def add(filename, description):
 	"""A simple program to add, remove, or read MusicXML page entries to test specific aspects of Mupix."""
-	print(filename)
-	print(description)
-	# for x in range(count):
-	# 	click.echo('add %s!' % name)
+	add_sheet(
+		{
+			"filename": filename,
+			"description": description,
+		}
+	)
 
 
 @click.command("read", short_help="Read an entries in the list")
