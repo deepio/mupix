@@ -61,13 +61,13 @@ class SequenceAlignment:
 		self.populate()
 
 	def __str__(self):
-		return f"""{{\n  true_data: "{"".join(self.true_data)}"\n  test_data: "{"".join(self.test_data)}"\n  aligned_true_data: "{"".join(self.aligned_true_data)}"\n  aligned_test_data: "{"".join(self.aligned_test_data)}"\n}}"""
-		# return """{{\n  true_data: "{}"\n  test_data: "{}"\n  aligned_true_data: "{}"\n  aligned_test_data: "{}"\n}}""".format(  # noqa
-		#   "".join(self.true_data),
-		#   "".join(self.test_data),
-		#   "".join(self.aligned_true_data),
-		#   "".join(self.aligned_test_data),
-		# )
+		# return f"""{{\n  true_data: "{"".join(self.true_data)}"\n  test_data: "{"".join(self.test_data)}"\n  aligned_true_data: "{"".join(self.aligned_true_data)}"\n  aligned_test_data: "{"".join(self.aligned_test_data)}"\n}}"""
+		return """{{\n  true_data: "{}"\n  test_data: "{}"\n  aligned_true_data: "{}"\n  aligned_test_data: "{}"\n}}""".format(  # noqa
+			"".join(map(str, self.true_data)),
+			"".join(map(str, self.test_data)),
+			"".join(map(str, self.aligned_true_data)),
+			"".join(map(str, self.aligned_test_data)),
+		)
 
 	def _type_check(self, input):
 		if isinstance(input, str):
