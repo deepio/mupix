@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import sys
 
 
 def __return_root_path() -> str:
@@ -77,7 +78,11 @@ def output_filter(ctx, func, *args, **kwargs):
 
 	if ctx["total_only"]:
 		for category in msg:
-			msg[category] = [item for item in msg[category] if 'Total' in item['name']]
+			try:
+				msg[category] = [item for item in msg[category] if 'Total' in item['name']]
+			except KeyError:
+				print(f"[{func}] - Does not have a Total output or something went wrong with it.")
+				sys.exit(0)
 
 	if not ctx["pretty_print"]:
 		print(msg)
