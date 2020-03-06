@@ -1,6 +1,6 @@
 import hashlib
 
-from mupix.base import MupixObject
+from mupix.typewise import MupixObject
 from mupix.extra import __return_root_path
 
 # Test Files path
