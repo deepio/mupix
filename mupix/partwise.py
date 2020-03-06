@@ -33,6 +33,9 @@ class MupixPartwiseObject():
 		),
 	)
 
+	def __iter__(self):
+		return iter(self.parts)
+
 	@classmethod
 	def from_filepath(cls, filepath):
 		"""
@@ -91,10 +94,7 @@ class MupixPartwiseObject():
 		for part in range(parts_index):
 			# Get notes and rests together first
 			notes_and_rests = sorted(
-				itertools.chain(
-					notes[part],
-					rests[part]
-				),
+				itertools.chain(notes[part], rests[part]),
 				key=operator.attrgetter("measure", "onset")
 			)
 			# Make sure clefs, time sigs, and key sigs come first.
