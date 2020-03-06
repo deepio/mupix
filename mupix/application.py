@@ -15,13 +15,13 @@ from io import BytesIO
 
 from lxml import etree
 
-from mupix.base import BaseCompareClass
-from mupix.base import MupixObject
 from mupix.extra import __return_root_path
 from mupix.sequence_alignment import (
 	AffineNeedlemanWunsch,
 	AdvancedAffineNeedlemanWunsch
 )
+from mupix.typewise import BaseCompareClass
+from mupix.partwise import PartiwiseCompareClass
 
 
 class BasicCompare(BaseCompareClass):

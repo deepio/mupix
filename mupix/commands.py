@@ -98,7 +98,7 @@ from mupix.application import BasicCompare
 from mupix.application import SimpleNeedlemanWunsch
 from mupix.application import WeightedNeedlemanWunsch
 from mupix.application import PartwiseWeightedNeedlemanWunsch
-from mupix.base import MupixObject
+from mupix.typewise import MupixObject
 from mupix.extra import output_filter
 
 
