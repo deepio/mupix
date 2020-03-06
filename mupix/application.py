@@ -29,7 +29,7 @@ class BasicCompare(BaseCompareClass):
 	Using 1-to-1 comparisons based on the index of each element.
 	Obviously not ideal, but can be an interesting comparison.
 	"""
-	def __init__(self, true_filepath, test_filepath, do_not_count: list = []):
+	def __init__(self, true_filepath: str, test_filepath: str, do_not_count: list = []):
 		super().__init__(true_filepath, test_filepath, do_not_count)
 		self._object_split()
 		self._total()
@@ -54,7 +54,7 @@ class SimpleNeedlemanWunsch(BaseCompareClass):
 
 		- Clefs           are aligned by measure number as a single char
 	"""
-	def __init__(self, true_filepath, test_filepath, do_not_count: list = []):
+	def __init__(self, true_filepath: str, test_filepath: str, do_not_count: list = []):
 		super().__init__(true_filepath, test_filepath, do_not_count)
 		self.basic_sequence_alignment(func=AffineNeedlemanWunsch)
 		self._total()
@@ -65,16 +65,16 @@ class WeightedNeedlemanWunsch(BaseCompareClass):
 	Using a weighted version of Affine Needleman-Wunsch, the way it should be
 	used.
 	"""
-	def __init__(self, true_filepath, test_filepath, do_not_count: list = []):
+	def __init__(self, true_filepath: str, test_filepath: str, do_not_count: list = []):
 		super().__init__(true_filepath, test_filepath, do_not_count)
 		self.sequence_alignment(func=AdvancedAffineNeedlemanWunsch)
 		self._total()
 
 
-class PartwiseWeightedNeedlemanWunsch(BaseCompareClass):
+class PartwiseWeightedNeedlemanWunsch(PartiwiseCompareClass):
 	"""
 	"""
-	def __init__(self, true_filepath, test_filepath, do_not_count: list = []):
+	def __init__(self, true_filepath: str, test_filepath: str, do_not_count: list = []):
 		super().__init__(true_filepath, test_filepath, do_not_count)
 
 		# Parse both files
