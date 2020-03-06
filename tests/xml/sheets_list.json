@@ -1,0 +1,6 @@
+{
+  "1": {
+    "filename": "1.xml",
+    "description": "Simple one part transposition should count as one error."
+  }
+}
