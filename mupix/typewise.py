@@ -397,7 +397,6 @@ class BaseCompareClass(MupixObject):
 		"""
 		Align Objects together by comparing voice, measure and onset.
 		"""
-		# print(self._return_object_names())
 		for obj in self._return_object_names():
 			for true_object in self.true_data.__getattribute__(obj):
 				for test_object in self.test_data.__getattribute__(obj):
