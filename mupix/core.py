@@ -161,7 +161,7 @@ class NoteObject(MusicalEvent):
 @attr.s
 class RestObject(MusicalEvent):
 	"""
-	Same as :func:`mupix.base.MusicalEvent`
+	Same as :func:`mupix.core.MusicalEvent`
 	"""
 	pass
 
