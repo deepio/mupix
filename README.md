@@ -20,7 +20,7 @@ Install it from PyPi
 
 ### Usage
 For up-to-date usage information
-  - Checkout the [ReadTheDocs](https://mupix.readthedocs.io/en/latest/commands/)!
+  - Checkout the [ReadTheDocs](https://mupix.readthedocs.io/en/latest/commands.html)!
   - For the offline version run `mupix` or `mupix --help`
 
 ### Features
