@@ -122,7 +122,8 @@ def xml_validator(musicxml_filepath, schema_filepath=__return_root_path() + "/te
 
 def xml_type_finder(musicxml_filepath):
 	"""
-	Check if the xml file is written in a partwise or timewise fashion.
+	Check if the xml file is written in a partwise or timewise fashion. This is just the fastest way
+	to check.
 
 	:param [filepath]: A character string that represents the filepath and filename of the file to open.
 	:type [filepath]: String
@@ -136,4 +137,6 @@ def xml_type_finder(musicxml_filepath):
 				return "Partwise"
 			elif "score-timewise" in line.lower():
 				return "Timewise"
+			else:
+				pass  # Leave room 
 		raise Exception("File has neither time-wise or part-wise tags")
