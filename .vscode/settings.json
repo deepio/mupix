@@ -9,9 +9,10 @@
   "editor.insertSpaces": false,
   "editor.detectIndentation": false,
   "spellright.language": [
-    "en"
-  ],
+		"en"
+	],
   "spellright.documentTypes": [
-    "latex"
-  ]
+		"latex"
+    ],
+    "python.languageServer": "Microsoft"
 }
