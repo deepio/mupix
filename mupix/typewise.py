@@ -615,8 +615,8 @@ class BaseCompareClass(MupixObject):
 			self._compare(objects, test_note_objects[index])
 
 		# Rests
-		true_rests = [item.measure for item in self.true_data.rests]
-		test_rests = [item.measure for item in self.test_data.rests]
+		true_rests = [item for item in self.true_data.rests]
+		test_rests = [item for item in self.test_data.rests]
 		rests_anw = func(true_rests, test_rests)
 
 		true_rest_objects = self._rebuild(rests_anw.aligned_true_data, self.true_data.rests)
@@ -625,8 +625,8 @@ class BaseCompareClass(MupixObject):
 			self._compare(objects, test_rest_objects[index])
 
 		# Time Signature
-		true_timeSignatures = [return_char_except(item.measure) for item in self.true_data.timeSignatures]
-		test_timeSignatures = [return_char_except(item.measure) for item in self.test_data.timeSignatures]
+		true_timeSignatures = [item for item in self.true_data.timeSignatures]
+		test_timeSignatures = [item for item in self.test_data.timeSignatures]
 		timeSignatures_anw = func(true_timeSignatures, test_timeSignatures)
 
 		true_timeSignature_objects = self._rebuild(timeSignatures_anw.aligned_true_data, self.true_data.timeSignatures)
@@ -635,8 +635,8 @@ class BaseCompareClass(MupixObject):
 			self._compare(objects, test_timeSignature_objects[index])
 
 		# Key Signature
-		true_keySignatures = [return_char_except(item.measure) for item in self.true_data.keySignatures]
-		test_keySignatures = [return_char_except(item.measure) for item in self.test_data.keySignatures]
+		true_keySignatures = [item for item in self.true_data.keySignatures]
+		test_keySignatures = [item for item in self.test_data.keySignatures]
 		keySignatures_anw = func(true_keySignatures, test_keySignatures)
 
 		true_keySignature_objects = self._rebuild(keySignatures_anw.aligned_true_data, self.true_data.keySignatures)
@@ -645,8 +645,8 @@ class BaseCompareClass(MupixObject):
 			self._compare(objects, test_keySignature_objects[index])
 
 		# Clefs
-		true_clefs = [return_char_except(item.measure) for item in self.true_data.clefs]
-		test_clefs = [return_char_except(item.measure) for item in self.test_data.clefs]
+		true_clefs = [item for item in self.true_data.clefs]
+		test_clefs = [item for item in self.test_data.clefs]
 		clef_anw = func(true_clefs, test_clefs)
 
 		true_clef_objects = self._rebuild(clef_anw.aligned_true_data, self.true_data.clefs)
