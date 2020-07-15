@@ -219,6 +219,34 @@ class ClefObject(Marking):
 		return self._music21_object.octaveChange
 
 
+@attr.s
+class SpannerObject(Marking):
+	"""
+	This is an object that holds information related to musical objects which can span multiple
+	measures like crescendos.
+	"""
+	name = attr.ib(init=False, eq=False)
+	@name.default
+	def _get_name(self):
+		return self._music21_object.type
+
+	# This is empty in Music21, need to repopulate this data.
+	measure = attr.ib(init=False)
+	@measure.default
+	def _get_measure(self):
+		return self._music21_object.measureNumber
+
+	placement = attr.ib(init=False, eq=False)
+	@placement.default
+	def _get_placement(self):
+		return self._music21_object.placement
+
+	length = attr.ib(init=False, eq=False)
+	@length.default
+	def _get_length(self):
+		return self._music21_object.spread
+
+
 if __name__ == "__main__":
 	"""
 	How to create Mupix Objects.

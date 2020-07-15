@@ -64,6 +64,7 @@ def output_filter(ctx, func, *args, **kwargs):
 		msg["TimeSignatures"] = [i.asdict() for i in output.timeSignatures]
 		msg["KeySignatures"] = [i.asdict() for i in output.keySignatures]
 		msg["Clefs"] = [i.asdict() for i in output.clefs]
+		msg["Spanners"] = [i.asdict() for i in output.spanners]
 		# Leave out of the regular output
 		# msg["ErrorDescription"] = output.error_description
 	else:
@@ -78,6 +79,8 @@ def output_filter(ctx, func, *args, **kwargs):
 			msg["KeySignatures"] = [i.asdict() for i in output.keySignatures]
 		if ctx["clefs"]:
 			msg["Clefs"] = [i.asdict() for i in output.clefs]
+		if ctx["spanners"]:
+			msg["Spanners"] = [i.asdict() for i in output.spanners]
 		if ctx["error_description"]:
 			msg["ErrorDescription"] = output.error_description
 
@@ -213,3 +216,15 @@ def add_step_information(notes, keySignatures):
 				note.step = Interval(noteStart=Note(Key(key_name).asKey().tonic), noteEnd=Note(note._music21_object.step)).semitones % 12
 
 		return notes
+
+
+def _temp_fix_spanners(spanner: list, tmp_list: list) -> list:
+	"""
+	"""
+	if len(spanner) != len(tmp_list):
+		raise Exception("Spanner measure addition error.")
+
+	for index, item in enumerate(spanner):
+		spanner[index].measure = tmp_list[index]["measure"]
+
+	return spanner

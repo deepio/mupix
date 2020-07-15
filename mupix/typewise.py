@@ -10,6 +10,7 @@ from mupix.core import (
 	TimeSignatureObject,
 	KeySignatureObject,
 	ClefObject,
+	SpannerObject,
 )
 from mupix.result_objects import (
 	Result,
@@ -37,11 +38,16 @@ from mupix.result_objects import (
 	ClefLineResult,
 	ClefOctaveResult,
 	ClefTotalResult,
+	SpannerNameResult,
+	SpannerPlacementResult,
+	SpannerLengthResult,
+	SpannerTotalResult,
 )
 from mupix.extra import (
 	add_step_information,
 	normalize_object_list,
 	return_char_except,
+	boundary_search,
 )
 
 
@@ -76,10 +82,12 @@ class MupixObject():
 	timeSignatures = attr.ib(kw_only=True,)
 	keySignatures = attr.ib(kw_only=True,)
 	clefs = attr.ib(kw_only=True,)
+	spanners = attr.ib(kw_only=True,)
 	parts = attr.ib(kw_only=True, type=int, validator=[attr.validators.instance_of(int)])
 	error_description = attr.ib(kw_only=True, type=dict, validator=[attr.validators.instance_of(dict)])
 	software_vendor = attr.ib(kw_only=True, type=list, default=[], validator=[attr.validators.instance_of(list)])
 
+	# @spanners.validator
 	@notes.validator
 	@rests.validator
 	@timeSignatures.validator
@@ -97,7 +105,8 @@ class MupixObject():
 		"""
 		Return all information about the Mupix object as a tuple.
 		"""
-		return self.notes, self.rests, self.timeSignatures, self.keySignatures, self.clefs, self.error_description
+		# return self.notes, self.rests, self.timeSignatures, self.keySignatures, self.clefs, self.error_description
+		return self.notes, self.rests, self.timeSignatures, self.keySignatures, self.clefs, self.spanners, self.error_description
 
 	def __iter__(self):
 		return iter(self.ret())
@@ -130,15 +139,50 @@ class MupixObject():
 		"""
 
 		with open(filepath, "r") as f:
-			software_vendor = re.finditer(r"(?<=<software>).+(?=<\/software>)", f.read()).__next__().group().split(" ")
+			data = f.read()
 
-		notes, rests, timeSignatures, keySignatures, clefs = [], [], [], [], []
+		software_vendor = re.finditer(r"(?<=<software>).+(?=<\/software>)", data).__next__().group().split(" ")
+
+		# notes, rests, timeSignatures, keySignatures, clefs = [], [], [], [], []
+		notes, rests, timeSignatures, keySignatures, clefs, spanners = [], [], [], [], [], []
 		for parts_index, parts in enumerate(music21.converter.parseFile(filepath).recurse().getElementsByClass("Part"), 1):  # noqa
 			notes += [NoteObject(item, parts_index) for item in parts.recurse().notes if not item.isChord]
 			rests += [RestObject(item, parts_index) for item in parts.recurse().notesAndRests if not item.isNote]
 			timeSignatures += [TimeSignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("TimeSignature")]  # noqa
 			keySignatures += [KeySignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("KeySignature")]  # noqa
 			clefs += [ClefObject(item, parts_index) for item in parts.recurse().getElementsByClass("Clef")]
+			spanners += [SpannerObject(item, parts_index) for item in parts.recurse().getElementsByClass("Spanner")]
+
+
+		# Surprise, music21 doesn't have measure information for spanners... fun.
+		# I'm not wasting any more time on this, i'm going to parse wedges myself until they fix it in m21.
+		# spanners += [SpannerObject(item, parts_index) for item in parts.recurse().getElementsByClass("Spanner")]
+		from mupix.extra import _temp_fix_spanners
+		tmp_list = []
+		parts__ = boundary_search("<part id=", "</part>", data)
+		instrument_id__ = boundary_search("<part id=", '"', data)
+		for p in parts__:
+			# instrument__ = boundary_search(f'<score-part id="{instrument_id__}', "</score-part>", data)
+			measures__ = boundary_search("<measure", "</measure>", p)
+
+			part_flag = False
+			for m in measures__:
+				wedges__ = boundary_search("<wedge", "/>", m)
+				for w in wedges__:
+					type__ = boundary_search('type="', '"', w)[0]
+					measure__ = boundary_search('number="', '"', m)[0]
+					part__ = boundary_search('"', '"', p)[0]
+
+					# if "piano" in instrument__[0].lower() and type__ != "stop":
+					if ("<staves>2</staves>" in m.lower() or part_flag) and type__ != "stop":
+						# Piano is doubled
+						tmp_list.append({"type": type__, "measure": measure__, "part": part__})
+						part_flag = True
+
+					if type__ != "stop":
+						tmp_list.append({"type": type__, "measure": measure__, "part": part__})
+
+		spanners = _temp_fix_spanners(spanners, tmp_list)
 
 		try:
 			measuresInScore = max(notes + rests, key=operator.attrgetter('measure')).measure
@@ -159,6 +203,7 @@ class MupixObject():
 			keySignatures=keySignatures,
 			clefs=clefs,
 			parts=parts_index,
+			spanners=spanners,
 			error_description={},
 			software_vendor=software_vendor,
 		)
@@ -211,6 +256,13 @@ class BaseCompareClass(MupixObject):
 		self.clefs_octave = ClefOctaveResult()
 		self.clefs_total = ClefTotalResult()
 
+		# Spanners
+		self.spanners = []
+		self.spanners_name = SpannerNameResult()
+		self.spanners_placement = SpannerPlacementResult()
+		self.spanners_length = SpannerLengthResult()
+		self.spanners_total = SpannerTotalResult()
+
 		self.error_description = {}
 
 		# Parse both files
@@ -222,7 +274,7 @@ class BaseCompareClass(MupixObject):
 		Returns all the objects
 
 		For example:
-			['clefs', 'keySignatures', 'notes', 'rests', 'timeSignatures']
+			['clefs', 'keySignatures', 'notes', 'rests', 'timeSignatures', 'spanners']
 		"""
 		return [item for item in dir(self) if "_" not in item and item not in ["check", "ret"]]
 
@@ -393,6 +445,12 @@ class BaseCompareClass(MupixObject):
 		elif (isinstance(true_object, ClefObject) and isinstance(test_object, str)) or (isinstance(true_object, str) and isinstance(test_object, ClefObject)):
 			self._compare_expand_objects_different(true_object, test_object, "clefs")
 
+		elif isinstance(true_object, SpannerObject) and isinstance(test_object, SpannerObject):
+			self._compare_expand_objects_same(true_object, test_object, "spanners")
+
+		elif (isinstance(true_object, SpannerObject) and isinstance(test_object, str)) or (isinstance(true_object, str) and isinstance(test_object, SpannerObject)):
+			self._compare_expand_objects_different(true_object, test_object, "spanners")
+
 	def _object_split(self):
 		"""
 		Align Objects together by comparing voice, measure and onset.
@@ -467,6 +525,8 @@ class BaseCompareClass(MupixObject):
 
 			- Clefs           are aligned by measure number as a single char
 
+			- Spanners 				are aligned by spanner names
+
 		:param [func]: A class that inherited from the SequenceAlignment class
 			which is defined in the sequence_alignment.py file.
 		:type [func]: SequenceAlignment
@@ -521,6 +581,16 @@ class BaseCompareClass(MupixObject):
 		test_clef_objects = self._rebuild(clef_anw.aligned_test_data, self.test_data.clefs)
 		for index, objects in enumerate(true_clef_objects):
 			self._compare(objects, test_clef_objects[index])
+
+		# Spanners
+		true_spanners = [item.name for item in self.true_data.spanners]
+		test_spanners = [item.name for item in self.test_data.spanners]
+		spanner_anw = func(true_spanners, test_spanners)
+
+		true_spanner_objects = self._rebuild(spanner_anw.aligned_true_data, self.true_data.spanners)
+		test_spanner_objects = self._rebuild(spanner_anw.aligned_test_data, self.true_data.spanners)
+		for index, objects in enumerate(true_spanner_objects):
+			self._compare(objects, test_spanner_objects[index])
 
 	def sequence_alignment(self, func):
 		"""

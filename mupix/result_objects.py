@@ -196,3 +196,31 @@ class ClefOctaveResult(Result):
 @attr.s
 class ClefTotalResult(Result):
 	pass
+
+
+@attr.s
+class SpannerNameResult(Result):
+	"""
+	Results Object that holds the number of correct and incorrect Spanner names.
+	"""
+
+
+@attr.s
+class SpannerPlacementResult(Result):
+	"""
+	Results Object that holds the number of correct and incorrect Spanner placement.
+	"""
+
+
+@attr.s
+class SpannerLengthResult(Result):
+	"""
+	Results Object that holds the number of correct and incorrect Spanner length.
+	"""
+
+
+@attr.s
+class SpannerTotalResult(Result):
+	"""
+	Results Object that holds the number of correct and incorrect Spanner properties.
+	"""
