@@ -25,12 +25,17 @@ class MupixPartwiseObject():
 		kw_only=True,
 		type=list,
 		validator=attr.validators.deep_iterable(
-			member_validator=attr.validators.deep_iterable(
-				member_validator=Marking,
-				iterable_validator=attr.validators.instance_of(list)
-			),
-			iterable_validator=attr.validators.instance_of(list)
-		),
+			member_validator=attr.validators.instance_of(list),
+			iterable_validator=attr.validators.instance_of(list),
+		)
+
+		# validator=attr.validators.deep_iterable(
+		# 	member_validator=attr.validators.deep_iterable(
+		# 		member_validator=Marking,
+		# 		iterable_validator=attr.validators.instance_of(list)
+		# 	),
+		# 	iterable_validator=attr.validators.instance_of(list)
+		# ),
 	)
 
 	def __iter__(self):
@@ -120,4 +125,16 @@ class PartiwiseCompareClass(BaseCompareClass):
 		self.test_data = MupixPartwiseObject.from_filepath(test_filepath)
 
 	def sequence_alignment(self, func):
-		pass
+
+		for part in self.true_data:
+			true_part = part
+			break
+		for part in self.test_data:
+			test_part = part
+			break
+
+		# print(true_part)
+		a = func(true_part, test_part)
+		print(a)
+		import sys
+		sys.exit(0)
