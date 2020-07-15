@@ -170,32 +170,46 @@ class KeySignatureStepResult(Result):
 
 @attr.s
 class KeySignatureModeResult(Result):
-	pass
+	"""
+	Results Object that holds the number of correct and incorrect Key Signature
+	modes.
+	"""
 
 
 @attr.s
 class KeySignatureTotalResult(Result):
-	pass
+	"""
+	Results Object that holds the number of correct and incorrect Key Signature
+	properties.
+	"""
 
 
 @attr.s
 class ClefNameResult(Result):
-	pass
+	"""
+	Results Object that holds the number of correct and incorrect Clef names.
+	"""
 
 
 @attr.s
 class ClefLineResult(Result):
-	pass
+	"""
+	Results Object that holds the number of correct and incorrect Clef lines.
+	"""
 
 
 @attr.s
 class ClefOctaveResult(Result):
-	pass
+	"""
+	Results Object that holds the number of correct and incorrect Clef octaves.
+	"""
 
 
 @attr.s
 class ClefTotalResult(Result):
-	pass
+	"""
+	Results Object that holds the number of correct and incorrect Clef properties.
+	"""
 
 
 @attr.s
