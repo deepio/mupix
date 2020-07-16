@@ -251,7 +251,7 @@ class AdvancedAffineNeedlemanWunsch(AffineNeedlemanWunsch):
 		if true.asname() == "Note" and test.asname() == "Note":
 			score += 1 if true.octave == test.octave else -1
 			# score += 1 if true.voice == test.voice else -1
-			score += 2 if true.step == test.step else -2
+			score += 4 if true.step == test.step else -4
 			score += 2 if true.duration == test.duration else -2
 			# score += 1 if true.beam == test.beam else -1
 			score += 1 if true.accidental == test.accidental else -1
