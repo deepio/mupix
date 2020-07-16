@@ -212,7 +212,6 @@ def add_step_information(notes, keySignatures):
 
 		for note in notes:
 			if note.part == key.part and note.measure == key.measure:
-				# note.step = Interval(noteStart=Note(Key(key_name).asKey().tonic), noteEnd=note._music21_object).semitones % 12
 				note.step = Interval(noteStart=Note(Key(key_name).asKey().tonic), noteEnd=Note(note._music21_object.step)).semitones % 12
 
 		return notes

@@ -1,3 +1,11 @@
+"""
+//FIXME: Move from RE to lxml library.
+	//TODO: Get all major music notation software
+	//TODO: Create testing sheets using all notation software
+	//TODO: Craete an automated method for testing multiple versions of Notation software (Almost done)
+	Only then will move from the RE library to the lxml library to parse MusicXML files.
+"""
+
 import re
 import operator
 
@@ -155,7 +163,7 @@ class MupixObject():
 
 
 		# Surprise, music21 doesn't have measure information for spanners... fun.
-		# I'm not wasting any more time on this, i'm going to parse wedges myself until they fix it in m21.
+		# I'm not wasting any more time on this, i'm going to parse wedges with... RE!
 		# spanners += [SpannerObject(item, parts_index) for item in parts.recurse().getElementsByClass("Spanner")]
 		from mupix.extra import _temp_fix_spanners
 		tmp_list = []
@@ -173,7 +181,6 @@ class MupixObject():
 					measure__ = boundary_search('number="', '"', m)[0]
 					part__ = boundary_search('"', '"', p)[0]
 
-					# if "piano" in instrument__[0].lower() and type__ != "stop":
 					if ("<staves>2</staves>" in m.lower() or part_flag) and type__ != "stop":
 						# Piano is doubled
 						tmp_list.append({"type": type__, "measure": measure__, "part": part__})
