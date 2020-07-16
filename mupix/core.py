@@ -234,7 +234,7 @@ class SpannerObject(Marking):
 	measure = attr.ib(init=False)
 	@measure.default
 	def _get_measure(self):
-		return self._music21_object.measureNumber
+		return self._music21_object.getFirst().measureNumber
 
 	placement = attr.ib(init=False, eq=False)
 	@placement.default

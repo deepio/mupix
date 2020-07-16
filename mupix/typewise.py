@@ -153,7 +153,9 @@ class MupixObject():
 		software_vendor = re.finditer(r"(?<=<software>).+(?=<\/software>)", data).__next__().group().split(" ")
 
 		notes, rests, timeSignatures, keySignatures, clefs, spanners = [], [], [], [], [], []
-		for parts_index, parts in enumerate(music21.converter.parseFile(filepath).recurse().getElementsByClass("Part"), 1):  # noqa
+		_keySignatures = []
+		# _clefs = []
+		for parts_index, parts in enumerate(music21.converter.parseFile(filepath, forceSource=True).recurse().getElementsByClass("Part"), 1):  # noqa
 			notes += [NoteObject(item, parts_index) for item in parts.recurse().notes if not item.isChord]
 			rests += [RestObject(item, parts_index) for item in parts.recurse().notesAndRests if not item.isNote]
 			timeSignatures += [TimeSignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("TimeSignature")]  # noqa
@@ -161,7 +163,15 @@ class MupixObject():
 			clefs += [ClefObject(item, parts_index) for item in parts.recurse().getElementsByClass("Clef")]
 
 			for measure in parts.recurse().getElementsByClass("Measure"):
-				spanners += [SpannerObject(item, parts_index) for item in measure.spanners]
+				spanners += [SpannerObject(item, parts_index) for item in measure.activeSite.spanners]
+
+		########################################################
+		# Expand clefs and keys
+		# 
+		# Because even with activeState, note objects can't find 
+		# the key for some reason?
+			_keySignatures += [KeySignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("KeySignature")]  # noqa
+			# _clefs += [ClefObject(item, parts_index) for item in parts.recurse().getElementsByClass("Clef")]
 
 		try:
 			measuresInScore = max(notes + rests, key=operator.attrgetter('measure')).measure
@@ -169,12 +179,12 @@ class MupixObject():
 			measuresInScore = 0
 			parts_index = 0
 
-		timeSignatures = normalize_object_list(object_list=timeSignatures, total_measures=measuresInScore, total_parts=parts_index)
-		keySignatures = normalize_object_list(object_list=keySignatures, total_measures=measuresInScore, total_parts=parts_index)
-		clefs = normalize_object_list(object_list=clefs, total_measures=measuresInScore, total_parts=parts_index)
+		_keySignatures = normalize_object_list(object_list=_keySignatures, total_measures=measuresInScore, total_parts=parts_index)
+		# _clefs = normalize_object_list(object_list=_clefs, total_measures=measuresInScore, total_parts=parts_index)
 
-		# only once keySignatures are normalized can we add the step information.
-		notes = add_step_information(notes, keySignatures)
+		# only once _keySignatures are normalized can we add the step information.
+		notes = add_step_information(notes, _keySignatures)
+		########################################################
 
 		return cls(
 			notes=notes,
