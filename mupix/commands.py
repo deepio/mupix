@@ -99,6 +99,7 @@ from mupix.application import SimpleNeedlemanWunsch
 from mupix.application import WeightedNeedlemanWunsch
 from mupix.application import PartwiseWeightedNeedlemanWunsch
 from mupix.typewise import MupixObject
+# from mupix.partwise import MupixPartwiseObject
 from mupix.extra import output_filter
 
 
@@ -180,6 +181,7 @@ def read(ctx, file_path):
 	"""
 	for f in file_path:
 		output_filter(ctx.parent.params, MupixObject.from_filepath, f)
+		# output_filter(ctx.parent.params, MupixPartwiseObject.from_filepath, f)
 
 
 @cli.command("validate", short_help="Check if MusicXML file is valid.")
