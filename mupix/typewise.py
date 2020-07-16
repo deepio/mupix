@@ -159,7 +159,9 @@ class MupixObject():
 			timeSignatures += [TimeSignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("TimeSignature")]  # noqa
 			keySignatures += [KeySignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("KeySignature")]  # noqa
 			clefs += [ClefObject(item, parts_index) for item in parts.recurse().getElementsByClass("Clef")]
-			spanners += [SpannerObject(item, parts_index) for item in parts.recurse().getElementsByClass("Spanner")]
+
+			for measure in parts.recurse().getElementsByClass("Measure"):
+				spanners += [SpannerObject(item, parts_index) for item in measure.spanners]
 
 		try:
 			measuresInScore = max(notes + rests, key=operator.attrgetter('measure')).measure
