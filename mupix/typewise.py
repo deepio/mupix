@@ -152,7 +152,6 @@ class MupixObject():
 
 		software_vendor = re.finditer(r"(?<=<software>).+(?=<\/software>)", data).__next__().group().split(" ")
 
-		# notes, rests, timeSignatures, keySignatures, clefs = [], [], [], [], []
 		notes, rests, timeSignatures, keySignatures, clefs, spanners = [], [], [], [], [], []
 		for parts_index, parts in enumerate(music21.converter.parseFile(filepath).recurse().getElementsByClass("Part"), 1):  # noqa
 			notes += [NoteObject(item, parts_index) for item in parts.recurse().notes if not item.isChord]
@@ -160,37 +159,9 @@ class MupixObject():
 			timeSignatures += [TimeSignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("TimeSignature")]  # noqa
 			keySignatures += [KeySignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("KeySignature")]  # noqa
 			clefs += [ClefObject(item, parts_index) for item in parts.recurse().getElementsByClass("Clef")]
-			spanners += [SpannerObject(item, parts_index) for item in parts.recurse().getElementsByClass("Spanner")]
 
-
-		# Surprise, music21 doesn't have measure information for spanners... fun.
-		# I'm not wasting any more time on this, i'm going to parse wedges with... RE!
-		# spanners += [SpannerObject(item, parts_index) for item in parts.recurse().getElementsByClass("Spanner")]
-		from mupix.extra import _temp_fix_spanners
-		tmp_list = []
-		parts__ = boundary_search("<part id=", "</part>", data)
-		instrument_id__ = boundary_search("<part id=", '"', data)
-		for p in parts__:
-			# instrument__ = boundary_search(f'<score-part id="{instrument_id__}', "</score-part>", data)
-			measures__ = boundary_search("<measure", "</measure>", p)
-
-			part_flag = False
-			for m in measures__:
-				wedges__ = boundary_search("<wedge", "/>", m)
-				for w in wedges__:
-					type__ = boundary_search('type="', '"', w)[0]
-					measure__ = boundary_search('number="', '"', m)[0]
-					part__ = boundary_search('"', '"', p)[0]
-
-					if ("<staves>2</staves>" in m.lower() or part_flag) and type__ != "stop":
-						# Piano is doubled
-						tmp_list.append({"type": type__, "measure": measure__, "part": part__})
-						part_flag = True
-
-					if type__ != "stop":
-						tmp_list.append({"type": type__, "measure": measure__, "part": part__})
-
-		spanners = _temp_fix_spanners(spanners, tmp_list)
+			for measure in parts.recurse().getElementsByClass("Measure"):
+				spanners += [SpannerObject(item, parts_index) for item in measure.spanners]
 
 		try:
 			measuresInScore = max(notes + rests, key=operator.attrgetter('measure')).measure
@@ -203,6 +174,7 @@ class MupixObject():
 		clefs = normalize_object_list(object_list=clefs, total_measures=measuresInScore, total_parts=parts_index)
 
 		notes = add_step_information(notes, keySignatures)  # only once keySignatures are normalized can we add the step information.
+		breakpoint()
 
 		return cls(
 			notes=notes,
