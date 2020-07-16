@@ -173,7 +173,8 @@ class MupixObject():
 		keySignatures = normalize_object_list(object_list=keySignatures, total_measures=measuresInScore, total_parts=parts_index)
 		clefs = normalize_object_list(object_list=clefs, total_measures=measuresInScore, total_parts=parts_index)
 
-		notes = add_step_information(notes, keySignatures)  # only once keySignatures are normalized can we add the step information.
+		# only once keySignatures are normalized can we add the step information.
+		notes = add_step_information(notes, keySignatures)
 
 		return cls(
 			notes=notes,
