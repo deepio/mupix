@@ -179,7 +179,7 @@ def normalize_object_list(object_list, total_measures, total_parts):
 	return obj
 
 
-def add_step_information(notes, keySignatures):
+def add_step_information(notes: list, keySignatures: list):
 	"""
 	This function will populate the step information into Mupix note objects, it
 	is required because music21 will not keep key signature information in
@@ -196,25 +196,14 @@ def add_step_information(notes, keySignatures):
 	:return [List]: The original list of Mupix NoteObjects (in order) with step information included.
 	:rtype: List
 	"""
-	for key in keySignatures:
-		try:
-			key_name = key.step.upper() if key.mode == "major" else key.step.lower()
-			# key_name = key.step.upper()  # Treat it all like major
-		except AttributeError:
-			raise Exception(
-				(
-					"Something happened with initializing the data.\n"
-					"Check the slots?\n"
-					f"Key: {keySignatures}\n"
-					f"Key Type: {type(keySignatures)}\n"
-				)
-			)
+	for key in keySignatures:  # min 1 keySignatures per measure
 
+		key_name = key.step.upper() if key.mode == "major" else key.step.lower()
 		for note in notes:
 			if note.part == key.part and note.measure == key.measure:
 				note.step = Interval(noteStart=Note(Key(key_name).asKey().tonic), noteEnd=Note(note._music21_object.step)).semitones % 12
 
-		return notes
+	return notes
 
 
 def _temp_fix_spanners(spanner: list, tmp_list: list) -> list:
