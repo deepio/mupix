@@ -173,7 +173,7 @@ class MupixObject():
 				spanners += [SpannerObject(item, parts_index) for item in measure.activeSite.spanners]
 
 		########################################################
-		# Expand clefs and keys
+		# Expand keys
 		# 
 		# Because even with activeState, note objects can't find 
 		# the key for some reason?
