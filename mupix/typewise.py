@@ -1,9 +1,8 @@
 """
-//FIXME: Move from RE to lxml library.
-	Only then will move from the RE library to the lxml library to parse MusicXML files.
+//FIXME: Move from RE to lxml library only when the following three conditions are met
 	//TODO: Get all major music notation software
 	//TODO: Create testing sheets using all notation software
-	//TODO: Craete an automated method for testing multiple versions of Notation software (Almost done)
+	//TODO: Create an automated method for testing multiple versions of Notation software (Almost done)
 """
 
 import re
