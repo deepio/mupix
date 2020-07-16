@@ -247,6 +247,17 @@ class SpannerObject(Marking):
 		return self._music21_object.spread
 
 
+@attr.s
+class DynamicObject(Marking):
+	"""
+	This is an object that holds information related to dynamics
+	"""
+	name = attr.ib(init=False, eq=False)
+	@name.default
+	def _get_name(self):
+		return self._music21_object.longName
+
+
 if __name__ == "__main__":
 	"""
 	How to create Mupix Objects.

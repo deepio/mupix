@@ -57,7 +57,7 @@ def output_filter(ctx, func, *args, **kwargs):
 	msg = {}
 
 	# If no filtering options are defined, output all information
-	if all(value == False for value in [ctx["notes"], ctx["rests"], ctx["time_signatures"], ctx["key_signatures"], ctx["clefs"], ctx["spanners"], ctx["error_description"]]):  # noqa
+	if all(value == False for value in [ctx["notes"], ctx["rests"], ctx["time_signatures"], ctx["key_signatures"], ctx["clefs"], ctx["spanners"], ctx["dynamics"], ctx["error_description"]]):  # noqa
 		# turn to json serializable.
 		msg["Notes"] = [i.asdict() for i in output.notes]
 		msg["Rests"] = [i.asdict() for i in output.rests]
@@ -65,6 +65,7 @@ def output_filter(ctx, func, *args, **kwargs):
 		msg["KeySignatures"] = [i.asdict() for i in output.keySignatures]
 		msg["Clefs"] = [i.asdict() for i in output.clefs]
 		msg["Spanners"] = [i.asdict() for i in output.spanners]
+		msg["Dynamics"] = [i.asdict() for i in output.dynamics]
 		# Leave out of the regular output
 		# msg["ErrorDescription"] = output.error_description
 	else:
@@ -81,6 +82,8 @@ def output_filter(ctx, func, *args, **kwargs):
 			msg["Clefs"] = [i.asdict() for i in output.clefs]
 		if ctx["spanners"]:
 			msg["Spanners"] = [i.asdict() for i in output.spanners]
+		if ctx["dynamics"]:
+			msg["Dynamics"] = [i.asdict() for i in output.dynamics]
 		if ctx["error_description"]:
 			msg["ErrorDescription"] = output.error_description
 

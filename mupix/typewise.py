@@ -18,6 +18,7 @@ from mupix.core import (
 	KeySignatureObject,
 	ClefObject,
 	SpannerObject,
+	DynamicObject,
 )
 from mupix.result_objects import (
 	Result,
@@ -51,6 +52,9 @@ from mupix.result_objects import (
 	SpannerPlacementResult,
 	SpannerLengthResult,
 	SpannerTotalResult,
+	DynamicOnsetResult,
+	DynamicNameResult,
+	DynamicTotalResult,
 )
 from mupix.extra import (
 	add_step_information,
@@ -92,16 +96,18 @@ class MupixObject():
 	keySignatures = attr.ib(kw_only=True,)
 	clefs = attr.ib(kw_only=True,)
 	spanners = attr.ib(kw_only=True,)
+	dynamics = attr.ib(kw_only=True,)
 	parts = attr.ib(kw_only=True, type=int, validator=[attr.validators.instance_of(int)])
 	error_description = attr.ib(kw_only=True, type=dict, validator=[attr.validators.instance_of(dict)])
 	software_vendor = attr.ib(kw_only=True, type=list, default=[], validator=[attr.validators.instance_of(list)])
 
-	# @spanners.validator
 	@notes.validator
 	@rests.validator
 	@timeSignatures.validator
 	@keySignatures.validator
 	@clefs.validator
+	@spanners.validator
+	@dynamics.validator
 	def check(self, attribute, value):
 		"""
 		Type-check for notes, rests, time signatures, key signatures, and, clefs.
@@ -115,7 +121,7 @@ class MupixObject():
 		Return all information about the Mupix object as a tuple.
 		"""
 		# return self.notes, self.rests, self.timeSignatures, self.keySignatures, self.clefs, self.error_description
-		return self.notes, self.rests, self.timeSignatures, self.keySignatures, self.clefs, self.spanners, self.error_description
+		return self.notes, self.rests, self.timeSignatures, self.keySignatures, self.clefs, self.spanners, self.dynamics, self.error_description
 
 	def __iter__(self):
 		return iter(self.ret())
@@ -152,7 +158,7 @@ class MupixObject():
 
 		software_vendor = re.finditer(r"(?<=<software>).+(?=<\/software>)", data).__next__().group().split(" ")
 
-		notes, rests, timeSignatures, keySignatures, clefs, spanners = [], [], [], [], [], []
+		notes, rests, timeSignatures, keySignatures, clefs, spanners, dynamics = [], [], [], [], [], [], []
 		_keySignatures = []
 		# _clefs = []
 		for parts_index, parts in enumerate(music21.converter.parseFile(filepath, forceSource=True).recurse().getElementsByClass("Part"), 1):  # noqa
@@ -161,6 +167,7 @@ class MupixObject():
 			timeSignatures += [TimeSignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("TimeSignature")]  # noqa
 			keySignatures += [KeySignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("KeySignature")]  # noqa
 			clefs += [ClefObject(item, parts_index) for item in parts.recurse().getElementsByClass("Clef")]
+			dynamics += [DynamicObject(item, parts_index) for item in parts.recurse().getElementsByClass("Dynamic")]
 
 			for measure in parts.recurse().getElementsByClass("Measure"):
 				spanners += [SpannerObject(item, parts_index) for item in measure.activeSite.spanners]
@@ -194,6 +201,7 @@ class MupixObject():
 			clefs=clefs,
 			parts=parts_index,
 			spanners=spanners,
+			dynamics=dynamics,
 			error_description={},
 			software_vendor=software_vendor,
 		)
@@ -254,6 +262,13 @@ class BaseCompareClass(MupixObject):
 		self.spanners_placement = SpannerPlacementResult()
 		self.spanners_length = SpannerLengthResult()
 		self.spanners_total = SpannerTotalResult()
+
+		# Dynamics
+		self.dynamics = []
+		self.dynamics_onset = DynamicOnsetResult()
+		self.dynamics_name = DynamicNameResult()
+		self.dynamics_total = DynamicTotalResult()
+
 
 		self.error_description = {}
 

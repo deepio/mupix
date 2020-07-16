@@ -244,3 +244,21 @@ class SpannerTotalResult(Result):
 	"""
 	Results Object that holds the number of correct and incorrect Spanner properties.
 	"""
+
+
+@attr.s
+class DynamicOnsetResult(Result):
+	"""
+	"""
+
+
+@attr.s
+class DynamicNameResult(Result):
+	"""
+	"""
+
+
+@attr.s
+class DynamicTotalResult(Result):
+	"""
+	"""
