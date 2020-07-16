@@ -14,42 +14,11 @@ def test_basic_parse_xml():
 		mupix read ms_F_Lydian_quarter_true.xml | openssl base64 -e
 			or
 		mupix read ms_F_Lydian_quarter_true.xml | base64
-	b'KHsnMC4wLjAnOiBOb3RlT2JqZWN0KGR1cmF0aW9uPSdlaWdodGgnLCBwaXRjaD0nRicsIG9jdGF2ZT00LCBhY2NpZGVudGFsPScnLCBzdGVtX2RpcmVjdGlvbj0ndXAnKSwgJzAuMC4xJzogTm90ZU9iamVjdChkdXJhdGlvbj0nZWlnaHRoJywgcGl0Y2g9J0cnLCBvY3RhdmU9NCwgYWNjaWRlbnRhbD0nJywgc3RlbV9kaXJlY3Rpb249J3VwJyksICcwLjAuMic6IE5vdGVPYmplY3QoZHVyYXRpb249J2VpZ2h0aCcsIHBpdGNoPSdBJywgb2N0YXZlPTQsIGFjY2lkZW50YWw9JycsIHN0ZW1fZGlyZWN0aW9uPSd1cCcpLCAnMC4wLjMnOiBOb3RlT2JqZWN0KGR1cmF0aW9uPSdlaWdodGgnLCBwaXRjaD0nQicsIG9jdGF2ZT00LCBhY2NpZGVudGFsPScnLCBzdGVtX2RpcmVjdGlvbj0nZG93bicpLCAnMC4xLjAnOiBOb3RlT2JqZWN0KGR1cmF0aW9uPSdlaWdodGgnLCBwaXRjaD0nQycsIG9jdGF2ZT01LCBhY2NpZGVudGFsPScnLCBzdGVtX2RpcmVjdGlvbj0nZG93bicpLCAnMC4xLjEnOiBOb3RlT2JqZWN0KGR1cmF0aW9uPSdlaWdodGgnLCBwaXRjaD0nRCcsIG9jdGF2ZT01LCBhY2NpZGVudGFsPScnLCBzdGVtX2RpcmVjdGlvbj0nZG93bicpLCAnMC4xLjInOiBOb3RlT2JqZWN0KGR1cmF0aW9uPSdlaWdodGgnLCBwaXRjaD0nRScsIG9jdGF2ZT01LCBhY2NpZGVudGFsPScnLCBzdGVtX2RpcmVjdGlvbj0nZG93bicpLCAnMC4xLjMnOiBOb3RlT2JqZWN0KGR1cmF0aW9uPSdlaWdodGgnLCBwaXRjaD0nRicsIG9jdGF2ZT01LCBhY2NpZGVudGFsPScnLCBzdGVtX2RpcmVjdGlvbj0nZG93bicpfSwgeycwLjAuMCc6IFRpbWVTaWduYXR1cmUobnVtZXJhdG9yPTQsIGRlbm9taW5hdG9yPTQpfSwgeycwLjAuMCc6IEtleVNpZ25hdHVyZShzdGVwPSdDJywgc2NhbGU9J21ham9yJyl9KQ=='
 
 	But maybe that's not such a bad idea...
 
-	"MupixObject(
-		notes=[
-			NoteObject(_music21_object=<music21.note.Note F>, part=1, measure=1, onset='0.0', duration='1.0', voice=1, articulation=[], step=5, name='F', octave=4, accidental='', stemdirection='up', beam=set()),
-			NoteObject(_music21_object=<music21.note.Note G>, part=1, measure=1, onset='1.0', duration='1.0', voice=1, articulation=[], step=7, name='G', octave=4, accidental='', stemdirection='up', beam=set()),
-			NoteObject(_music21_object=<music21.note.Note A>, part=1, measure=1, onset='2.0', duration='1.0', voice=1, articulation=[], step=9, name='A', octave=4, accidental='', stemdirection='up', beam=set()),
-			NoteObject(_music21_object=<music21.note.Note B>, part=1, measure=1, onset='3.0', duration='1.0', voice=1, articulation=[], step=11, name='B', octave=4, accidental='', stemdirection='down', beam=set()),
-			NoteObject(_music21_object=<music21.note.Note C>, part=1, measure=2, onset='0.0', duration='1.0', voice=1, articulation=[], step=None, name='C', octave=5, accidental='', stemdirection='down', beam=set()),
-			NoteObject(_music21_object=<music21.note.Note D>, part=1, measure=2, onset='1.0', duration='1.0', voice=1, articulation=[], step=None, name='D', octave=5, accidental='', stemdirection='down', beam=set()),
-			NoteObject(_music21_object=<music21.note.Note E>, part=1, measure=2, onset='2.0', duration='1.0', voice=1, articulation=[], step=None, name='E', octave=5, accidental='', stemdirection='down', beam=set()),
-			NoteObject(_music21_object=<music21.note.Note F>, part=1, measure=2, onset='3.0', duration='1.0', voice=1, articulation=[], step=None, name='F', octave=5, accidental='', stemdirection='down', beam=set())
-		],
-
-		rests=[],
-
-		timeSignatures=[
-			TimeSignatureObject(_music21_object=<music21.meter.TimeSignature 4/4>, part=1, measure=1, onset='0.0', numerator=4, denominator=4),
-			TimeSignatureObject(_music21_object=<music21.meter.TimeSignature 4/4>, part=1, measure=2, onset='0.0', numerator=4, denominator=4)
-		],
-
-		keySignatures=[
-			KeySignatureObject(_music21_object=<music21.key.KeySignature of no sharps or flats>, part=1, measure=1, onset='0.0', step='C', mode='major'),
-			KeySignatureObject(_music21_object=<music21.key.KeySignature of no sharps or flats>, part=1, measure=2, onset='0.0', step='C', mode='major')
-		],
-
-		clefs=[
-			ClefObject(_music21_object=<music21.clef.TrebleClef>, part=1, measure=1, onset='0.0', name='G', line=2, octave=0),
-			ClefObject(_music21_object=<music21.clef.TrebleClef>, part=1, measure=2, onset='0.0', name='G', line=2, octave=0)
-		],
-		spanners=[],
-		parts=1,
-		error_description={},
-		software_vendor=['MuseScore', '2.1.0'])"
+	Result should be:
+		b"MupixObject(notes=[NoteObject(_music21_object=<music21.note.Note F>, part=1, measure=1, onset='0.0', duration='1.0', voice=1, articulation=[], step=5, name='F', octave=4, accidental='', stemdirection='up', beam=set()), NoteObject(_music21_object=<music21.note.Note G>, part=1, measure=1, onset='1.0', duration='1.0', voice=1, articulation=[], step=7, name='G', octave=4, accidental='', stemdirection='up', beam=set()), NoteObject(_music21_object=<music21.note.Note A>, part=1, measure=1, onset='2.0', duration='1.0', voice=1, articulation=[], step=9, name='A', octave=4, accidental='', stemdirection='up', beam=set()), NoteObject(_music21_object=<music21.note.Note B>, part=1, measure=1, onset='3.0', duration='1.0', voice=1, articulation=[], step=11, name='B', octave=4, accidental='', stemdirection='down', beam=set()), NoteObject(_music21_object=<music21.note.Note C>, part=1, measure=2, onset='0.0', duration='1.0', voice=1, articulation=[], step=0, name='C', octave=5, accidental='', stemdirection='down', beam=set()), NoteObject(_music21_object=<music21.note.Note D>, part=1, measure=2, onset='1.0', duration='1.0', voice=1, articulation=[], step=2, name='D', octave=5, accidental='', stemdirection='down', beam=set()), NoteObject(_music21_object=<music21.note.Note E>, part=1, measure=2, onset='2.0', duration='1.0', voice=1, articulation=[], step=4, name='E', octave=5, accidental='', stemdirection='down', beam=set()), NoteObject(_music21_object=<music21.note.Note F>, part=1, measure=2, onset='3.0', duration='1.0', voice=1, articulation=[], step=5, name='F', octave=5, accidental='', stemdirection='down', beam=set())], rests=[], timeSignatures=[TimeSignatureObject(_music21_object=<music21.meter.TimeSignature 4/4>, part=1, measure=1, onset='0.0', numerator=4, denominator=4)], keySignatures=[KeySignatureObject(_music21_object=<music21.key.KeySignature of no sharps or flats>, part=1, measure=1, onset='0.0', step='C', mode='major')], clefs=[ClefObject(_music21_object=<music21.clef.TrebleClef>, part=1, measure=1, onset='0.0', name='G', line=2, octave=0)], spanners=[], dynamics=[], parts=1, error_description={}, software_vendor=['MuseScore', '2.1.0'])"
 	"""
 	m = hashlib.sha512()
 	output = MupixObject.from_filepath(ROOT_DIR + "/compare/ms_F_Lydian_quarter_true.xml")
@@ -61,7 +30,7 @@ def test_basic_parse_xml():
 	# You can get the new hash AFTER checking manually for errors by un-commenting this next line and running the test.
 	# raise Exception(output)
 	# raise Exception(m.hexdigest())
-	correct_hash = "b9ef02fa10f66e8b81810fa71b5443d706650297c2d0dc5bbd2e0e20b0a546f5434a58dc5971875cda8b51df7f7448a7d6cb497101b8fbf9533b05c000c09b72" # noqa
+	correct_hash = "62ba8b3393e1e2e2c2ebaa5153179e6ef43b88438c046c2439542a2f7a100844f1591c0b175d28c336ffad4e211fb1e8cf94dbe4c1acace0b38e40121e70fda8" # noqa
 	assert m.hexdigest() == correct_hash
 
 
