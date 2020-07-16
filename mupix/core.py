@@ -258,6 +258,7 @@ if __name__ == "__main__":
 	from mupix.extra import add_step_information
 
 	s = Score()
+
 	p1 = Part(id="part1")
 	m1 = Measure(number=1)
 	m1.append(KeySignature(0))
@@ -266,7 +267,17 @@ if __name__ == "__main__":
 	m2.append(KeySignature(1))
 	m2.append(Note("G4", type="eighth"))
 	p1.append([m1, m2])
-	s.append([p1])
+
+	p2 = Part(id="part2")
+	m1_ = Measure(number=1)
+	m1_.append(KeySignature(0))
+	m1_.append(Note("C4", type="eighth"))
+	m2_ = Measure(number=2)
+	m2_.append(KeySignature(1))
+	m2_.append(Note("G4", type="eighth"))
+	p2.append([m1_, m2_])
+
+	s.append([p1, p2])
 
 	notes = [NoteObject(item, 1) for item in s.recurse().notes if not item.isChord]
 	keySignatures = [KeySignatureObject(item, 1) for item in s.recurse().getElementsByClass("KeySignature")]  # noqa
