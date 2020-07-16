@@ -101,15 +101,6 @@ class NoteTotalResult(Result):
 	"""
 
 
-# @attr.s
-# class RestAccidentalResult(Result):
-#   """
-#   It sounds weird, but rests are note objects in musicxml. In the event an
-#   accidental is added erroneously, we should count it? Maybe not... Music21
-#   complains about this all the time.
-#   """
-
-
 @attr.s
 class RestArticulationResult(Result):
 	"""
@@ -177,6 +168,14 @@ class KeySignatureModeResult(Result):
 
 
 @attr.s
+class KeySignatureOnsetResult(Result):
+	"""
+	Results Object that holds the number of correct and incorrect Key Signature
+	onsets.
+	"""
+
+
+@attr.s
 class KeySignatureTotalResult(Result):
 	"""
 	Results Object that holds the number of correct and incorrect Key Signature
@@ -202,6 +201,13 @@ class ClefLineResult(Result):
 class ClefOctaveResult(Result):
 	"""
 	Results Object that holds the number of correct and incorrect Clef octaves.
+	"""
+
+
+@attr.s
+class ClefOnsetResult(Result):
+	"""
+	Results Object that holds the number of correct and incorrect Clef onsets.
 	"""
 
 

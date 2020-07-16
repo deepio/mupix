@@ -1,9 +1,9 @@
 """
 //FIXME: Move from RE to lxml library.
+	Only then will move from the RE library to the lxml library to parse MusicXML files.
 	//TODO: Get all major music notation software
 	//TODO: Create testing sheets using all notation software
 	//TODO: Craete an automated method for testing multiple versions of Notation software (Almost done)
-	Only then will move from the RE library to the lxml library to parse MusicXML files.
 """
 
 import re
@@ -41,10 +41,12 @@ from mupix.result_objects import (
 	TimeSignatureTotalResult,
 	KeySignatureStepResult,
 	KeySignatureModeResult,
+	KeySignatureOnsetResult,
 	KeySignatureTotalResult,
 	ClefNameResult,
 	ClefLineResult,
 	ClefOctaveResult,
+	ClefOnsetResult,
 	ClefTotalResult,
 	SpannerNameResult,
 	SpannerPlacementResult,
@@ -254,6 +256,7 @@ class BaseCompareClass(MupixObject):
 		self.keySignatures = []
 		self.keySignatures_step = KeySignatureStepResult()
 		self.keySignatures_mode = KeySignatureModeResult()
+		self.keySignatures_onset = KeySignatureOnsetResult()
 		self.keySignatures_total = KeySignatureTotalResult()
 
 		# Clefs
@@ -261,6 +264,7 @@ class BaseCompareClass(MupixObject):
 		self.clefs_name = ClefNameResult()
 		self.clefs_line = ClefLineResult()
 		self.clefs_octave = ClefOctaveResult()
+		self.clefs_onset = ClefOnsetResult()
 		self.clefs_total = ClefTotalResult()
 
 		# Spanners

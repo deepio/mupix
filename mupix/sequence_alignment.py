@@ -268,11 +268,13 @@ class AdvancedAffineNeedlemanWunsch(AffineNeedlemanWunsch):
 		if true.asname() == "KeySignature" and test.asname() == "KeySignature":
 			score += 2 if true.step == test.step else -2
 			score += 2 if true.mode == test.mode else -2
+			score += 2 if true.onset == test.onset else -2
 
 		if true.asname() == "Clef" and test.asname() == "Clef":
 			score += 5 if true.name == test.name else -5
 			score += 2 if true.line == test.line else -2
 			score += 2 if true.octave == test.octave else -2
+			score += 2 if true.onset == test.onset else -2
 
 		if true.asname() == "Spanner" and test.asname() == "Spanner":
 			score += 5 if true.name == test.name else -5
