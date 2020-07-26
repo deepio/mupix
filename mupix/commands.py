@@ -113,9 +113,10 @@ from mupix.extra import output_filter
 @click.option("-s", "--spanners", is_flag=True, help="Show the spanners")
 @click.option("-d", "--dynamics", is_flag=True, help="Show the dynamics")
 @click.option("-z", "--error-description", is_flag=True, help="What element matched with what")
+@click.option("-v", "--visualize", is_flag=True, help="Uses Music21 to visualize the errors")
 @click.option("-T", "--total-only", is_flag=True, help="Show the total of each category")
 @click.pass_context
-def cli(ctx, pretty_print, notes, rests, time_signatures, key_signatures, clefs, spanners, dynamics, error_description, total_only):
+def cli(ctx, pretty_print, notes, rests, time_signatures, key_signatures, clefs, spanners, dynamics, error_description, visualize, total_only):
 	"""
 	This tool helps parse MusicXML files and can list how many discrepancies there are, and what type they are.
 

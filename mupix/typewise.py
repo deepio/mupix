@@ -102,6 +102,7 @@ class MupixObject():
 	dynamics = attr.ib(kw_only=True,)
 	parts = attr.ib(kw_only=True, type=int, validator=[attr.validators.instance_of(int)])
 	error_description = attr.ib(kw_only=True, type=dict, validator=[attr.validators.instance_of(dict)])
+	visualize = attr.ib(kw_only=True)
 	software_vendor = attr.ib(kw_only=True, type=list, default=[], validator=[attr.validators.instance_of(list)])
 
 	@notes.validator
@@ -164,7 +165,8 @@ class MupixObject():
 		notes, rests, timeSignatures, keySignatures, clefs, spanners, dynamics = [], [], [], [], [], [], []
 		_keySignatures = []
 		# _clefs = []
-		for parts_index, parts in enumerate(music21.converter.parseFile(filepath, forceSource=True).recurse().getElementsByClass("Part"), 1):  # noqa
+		file_ = music21.converter.parseFile(filepath, forceSource=True)
+		for parts_index, parts in enumerate(file_.recurse().getElementsByClass("Part"), 1):  # noqa
 			notes += [NoteObject(item, parts_index) for item in parts.recurse().notes if not item.isChord]
 			rests += [RestObject(item, parts_index) for item in parts.recurse().notesAndRests if not item.isNote]
 			timeSignatures += [TimeSignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("TimeSignature")]  # noqa
@@ -206,6 +208,7 @@ class MupixObject():
 			spanners=spanners,
 			dynamics=dynamics,
 			error_description={},
+			visualize=file_,
 			software_vendor=software_vendor,
 		)
 
@@ -320,6 +323,8 @@ class BaseCompareClass(MupixObject):
 					except KeyError:
 						self.error_description[result_parameter] = [out]
 					self.__getattribute__(result_parameter).wrong += 1
+					# Adding color to wrong notes for visualization
+					test_object._music21_object.style.color = "pink"
 			except AttributeError:
 				raise Exception(type(true_object), type(test_object), "What happened here???")
 
@@ -347,6 +352,8 @@ class BaseCompareClass(MupixObject):
 				self.error_description[parameter] = [out]
 
 			self.__getattribute__(parameter).wrong += 1
+			# Adding color to wrong notes for visualization
+			test_object._music21_object.style.color = "pink"
 
 	def _compare(self, true_object, test_object):
 		"""
@@ -501,6 +508,11 @@ class BaseCompareClass(MupixObject):
 				self.__getattribute__(f"{obj}_total").wrong += self.__getattribute__(params).wrong
 
 			self.__getattribute__(obj).append(self.__getattribute__(f"{obj}_total"))
+
+		# Add the visualize file after the alignment
+		# TODO: Color all properties as they are found. {Working somewhat}
+		# TODO: Test what is shown to work and what isn't.
+		self.visualize = self.test_data.visualize
 
 	def _rebuild(self, aligned_data, unaligned_data):
 		"""

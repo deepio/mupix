@@ -57,7 +57,7 @@ def output_filter(ctx, func, *args, **kwargs):
 	msg = {}
 
 	# If no filtering options are defined, output all information
-	if all(value == False for value in [ctx["notes"], ctx["rests"], ctx["time_signatures"], ctx["key_signatures"], ctx["clefs"], ctx["spanners"], ctx["dynamics"], ctx["error_description"]]):  # noqa
+	if all(value == False for value in [ctx["notes"], ctx["rests"], ctx["time_signatures"], ctx["key_signatures"], ctx["clefs"], ctx["spanners"], ctx["dynamics"], ctx["visualize"], ctx["error_description"]]):  # noqa
 		# turn to json serializable.
 		msg["Notes"] = [i.asdict() for i in output.notes]
 		msg["Rests"] = [i.asdict() for i in output.rests]
@@ -94,6 +94,13 @@ def output_filter(ctx, func, *args, **kwargs):
 			except KeyError:
 				print(f"[{func}] - Does not have a Total output or something went wrong with it.")
 				sys.exit(0)
+
+	if ctx["visualize"]:
+		# get Music21 to display the file
+		try:
+			output.visualize.show()
+		except:  # noqa
+			raise Exception("[-] You must install MuseScore for this feature.")
 
 	if not ctx["pretty_print"]:
 		print(msg)
