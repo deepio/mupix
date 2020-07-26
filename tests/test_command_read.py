@@ -22,16 +22,18 @@ def test_basic_parse_xml():
 	"""
 	m = hashlib.sha512()
 	output = MupixObject.from_filepath(ROOT_DIR + "/compare/ms_F_Lydian_quarter_true.xml")
+	# Visualizer will always return with it's address in memory.
+	# TODO: Create a test for the visualizer functionality
+	setattr(output, "visualize", "0xbadbad")
 	output = bytes(str(output), encoding="utf-8")
 	m.update(output)
 	# If you want to change the structure of how elements are stored, or add fields to the classes,
 	# you will need to manually check to make sure there are no errors and generate a new hash for the structure.
 
 	# You can get the new hash AFTER checking manually for errors by un-commenting this next line and running the test.
-	# import json
 	# raise Exception(output)
 	# raise Exception(m.hexdigest())
-	correct_hash = "065b9870355a94c3f4b728b0a1e04c50968a27aa31451c0216045e4eeb2ed2240093259b4eb169f0147469af0802691c0dfd6b83f5a07986089889c6b6e159f2" # noqa
+	correct_hash = "e55fb3c669f9b7874a159c6e34ccad8feb9ccf8f47329bc2e231be38d95cf9154074a0b7e26b5f3b63445d1a2af97f86dec6f3276da55dc51a79ca4e6ce15bf7" # noqa
 	assert m.hexdigest() == correct_hash
 
 
