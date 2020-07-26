@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mupix"
-version = "0.3.0"
+version = "0.3.1"
 description = "MusicXML Evaluation Tool"
 authors = ["Deepio <global2alex@gmail.com>"]
 license = "GPL-3.0"
