@@ -25,7 +25,7 @@ def test_compare_basic_single_voice_notes_total(load_single_voice_compare_resour
   #   load_single_voice_compare_resources.notes[-1].right,
   #   load_single_voice_compare_resources.notes[-1].wrong
   # )
-  assert load_single_voice_compare_resources.notes[-1].right == 62
+  assert load_single_voice_compare_resources.notes[-1].right == 86
   assert load_single_voice_compare_resources.notes[-1].wrong == 2
 
 

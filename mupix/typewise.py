@@ -31,6 +31,9 @@ from mupix.result_objects import (
 	NoteStemDirectionResult,
 	NoteBeamResult,
 	NoteVoiceResult,
+	NoteTieStyle,
+	NoteTieType,
+	NoteTiePlacement,
 	NoteTotalResult,
 	RestArticulationResult,
 	RestDurationResult,
@@ -174,7 +177,7 @@ class MupixObject():
 
 		########################################################
 		# Expand keys
-		# 
+		#
 		# Because even with activeState, note objects can't find 
 		# the key for some reason?
 			_keySignatures += [KeySignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("KeySignature")]  # noqa
@@ -226,6 +229,9 @@ class BaseCompareClass(MupixObject):
 		self.notes_stemdirection = NoteStemDirectionResult()
 		self.notes_beam = NoteBeamResult()
 		self.notes_voice = NoteVoiceResult()
+		self.notes_tiestyle = NoteTieStyle()
+		self.notes_tietype = NoteTieType()
+		self.notes_tieplacement = NoteTiePlacement()
 		self.notes_total = NoteTotalResult()
 
 		# Rests

@@ -157,6 +157,39 @@ class NoteObject(MusicalEvent):
 		# We do not want the errors be disproportionate if the duration is wrong too.
 		return set([item for item in note.beams.getTypes()])
 
+	tiestyle = attr.ib(init=False, eq=False)
+	@tiestyle.default
+	def _get_tie_style(self):
+		"""
+		"normal" or "dotted" or "dashed" or "hidden"
+		"""
+		try:
+			return self._music21_object.tie.style
+		except AttributeError:
+			return None
+
+	tietype = attr.ib(init=False, eq=False)
+	@tietype.default
+	def _get_tie_type(self):
+		"""
+		"start", "stop", "continue", "let-ring", "continue-let-ring"
+		"""
+		try:
+			return self._music21_object.tie.type
+		except AttributeError:
+			return None
+
+	tieplacement = attr.ib(init=False, eq=False)
+	@tieplacement.default
+	def _get_tie_placement(self):
+		"""
+		None, above, below
+		"""
+		try:
+			return self._music21_object.tie.placement
+		except AttributeError:
+			return None
+
 
 @attr.s
 class RestObject(MusicalEvent):

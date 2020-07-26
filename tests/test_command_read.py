@@ -28,9 +28,10 @@ def test_basic_parse_xml():
 	# you will need to manually check to make sure there are no errors and generate a new hash for the structure.
 
 	# You can get the new hash AFTER checking manually for errors by un-commenting this next line and running the test.
+	# import json
 	# raise Exception(output)
 	# raise Exception(m.hexdigest())
-	correct_hash = "62ba8b3393e1e2e2c2ebaa5153179e6ef43b88438c046c2439542a2f7a100844f1591c0b175d28c336ffad4e211fb1e8cf94dbe4c1acace0b38e40121e70fda8" # noqa
+	correct_hash = "065b9870355a94c3f4b728b0a1e04c50968a27aa31451c0216045e4eeb2ed2240093259b4eb169f0147469af0802691c0dfd6b83f5a07986089889c6b6e159f2" # noqa
 	assert m.hexdigest() == correct_hash
 
 

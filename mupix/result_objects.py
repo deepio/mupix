@@ -95,6 +95,27 @@ class NoteVoiceResult(Result):
 
 
 @attr.s
+class NoteTieStyle(Result):
+	"""
+	Results Object that holds the number of correct and incorrect Note Tie Style
+	"""
+
+
+@attr.s
+class NoteTieType(Result):
+	"""
+	Results Object that holds the number of correct and incorrect Note Tie Type
+	"""
+
+
+@attr.s
+class NoteTiePlacement(Result):
+	"""
+	Results Object that holds the number of correct and incorrect Note Tie Placement
+	"""
+
+
+@attr.s
 class NoteTotalResult(Result):
 	"""
 	The accumulated total of all the Note related Results Objects
