@@ -232,13 +232,21 @@ class PartiwiseCompareClass(BaseCompareClass):
 
 				# Get Individual Parameters
 				for parameter in self._return_parameter_names(object_):
-					self.__getattribute__(parameter).right += item.__getattribute__(parameter).right
-					self.__getattribute__(parameter).wrong += item.__getattribute__(parameter).wrong
+					try:
+						self.__getattribute__(parameter).right += item.__getattribute__(parameter).right
+						self.__getattribute__(parameter).wrong += item.__getattribute__(parameter).wrong
+					except AttributeError:
+						# All none types are from unaligned objects. These must be counted as errors.
+						self.__getattribute__(parameter).wrong += 1
 
 				# Get Totals
-				self.__getattribute__(f"{object_}_total").right += item.__getattribute__(f"{object_}_total").right
-				self.__getattribute__(f"{object_}_total").wrong += item.__getattribute__(f"{object_}_total").wrong
-				# print(item.__getattribute__(f"{object_}_total"))
+				try:
+					self.__getattribute__(f"{object_}_total").right += item.__getattribute__(f"{object_}_total").right
+					self.__getattribute__(f"{object_}_total").wrong += item.__getattribute__(f"{object_}_total").wrong
+				except AttributeError:
+					# All none types are from unaligned objects. These must be counted as errors.
+					self.__getattribute__(f"{object_}_total").wrong += 1
+
 
 		# import sys
 		# sys.exit(0)
