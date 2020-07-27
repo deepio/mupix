@@ -261,7 +261,12 @@ class SpannerObject(Marking):
 	name = attr.ib(init=False, eq=False)
 	@name.default
 	def _get_name(self):
-		return self._music21_object.type
+		try:
+			return self._music21_object.type
+		except AttributeError:
+			# raise Exception(self._music21_object)
+			# raise Exception(dir(self._music21_object))
+			return self._music21_object.classes[0]
 
 	# This is empty in Music21, need to repopulate this data.
 	measure = attr.ib(init=False)
@@ -277,7 +282,10 @@ class SpannerObject(Marking):
 	length = attr.ib(init=False, eq=False)
 	@length.default
 	def _get_length(self):
-		return self._music21_object.spread
+		try:
+			return self._music21_object.spread
+		except AttributeError:
+			return self._music21_object.getFirst().quarterLength
 
 
 @attr.s
