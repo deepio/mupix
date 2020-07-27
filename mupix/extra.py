@@ -226,3 +226,18 @@ def _temp_fix_spanners(spanner: list, tmp_list: list) -> list:
 		spanner[index].measure = tmp_list[index]["measure"]
 
 	return spanner
+
+
+def get_software_vendor(filepath: str) -> str:
+	"""
+	Grabs the software vendor from a MusicXML file.
+	:param [filepath]: A string representing the local filepath.
+	:type [filepath]: String
+
+	:return [String]: The software vendor which created the MusicXML file.
+	:rtype: String
+	"""
+	with open(filepath, "r") as f:
+			data = f.read()
+
+	return re.finditer(r"(?<=<software>).+(?=<\/software>)", data).__next__().group().split(" ")
