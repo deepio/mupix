@@ -1,5 +1,9 @@
 import itertools
 import operator
+from typing import (
+	Union,
+	Callable,
+)
 
 import attr
 import music21
@@ -10,24 +14,28 @@ from mupix.core import (
 	TimeSignatureObject,
 	KeySignatureObject,
 	ClefObject,
-	Marking,
+	# Marking,
 )
 from mupix.extra import (
 	add_step_information,
 	normalize_object_list,
 )
-from mupix.typewise import BaseCompareClass
+from mupix.typewise import (
+	BaseCompareClass,
+	MupixObject
+)
 
 
 @attr.s
 class MupixPartwiseObject():
 	parts = attr.ib(
 		kw_only=True,
-		type=list,
-		validator=attr.validators.deep_iterable(
-			member_validator=attr.validators.instance_of(list),
-			iterable_validator=attr.validators.instance_of(list),
-		)
+		type=dict,
+		# type=list,
+		# validator=attr.validators.deep_iterable(
+		# 	member_validator=attr.validators.instance_of(list),
+		# 	iterable_validator=attr.validators.instance_of(list),
+		# )
 
 		# validator=attr.validators.deep_iterable(
 		# 	member_validator=attr.validators.deep_iterable(
@@ -56,6 +64,7 @@ class MupixPartwiseObject():
 		"""
 
 		notes, rests, timeSignatures, keySignatures, clefs = [], [], [], [], []
+		_keySignatures = []
 		# Creates lists of lists notes[part][index]
 		for parts_index, parts in enumerate(music21.converter.parseFile(filepath).recurse().getElementsByClass("Part"), 1):  # noqa
 			notes.append([NoteObject(item, parts_index) for item in parts.recurse().notes if not item.isChord])
@@ -63,6 +72,10 @@ class MupixPartwiseObject():
 			timeSignatures.append([TimeSignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("TimeSignature")])  # noqa
 			keySignatures.append([KeySignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("KeySignature")])  # noqa
 			clefs.append([ClefObject(item, parts_index) for item in parts.recurse().getElementsByClass("Clef")])
+
+		########################################################
+		# Expand keys
+			_keySignatures.append([KeySignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("KeySignature")])  # noqa
 
 		try:
 			measuresInScore = max(notes[0] + rests[0], key=operator.attrgetter('measure')).measure
@@ -73,68 +86,159 @@ class MupixPartwiseObject():
 		# Make sure the correct key and measure information is in every measure.
 		# Sometimes
 		for part in range(parts_index):
-			timeSignatures[part] = normalize_object_list(
-				object_list=timeSignatures[part],
+			# timeSignatures[part] = normalize_object_list(
+			# 	object_list=timeSignatures[part],
+			# 	total_measures=measuresInScore,
+			# 	total_parts=parts_index
+			# )
+			_keySignatures[part] = normalize_object_list(
+				object_list=_keySignatures[part],
 				total_measures=measuresInScore,
 				total_parts=parts_index
 			)
-			keySignatures[part] = normalize_object_list(
-				object_list=keySignatures[part],
-				total_measures=measuresInScore,
-				total_parts=parts_index
-			)
-			clefs[part] = normalize_object_list(
-				object_list=clefs[part],
-				total_measures=measuresInScore,
-				total_parts=parts_index
-			)
+			# clefs[part] = normalize_object_list(
+			# 	object_list=clefs[part],
+			# 	total_measures=measuresInScore,
+			# 	total_parts=parts_index
+			# )
 
 		# Make sure the key signature information is in the note objects
 		for part in range(parts_index):
 			# only once keySignatures are normalized can we add the step information.
-			notes[part] = add_step_information(notes[part], keySignatures[part])
+			notes[part] = add_step_information(notes[part], _keySignatures[part])
 
 		# Finally sort all elements in the correct musical stream
-		out = []
-		for part in range(parts_index):
-			# Get notes and rests together first
-			notes_and_rests = sorted(
-				itertools.chain(notes[part], rests[part]),
-				key=operator.attrgetter("measure", "onset")
-			)
-			# Make sure clefs, time sigs, and key sigs come first.
-			out.append(
-				sorted(
-					itertools.chain(
-						clefs[part],
-						timeSignatures[part],
-						keySignatures[part],
-						notes_and_rests,
-					),
-					key=operator.attrgetter("measure", "onset")
-				)
-			)
-		return cls(parts=out)
+		# out = []
+		# for part in range(parts_index):
+		# 	# Get notes and rests together first
+		# 	notes_and_rests = sorted(
+		# 		itertools.chain(notes[part], rests[part]),
+		# 		key=operator.attrgetter("measure", "onset")
+		# 	)
+		# 	# Make sure clefs, time sigs, and key sigs come first.
+		# 	out.append(
+		# 		sorted(
+		# 			itertools.chain(
+		# 				clefs[part],
+		# 				timeSignatures[part],
+		# 				keySignatures[part],
+		# 				notes_and_rests,
+		# 			),
+		# 			key=operator.attrgetter("measure", "onset")
+		# 		)
+		# 	)
+		# return cls(parts=out)
+		from mupix.typewise import MupixObject
+		from mupix.extra import get_software_vendor
+		software_vendor = get_software_vendor(filepath)
+
+		# spanners = [item for item in spanners[i]],
+		# dynamics = [item for item in dynamics[i]],
+		mupix_data = {i:MupixObject(
+				notes = [item for item in notes[i]],
+				rests = [item for item in rests[i]],
+				timeSignatures = [item for item in timeSignatures[i]],
+				keySignatures = [item for item in keySignatures[i]],
+				clefs = [item for item in clefs[i]],
+				spanners = [],
+				dynamics = [],
+				parts = 1,
+				error_description = {},
+				visualize = {},
+				software_vendor = software_vendor,
+			) for i in range(parts_index)
+		}
+		return cls(parts=mupix_data)
 
 
 class PartiwiseCompareClass(BaseCompareClass):
 	"""
+	Will iterate through each part of each score and align each part with the sequence alignment algorithm.
 	"""
-	def __init__(self, true_filepath: str, test_filepath: str, do_not_count: list = []):
-		self.true_data = MupixPartwiseObject.from_filepath(true_filepath)
-		self.test_data = MupixPartwiseObject.from_filepath(test_filepath)
+	def __init__(self, true_filepath: Union[str, MupixObject], test_filepath: Union[str, MupixObject], do_not_count: list = []):
+
+		if isinstance(true_filepath, str):
+			self.true_filepath = MupixPartwiseObject.from_filepath(true_filepath)
+			self.test_filepath = MupixPartwiseObject.from_filepath(test_filepath)
+
+		super().__init__(self.true_filepath, self.test_filepath, do_not_count)
 
 	def sequence_alignment(self, func):
+		# print(self.test_data)
+		# raise Exception("\n")
+		# raise Exception(self.dynamics_onset)
+		test_length = len(self.test_data.parts)
+		true_length = len(self.true_data.parts)
 
-		for part in self.true_data:
-			true_part = part
-			break
-		for part in self.test_data:
-			test_part = part
-			break
+		if true_length != test_length:
+			print(
+				"[-] WARNING: Both files do not have an equal number of parts. \n"
+				"\tThis may lead to additional inflated errors.\n"
+				"\tYou have been warned. \n"
+				f"\n\tGround Truth: {true_length} Test File: {test_length}"
+			)
 
-		# print(true_part)
-		a = func(true_part, test_part)
-		print(a)
-		import sys
-		sys.exit(0)
+		from mupix.application import WeightedNeedlemanWunsch
+
+		matrix = {}
+		already_found_keys = []
+		self.compiled_list = {}
+
+		for true_parts in reversed(range(true_length)):
+			matrix[true_parts] = {}
+			smallest = 1_000_000
+			smallest_group = None
+
+			for test_parts in reversed(range(test_length)):
+				if len(already_found_keys) == test_length:
+					# need to compare against Null objects instead.
+					continue
+
+				aligned_part = WeightedNeedlemanWunsch(self.true_data.parts[true_parts], self.test_data.parts[test_parts], )
+
+				errors = sum([len(x) for x in aligned_part.error_description])
+				matrix[true_parts][test_parts] = errors
+
+				if errors < smallest and test_parts not in already_found_keys:
+					smallest = errors
+					smallest_group = aligned_part
+
+			self.compiled_list[true_parts] = smallest_group
+			already_found_keys.append(test_parts)
+
+	def _total(self, ):
+		"""
+		"""
+		try:
+			self.compiled_list
+		except NameError:
+			raise Exception(
+				"[-] A partwise list has not been created yet.\n"
+				"\tCreate one by running the sequence alignment method."
+			)
+
+		objects = self._return_object_names()
+
+		# Create Result objects
+		for object_ in objects:
+			for parameter in self._return_parameter_names(object_):
+				self.__getattribute__(object_).append(self.__getattribute__(parameter))
+			self.__getattribute__(object_).append(self.__getattribute__(f"{object_}_total"))
+
+		# Items common to both the ground truth and test sheets
+		for i, item in self.compiled_list.items():
+			# For each object (notes, rests, clefs, spanners, time sigs, keys)
+			for object_ in objects:
+
+				# Get Individual Parameters
+				for parameter in self._return_parameter_names(object_):
+					self.__getattribute__(parameter).right += item.__getattribute__(parameter).right
+					self.__getattribute__(parameter).wrong += item.__getattribute__(parameter).wrong
+
+				# Get Totals
+				self.__getattribute__(f"{object_}_total").right += item.__getattribute__(f"{object_}_total").right
+				self.__getattribute__(f"{object_}_total").wrong += item.__getattribute__(f"{object_}_total").wrong
+				# print(item.__getattribute__(f"{object_}_total"))
+
+		# import sys
+		# sys.exit(0)

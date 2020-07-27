@@ -73,29 +73,16 @@ class WeightedNeedlemanWunsch(BaseCompareClass):
 
 class PartwiseWeightedNeedlemanWunsch(PartiwiseCompareClass):
 	"""
+	Using weighted N-W on every permutation of parts between ground truths and test files.
+	The ones with the lowest number of errors are aligned.
+	Then a new total is computed with the lowest errored parts.
+
+
 	"""
 	def __init__(self, true_filepath: str, test_filepath: str, do_not_count: list = []):
 		super().__init__(true_filepath, test_filepath, do_not_count)
 		self.sequence_alignment(func=AdvancedAffineNeedlemanWunsch)
-
-	# 	# Parse both files
-	# 	self.true_data = MupixObject.partwise_from_filepath(true_filepath)
-	# 	self.test_data = MupixObject.partwise_from_filepath(test_filepath)
-	# 	self.partwise_sequence_alignment(func=AdvancedAffineNeedlemanWunsch)
-
-	# def partwise_sequence_alignment(self, func):
-	# 	for part, _ in enumerate(self.true_data.notes):
-
-	# 		true_notes_part_x = [item for item in self.true_data.notes[part]]
-	# 		test_notes_part_x = [item for item in self.test_data.notes[part]]
-	# 		notes_x = func(true_notes_part_x, test_notes_part_x)  # noqa
-
-	# 		try:
-	# 			true_notes_part_y = [item for item in self.true_data.notes[part]]
-	# 			test_notes_part_y = [item for item in self.test_data.notes[part + 1]]
-	# 			notes_y = func(true_notes_part_y, test_notes_part_y)
-	# 		except IndexError:
-	# 			notes_y = float("inf")  # noqa
+		self._total()
 
 
 def xml_validator(musicxml_filepath, schema_filepath=__return_root_path() + "/tests/xml/musicxml.xsd"):

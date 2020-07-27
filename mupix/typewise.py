@@ -5,8 +5,9 @@
 # TODO: Create an automated method for testing multiple versions of Notation software (Almost done)
 """
 
-import re
 import operator
+import re
+from typing import Union 
 
 import attr
 import music21
@@ -100,10 +101,11 @@ class MupixObject():
 	clefs = attr.ib(kw_only=True,)
 	spanners = attr.ib(kw_only=True,)
 	dynamics = attr.ib(kw_only=True,)
+
 	parts = attr.ib(kw_only=True, type=int, validator=[attr.validators.instance_of(int)])
 	error_description = attr.ib(kw_only=True, type=dict, validator=[attr.validators.instance_of(dict)])
 	visualize = attr.ib(kw_only=True)
-	software_vendor = attr.ib(kw_only=True, type=list, default=[], validator=[attr.validators.instance_of(list)])
+	software_vendor = attr.ib(kw_only=True, type=str,)
 
 	@notes.validator
 	@rests.validator
@@ -157,10 +159,12 @@ class MupixObject():
 		:rtype: Mupix Object
 		"""
 
-		with open(filepath, "r") as f:
-			data = f.read()
+		# with open(filepath, "r") as f:
+		# 	data = f.read()
 
-		software_vendor = re.finditer(r"(?<=<software>).+(?=<\/software>)", data).__next__().group().split(" ")
+		# software_vendor = re.finditer(r"(?<=<software>).+(?=<\/software>)", data).__next__().group().split(" ")
+		from mupix.extra import get_software_vendor
+		software_vendor = get_software_vendor(filepath)
 
 		notes, rests, timeSignatures, keySignatures, clefs, spanners, dynamics = [], [], [], [], [], [], []
 		_keySignatures = []
@@ -217,14 +221,14 @@ class BaseCompareClass(MupixObject):
 	"""
 	The base comparison class for Mupix Objects.
 	"""
-	def __init__(self, true_filepath: str, test_filepath: str, do_not_count: list = []):
+	def __init__(self, true_mupix_or_filepath: Union[str, MupixObject], test_mupix_or_filepath: Union[str, MupixObject], do_not_count: list = []):
 		# for result_to_exclude in do_not_count:
 		#   del self.__getattribute__(result_to_exclude)
 
 		# Notes
 		self.notes = []
 		self.notes_step = NoteStepResult()
-		self.notes_name = NoteNameResult()
+		# self.notes_name = NoteNameResult()
 		self.notes_duration = NoteDurationResult()
 		self.notes_octave = NoteOctaveResult()
 		self.notes_accidental = NoteAccidentalResult()
@@ -278,12 +282,15 @@ class BaseCompareClass(MupixObject):
 		self.dynamics_name = DynamicNameResult()
 		self.dynamics_total = DynamicTotalResult()
 
-
 		self.error_description = {}
 
-		# Parse both files
-		self.true_data = MupixObject.from_filepath(true_filepath)
-		self.test_data = MupixObject.from_filepath(test_filepath)
+		# Parse both input types
+		if isinstance(true_mupix_or_filepath, str):
+			self.true_data = MupixObject.from_filepath(true_mupix_or_filepath)
+			self.test_data = MupixObject.from_filepath(test_mupix_or_filepath)
+		else:
+			self.true_data = true_mupix_or_filepath
+			self.test_data = test_mupix_or_filepath
 
 	def _return_object_names(self):
 		"""
@@ -292,7 +299,7 @@ class BaseCompareClass(MupixObject):
 		For example:
 			['clefs', 'keySignatures', 'notes', 'rests', 'timeSignatures', 'spanners']
 		"""
-		return [item for item in dir(self) if "_" not in item and item not in ["check", "ret"]]
+		return [item for item in dir(self) if "_" not in item and item not in ["check", "ret", "visualize"]]
 
 	def _return_parameter_names(self, field):
 		"""
@@ -353,7 +360,13 @@ class BaseCompareClass(MupixObject):
 
 			self.__getattribute__(parameter).wrong += 1
 			# Adding color to wrong notes for visualization
-			test_object._music21_object.style.color = "pink"
+			try:
+				test_object._music21_object.style.color = "pink"
+			except AttributeError:
+				# Null objects don't have attributes.
+				# Can we add some sort or rectangle that's colored?
+				# TODO:Create a square where the space would be.
+				pass
 
 	def _compare(self, true_object, test_object):
 		"""
@@ -491,7 +504,6 @@ class BaseCompareClass(MupixObject):
 		it takes a global average of all the instruments together and not based on
 		the part.
 		"""
-
 		try:
 			if self.notes_step.wrong > self.notes_name.wrong:
 				del self.notes_step
