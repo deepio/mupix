@@ -6,8 +6,7 @@
 """
 
 import operator
-import re
-from typing import Union 
+from typing import Union
 
 import attr
 import music21
@@ -62,9 +61,10 @@ from mupix.result_objects import (
 )
 from mupix.extra import (
 	add_step_information,
+	# boundary_search,
+	get_software_vendor,
 	normalize_object_list,
 	return_char_except,
-	boundary_search,
 )
 
 
@@ -159,13 +159,7 @@ class MupixObject():
 		:rtype: Mupix Object
 		"""
 
-		# with open(filepath, "r") as f:
-		# 	data = f.read()
-
-		# software_vendor = re.finditer(r"(?<=<software>).+(?=<\/software>)", data).__next__().group().split(" ")
-		from mupix.extra import get_software_vendor
 		software_vendor = get_software_vendor(filepath)
-
 		notes, rests, timeSignatures, keySignatures, clefs, spanners, dynamics = [], [], [], [], [], [], []
 		_keySignatures = []
 		# _clefs = []
@@ -184,13 +178,13 @@ class MupixObject():
 		########################################################
 		# Expand keys
 		#
-		# Because even with activeState, note objects can't find 
+		# Because even with activeState, note objects can't find
 		# the key for some reason?
 			_keySignatures += [KeySignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("KeySignature")]  # noqa
 			# _clefs += [ClefObject(item, parts_index) for item in parts.recurse().getElementsByClass("Clef")]
 
 		try:
-			measuresInScore = max(notes + rests, key=operator.attrgetter('measure')).measure
+			measuresInScore = max(notes + rests, key=operator.attrgetter("measure")).measure
 		except ValueError:
 			measuresInScore = 0
 			parts_index = 0
@@ -297,7 +291,7 @@ class BaseCompareClass(MupixObject):
 		Returns all the objects
 
 		For example:
-			['clefs', 'keySignatures', 'notes', 'rests', 'timeSignatures', 'spanners']
+			['clefs', 'keySignatures', 'notes', 'rests', 'timeSignatures', 'spanners', 'dynamics']
 		"""
 		return [item for item in dir(self) if "_" not in item and item not in ["check", "ret", "visualize"]]
 
@@ -360,12 +354,13 @@ class BaseCompareClass(MupixObject):
 
 			self.__getattribute__(parameter).wrong += 1
 			# Adding color to wrong notes for visualization
+			# TODO: Create object parameters when they are missing
 			try:
 				test_object._music21_object.style.color = "pink"
 			except AttributeError:
 				# Null objects don't have attributes.
 				# Can we add some sort or rectangle that's colored?
-				# TODO:Create a square where the space would be.
+				# TODO: Create a square where the space would be.
 				pass
 
 	def _compare(self, true_object, test_object):
@@ -504,13 +499,13 @@ class BaseCompareClass(MupixObject):
 		it takes a global average of all the instruments together and not based on
 		the part.
 		"""
-		try:
-			if self.notes_step.wrong > self.notes_name.wrong:
-				del self.notes_step
-			else:
-				del self.notes_name
-		except AttributeError:
-			self.error_description["Error"] = "Could not remove note_step or note_name"
+		# try:
+		# 	if self.notes_step.wrong > self.notes_name.wrong:
+		# 		del self.notes_step
+		# 	else:
+		# 		del self.notes_name
+		# except AttributeError:
+		# 	self.error_description["Error"] = "Could not remove note_step or note_name"
 
 		for obj in self._return_object_names():
 			for params in self._return_parameter_names(obj):
@@ -569,65 +564,19 @@ class BaseCompareClass(MupixObject):
 		:type [func]: SequenceAlignment
 		"""
 
-		# Notes
-		true_notes = [item.step for item in self.true_data.notes]
-		test_notes = [item.step for item in self.test_data.notes]
-		notes_anw = func(true_notes, test_notes)
+		for object_ in self._return_object_names():
+			if object_ == "notes":
+				true_objects = [item.step for item in self.true_data.notes]
+				test_objects = [item.step for item in self.test_data.notes]
+			else:
+				true_objects = [return_char_except(item.measure) for item in self.true_data.__getattribute__(object_)]
+				test_objects = [return_char_except(item.measure) for item in self.test_data.__getattribute__(object_)]
 
-		true_note_objects = self._rebuild(notes_anw.aligned_true_data, self.true_data.notes)
-		test_note_objects = self._rebuild(notes_anw.aligned_test_data, self.test_data.notes)
-		for index, objects in enumerate(true_note_objects):
-			self._compare(objects, test_note_objects[index])
-
-		# Rests
-		true_rests = [return_char_except(item.measure) for item in self.true_data.rests]
-		test_rests = [return_char_except(item.measure) for item in self.test_data.rests]
-		rests_anw = func(true_rests, test_rests)
-
-		true_rest_objects = self._rebuild(rests_anw.aligned_true_data, self.true_data.rests)
-		test_rest_objects = self._rebuild(rests_anw.aligned_test_data, self.test_data.rests)
-		for index, objects in enumerate(true_rest_objects):
-			self._compare(objects, test_rest_objects[index])
-
-		# Time Signature
-		true_timeSignatures = [return_char_except(item.measure) for item in self.true_data.timeSignatures]
-		test_timeSignatures = [return_char_except(item.measure) for item in self.test_data.timeSignatures]
-		timeSignatures_anw = func(true_timeSignatures, test_timeSignatures)
-
-		true_timeSignature_objects = self._rebuild(timeSignatures_anw.aligned_true_data, self.true_data.timeSignatures)
-		test_timeSignature_objects = self._rebuild(timeSignatures_anw.aligned_test_data, self.test_data.timeSignatures)
-		for index, objects in enumerate(true_timeSignature_objects):
-			self._compare(objects, test_timeSignature_objects[index])
-
-		# Key Signature
-		true_keySignatures = [return_char_except(item.measure) for item in self.true_data.keySignatures]
-		test_keySignatures = [return_char_except(item.measure) for item in self.test_data.keySignatures]
-		keySignatures_anw = func(true_keySignatures, test_keySignatures)
-
-		true_keySignature_objects = self._rebuild(keySignatures_anw.aligned_true_data, self.true_data.keySignatures)
-		test_keySignature_objects = self._rebuild(keySignatures_anw.aligned_test_data, self.test_data.keySignatures)
-		for index, objects in enumerate(true_keySignature_objects):
-			self._compare(objects, test_keySignature_objects[index])
-
-		# Clefs
-		true_clefs = [return_char_except(item.measure) for item in self.true_data.clefs]
-		test_clefs = [return_char_except(item.measure) for item in self.test_data.clefs]
-		clef_anw = func(true_clefs, test_clefs)
-
-		true_clef_objects = self._rebuild(clef_anw.aligned_true_data, self.true_data.clefs)
-		test_clef_objects = self._rebuild(clef_anw.aligned_test_data, self.test_data.clefs)
-		for index, objects in enumerate(true_clef_objects):
-			self._compare(objects, test_clef_objects[index])
-
-		# Spanners
-		true_spanners = [item.name for item in self.true_data.spanners]
-		test_spanners = [item.name for item in self.test_data.spanners]
-		spanner_anw = func(true_spanners, test_spanners)
-
-		true_spanner_objects = self._rebuild(spanner_anw.aligned_true_data, self.true_data.spanners)
-		test_spanner_objects = self._rebuild(spanner_anw.aligned_test_data, self.true_data.spanners)
-		for index, objects in enumerate(true_spanner_objects):
-			self._compare(objects, test_spanner_objects[index])
+			anw = func(true_objects, test_objects)
+			true_objects_rebuilt = self._rebuild(anw.aligned_true_data, self.true_data.__getattribute__(object_))
+			test_objects_rebuilt = self._rebuild(anw.aligned_test_data, self.test_data.__getattribute__(object_))
+			for index, true_object in enumerate(true_objects_rebuilt):
+				self._compare(true_object, test_objects_rebuilt[index])
 
 	def sequence_alignment(self, func):
 		"""
@@ -641,52 +590,12 @@ class BaseCompareClass(MupixObject):
 		:type [func]: SequenceAlignment
 		"""
 
-		# Notes
-		true_notes = [item for item in self.true_data.notes]
-		test_notes = [item for item in self.test_data.notes]
-		notes_anw = func(true_notes, test_notes)
+		for object_ in self._return_object_names():
+			true_objects = [item for item in self.true_data.__getattribute__(object_)]
+			test_objects = [item for item in self.test_data.__getattribute__(object_)]
+			objects_anw = func(true_objects, test_objects)
 
-		true_note_objects = self._rebuild(notes_anw.aligned_true_data, self.true_data.notes)
-		test_note_objects = self._rebuild(notes_anw.aligned_test_data, self.test_data.notes)
-		for index, objects in enumerate(true_note_objects):
-			self._compare(objects, test_note_objects[index])
-
-		# Rests
-		true_rests = [item for item in self.true_data.rests]
-		test_rests = [item for item in self.test_data.rests]
-		rests_anw = func(true_rests, test_rests)
-
-		true_rest_objects = self._rebuild(rests_anw.aligned_true_data, self.true_data.rests)
-		test_rest_objects = self._rebuild(rests_anw.aligned_test_data, self.test_data.rests)
-		for index, objects in enumerate(true_rest_objects):
-			self._compare(objects, test_rest_objects[index])
-
-		# Time Signature
-		true_timeSignatures = [item for item in self.true_data.timeSignatures]
-		test_timeSignatures = [item for item in self.test_data.timeSignatures]
-		timeSignatures_anw = func(true_timeSignatures, test_timeSignatures)
-
-		true_timeSignature_objects = self._rebuild(timeSignatures_anw.aligned_true_data, self.true_data.timeSignatures)
-		test_timeSignature_objects = self._rebuild(timeSignatures_anw.aligned_test_data, self.test_data.timeSignatures)
-		for index, objects in enumerate(true_timeSignature_objects):
-			self._compare(objects, test_timeSignature_objects[index])
-
-		# Key Signature
-		true_keySignatures = [item for item in self.true_data.keySignatures]
-		test_keySignatures = [item for item in self.test_data.keySignatures]
-		keySignatures_anw = func(true_keySignatures, test_keySignatures)
-
-		true_keySignature_objects = self._rebuild(keySignatures_anw.aligned_true_data, self.true_data.keySignatures)
-		test_keySignature_objects = self._rebuild(keySignatures_anw.aligned_test_data, self.test_data.keySignatures)
-		for index, objects in enumerate(true_keySignature_objects):
-			self._compare(objects, test_keySignature_objects[index])
-
-		# Clefs
-		true_clefs = [item for item in self.true_data.clefs]
-		test_clefs = [item for item in self.test_data.clefs]
-		clef_anw = func(true_clefs, test_clefs)
-
-		true_clef_objects = self._rebuild(clef_anw.aligned_true_data, self.true_data.clefs)
-		test_clef_objects = self._rebuild(clef_anw.aligned_test_data, self.test_data.clefs)
-		for index, objects in enumerate(true_clef_objects):
-			self._compare(objects, test_clef_objects[index])
+			true_objects_rebuilt = self._rebuild(objects_anw.aligned_true_data, self.true_data.__getattribute__(object_))
+			test_objects_rebuilt = self._rebuild(objects_anw.aligned_test_data, self.test_data.__getattribute__(object_))
+			for index, true_object in enumerate(true_objects_rebuilt):
+				self._compare(true_object, test_objects_rebuilt[index])
