@@ -271,7 +271,7 @@ class AdvancedAffineNeedlemanWunsch(AffineNeedlemanWunsch):
 			score += 2 if true.onset == test.onset else -2
 
 		if true.asname() == "Clef" and test.asname() == "Clef":
-			score += 5 if true.name == test.name else -5
+			# score += 5 if true.name == test.name else -5
 			score += 2 if true.line == test.line else -2
 			score += 2 if true.octave == test.octave else -2
 			score += 2 if true.onset == test.onset else -2
@@ -281,10 +281,15 @@ class AdvancedAffineNeedlemanWunsch(AffineNeedlemanWunsch):
 			score += 2 if true.placement == test.placement else -2
 			score += 1 if true.length == test.length else -1
 
+		if true.asname() == "Dynamic" and test.asname() == "Dynamic":
+			score += 5 if true.name == test.name else -5
+			score += 2 if true.placement == test.placement else -2
+			score += 1 if true.length == test.length else -1
+
 		# If the objects are the same type
-		score += 10 if true.part == test.part else -10
+		# score += 10 if true.part == test.part else -10
 		score += 5 if true.measure == test.measure else -5
-		score += 5 if true.onset == test.onset else -5
+		# score += 5 if true.onset == test.onset else -5
 		score += 5 if true.asname() == test.asname() else -5
 
 		return score

@@ -479,6 +479,12 @@ class BaseCompareClass(MupixObject):
 		elif (isinstance(true_object, SpannerObject) and isinstance(test_object, str)) or (isinstance(true_object, str) and isinstance(test_object, SpannerObject)):
 			self._compare_expand_objects_different(true_object, test_object, "spanners")
 
+		elif isinstance(true_object, DynamicObject) and isinstance(test_object, DynamicObject):
+			self._compare_expand_objects_same(true_object, test_object, "dynamics")
+
+		elif (isinstance(true_object, DynamicObject) and isinstance(test_object, str)) or (isinstance(true_object, str) and isinstance(test_object, DynamicObject)):
+			self._compare_expand_objects_different(true_object, test_object, "dynamics")
+
 	def _object_split(self):
 		"""
 		Align Objects together by comparing voice, measure and onset.
