@@ -1,8 +1,8 @@
-import itertools
+# import itertools
 import operator
 from typing import (
 	Union,
-	Callable,
+	# Callable,
 )
 
 import attr
@@ -45,6 +45,7 @@ class MupixPartwiseObject():
 		# 	iterable_validator=attr.validators.instance_of(list)
 		# ),
 	)
+	visualize = attr.ib(kw_only=True)
 
 	def __iter__(self):
 		return iter(self.parts)
@@ -66,7 +67,8 @@ class MupixPartwiseObject():
 		notes, rests, timeSignatures, keySignatures, clefs = [], [], [], [], []
 		_keySignatures = []
 		# Creates lists of lists notes[part][index]
-		for parts_index, parts in enumerate(music21.converter.parseFile(filepath).recurse().getElementsByClass("Part"), 1):  # noqa
+		file_ = music21.converter.parseFile(filepath, forceSource=True)
+		for parts_index, parts in enumerate(file_.recurse().getElementsByClass("Part"), 1):  # noqa
 			notes.append([NoteObject(item, parts_index) for item in parts.recurse().notes if not item.isChord])
 			rests.append([RestObject(item, parts_index) for item in parts.recurse().notesAndRests if not item.isNote])
 			timeSignatures.append([TimeSignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("TimeSignature")])  # noqa
@@ -78,6 +80,7 @@ class MupixPartwiseObject():
 			_keySignatures.append([KeySignatureObject(item, parts_index) for item in parts.recurse().getElementsByClass("KeySignature")])  # noqa
 
 		try:
+			# This is fine because both rests and notes have a .measure property
 			measuresInScore = max(notes[0] + rests[0], key=operator.attrgetter('measure')).measure
 		except ValueError:
 			measuresInScore = 0
@@ -134,7 +137,7 @@ class MupixPartwiseObject():
 
 		# spanners = [item for item in spanners[i]],
 		# dynamics = [item for item in dynamics[i]],
-		mupix_data = {i:MupixObject(
+		mupix_data = {i: MupixObject(
 				notes = [item for item in notes[i]],
 				rests = [item for item in rests[i]],
 				timeSignatures = [item for item in timeSignatures[i]],
@@ -148,7 +151,7 @@ class MupixPartwiseObject():
 				software_vendor = software_vendor,
 			) for i in range(parts_index)
 		}
-		return cls(parts=mupix_data)
+		return cls(parts=mupix_data, visualize=file_)
 
 
 class PartiwiseCompareClass(BaseCompareClass):
@@ -179,7 +182,6 @@ class PartiwiseCompareClass(BaseCompareClass):
 			)
 
 		from mupix.application import WeightedNeedlemanWunsch
-
 		matrix = {}
 		already_found_keys = []
 		self.compiled_list = {}
@@ -247,6 +249,10 @@ class PartiwiseCompareClass(BaseCompareClass):
 					# All none types are from unaligned objects. These must be counted as errors.
 					self.__getattribute__(f"{object_}_total").wrong += 1
 
+		# Add the visualize file after the alignment
+		# TODO: Color all properties as they are found. {Working somewhat}
+		# TODO: Test what is shown to work and what isn't.
+		self.visualize = self.test_data.visualize
 
 		# import sys
 		# sys.exit(0)
