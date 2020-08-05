@@ -277,7 +277,12 @@ class SpannerObject(Marking):
 	placement = attr.ib(init=False, eq=False)
 	@placement.default
 	def _get_placement(self):
-		return self._music21_object.placement
+		try:
+			return self._music21_object.placement
+		except AttributeError:
+			# raise Exception(dir(self._music21_object))
+			# <music21.spanner.Glissando <music21.chord.Chord F#3 C#4 F#4 G4><music21.chord.Chord F#3 C#4 F#4 G4>> ?
+			return None
 
 	length = attr.ib(init=False, eq=False)
 	@length.default
