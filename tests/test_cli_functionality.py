@@ -49,7 +49,7 @@ def test_cli_read():
 
 	for length in range(1, len(print_options) + 1):
 		for print_option in itertools.permutations(iterable=print_options, r=length):
-			result = runner.invoke(cli, [print_option, "read", test_file])
+			result = runner.invoke(cli, [str(print_option), "read", test_file])
 			assert result.exit_code == 0
 
 
@@ -63,5 +63,5 @@ def test_cli_compare():
 	for length in range(1, len(print_options) + 1):
 		for print_option in itertools.permutations(iterable=print_options, r=length):
 			for sort_option in sort_options:
-				result = runner.invoke(cli, [print_option, "compare", sort_option, true_file, test_file])
+				result = runner.invoke(cli, [str(print_option), "compare", sort_option, true_file, test_file])
 				assert result.exit_code == 0

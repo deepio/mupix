@@ -1,8 +1,10 @@
 # import itertools
 import operator
 from typing import (
-	Union,
 	# Callable,
+	Dict,
+	List,
+	Union,
 )
 
 import attr
@@ -81,7 +83,7 @@ class MupixPartwiseObject():
 
 		try:
 			# This is fine because both rests and notes have a .measure property
-			measuresInScore = max(notes[0] + rests[0], key=operator.attrgetter('measure')).measure
+			measuresInScore = max(notes[0] + rests[0], key=operator.attrgetter('measure')).measure  # type: ignore
 		except ValueError:
 			measuresInScore = 0
 			parts_index = 0
@@ -182,8 +184,8 @@ class PartiwiseCompareClass(BaseCompareClass):
 			)
 
 		from mupix.application import WeightedNeedlemanWunsch
-		matrix = {}
-		already_found_keys = []
+		matrix = {}  # type: Dict
+		already_found_keys = []  # type: List[int]
 		self.compiled_list = {}
 
 		for true_parts in reversed(range(true_length)):

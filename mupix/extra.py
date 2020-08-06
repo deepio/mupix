@@ -240,4 +240,4 @@ def get_software_vendor(filepath: str) -> str:
 	with open(filepath, "r") as f:
 			data = f.read()
 
-	return re.finditer(r"(?<=<software>).+(?=<\/software>)", data).__next__().group().split(" ")
+	return str(re.finditer(r"(?<=<software>).+(?=<\/software>)", data).__next__().group().split(" "))

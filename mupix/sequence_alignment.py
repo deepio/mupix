@@ -1,3 +1,8 @@
+from typing import (
+	Any,
+	Iterator,
+)
+
 import attr
 import numpy
 
@@ -30,8 +35,8 @@ class SequenceAlignment:
 	"""
 	true_data = attr.ib()
 	test_data = attr.ib()
-	aligned_true_data = attr.ib(init=False, default=[])
-	aligned_test_data = attr.ib(init=False, default=[])
+	aligned_true_data = attr.ib(init=False, default=[])  # type: Iterator[Any]
+	aligned_test_data = attr.ib(init=False, default=[])  # type: Iterator[Any]
 
 	match = attr.ib(kw_only=True, default=10)
 	mismatch = attr.ib(kw_only=True, default=-5)
@@ -120,7 +125,7 @@ class SequenceAlignment:
 				self._skips += 1
 				self.ypt -= 1
 
-			self.mpt = self.matrix.pointer[self.xpt][self.ypt]
+			self.mpt = self.matrix.pointer[self.xpt][self.ypt]  # type: int
 
 		while self.ypt > 0:
 			self.true_align.append("_")

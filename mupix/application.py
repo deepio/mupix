@@ -111,7 +111,7 @@ def xml_validator(musicxml_filepath, schema_filepath=__return_root_path() + "/te
 def xml_type_finder(musicxml_filepath):
 	"""
 	Check if the xml file is written in a partwise or timewise fashion. This is just the fastest way
-	to check.
+	to check as long as everything in the MusicXML isn't minified on a single line.
 
 	:param [filepath]: A character string that represents the filepath and filename of the file to open.
 	:type [filepath]: String

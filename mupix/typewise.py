@@ -6,7 +6,10 @@
 """
 
 import operator
-from typing import Union
+from typing import (
+	# List,
+	Union
+)
 
 import attr
 import music21
@@ -184,7 +187,7 @@ class MupixObject():
 			# _clefs += [ClefObject(item, parts_index) for item in parts.recurse().getElementsByClass("Clef")]
 
 		try:
-			measuresInScore = max(notes + rests, key=operator.attrgetter("measure")).measure
+			measuresInScore = max(notes + rests, key=operator.attrgetter("measure")).measure  # type: ignore
 		except ValueError:
 			measuresInScore = 0
 			parts_index = 0
