@@ -138,17 +138,17 @@ class MupixPartwiseObject():
 		# spanners = [item for item in spanners[i]],
 		# dynamics = [item for item in dynamics[i]],
 		mupix_data = {i: MupixObject(
-				notes = [item for item in notes[i]],
-				rests = [item for item in rests[i]],
-				timeSignatures = [item for item in timeSignatures[i]],
-				keySignatures = [item for item in keySignatures[i]],
-				clefs = [item for item in clefs[i]],
-				spanners = [],
-				dynamics = [],
-				parts = 1,
-				error_description = {},
-				visualize = {},
-				software_vendor = software_vendor,
+				notes=[item for item in notes[i]],
+				rests=[item for item in rests[i]],
+				timeSignatures=[item for item in timeSignatures[i]],
+				keySignatures=[item for item in keySignatures[i]],
+				clefs=[item for item in clefs[i]],
+				spanners=[],
+				dynamics=[],
+				parts=1,
+				error_description={},
+				visualize={},
+				software_vendor=software_vendor,
 			) for i in range(parts_index)
 		}
 		return cls(parts=mupix_data, visualize=file_)

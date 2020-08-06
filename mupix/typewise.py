@@ -22,7 +22,7 @@ from mupix.core import (
 )
 from mupix.result_objects import (
 	Result,
-	NoteNameResult,
+	# NoteNameResult,
 	NoteStepResult,
 	NoteDurationResult,
 	NoteOctaveResult,

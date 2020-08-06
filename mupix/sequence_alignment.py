@@ -42,6 +42,7 @@ class SequenceAlignment:
 	gap_open_y = attr.ib(kw_only=True, default=-10)
 	gap_extend_y = attr.ib(kw_only=True, default=-1)
 
+	# Return the total number of skips to grade how well an alignment worked.
 	_skips = attr.ib(init=False, default=0)
 
 	def __attrs_post_init__(self):
@@ -75,22 +76,22 @@ class SequenceAlignment:
 		elif isinstance(input, list):
 			pass
 		else:
-			raise Exception(
-				f"{self.__class__}\n\n" +
-				f"Input data of type {type(input)} is not acceptable.\n" +
+			raise TypeError(
+				f"{self.__class__}\n\n"
+				f"Input data of type {type(input)} is not acceptable.\n"
 				"Please use a String or a List instead."
 			)
 		return input
 
 	def scoring_method(self, true, test):
-		raise Exception(
-			f"{self.__class__}\n\n" +
+		raise NameError(
+			f"{self.__class__}\n\n"
 			f"You forgot to specify a scoring_method() method."
 		)
 
 	def populate(self):
-		raise Exception(
-				f"{self.__class__}\n\n" +
+		raise NameError(
+				f"{self.__class__}\n\n"
 				f"You forgot to specify a populate() method."
 			)
 
@@ -283,8 +284,6 @@ class AdvancedAffineNeedlemanWunsch(AffineNeedlemanWunsch):
 
 		if true.asname() == "Dynamic" and test.asname() == "Dynamic":
 			score += 5 if true.name == test.name else -5
-			score += 2 if true.placement == test.placement else -2
-			score += 1 if true.length == test.length else -1
 
 		# If the objects are the same type
 		# score += 10 if true.part == test.part else -10
@@ -339,26 +338,33 @@ if __name__ == "__main__":
 	seq1 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit '
 	seq2 = 'LoLorem fipsudor ..... st emet, c.nnr adizcing eelilit'
 
+	# Accepts Lists
 	print(
 		AffineNeedlemanWunsch(
-			# # Accepts Lists
-			# [char for char in seq1], [char for char in seq2],
+			[char for char in seq1], [char for char in seq2]
+		))
 
-			# # Accepts Strings
+	# Accepts Strings
+	print(
+		AffineNeedlemanWunsch(
 			seq1, seq2,
-
-			# # Raises and Exception on everything else.
-
-			# # Tuple
-			# (1,2,3,4), seq2,
-
-			# # Int
-			# 1243, seq1,
-
-			# # Float
-			# 1.123, seq1,
-
-			# # Dicts
-			# {"asdf": "zxcv"}, seq2,
 		)
 	)
+
+	# Raises and Exception on everything else.
+
+	# Tuple
+	print(
+		AffineNeedlemanWunsch(
+			(1, 2, 3, 4), seq2,
+		)
+	)
+
+	# Int
+	# 1243, seq1,
+
+	# Float
+	# 1.123, seq1,
+
+	# Dicts
+	# {"asdf": "zxcv"}, seq2,

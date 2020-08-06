@@ -126,5 +126,5 @@ def xml_type_finder(musicxml_filepath):
 			elif "score-timewise" in line.lower():
 				return "Timewise"
 			else:
-				pass  # Leave room 
+				pass  # Leave room
 		raise Exception("File has neither time-wise or part-wise tags")
